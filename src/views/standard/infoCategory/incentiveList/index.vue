@@ -28,13 +28,14 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="aa" label="危险源" />
+      <el-table-column prop="aa" label="编号" />
+      <el-table-column prop="bb" label="危险源" />
     </el-table>
     <!--分页组件-->
     <el-pagination
       :total="total"
       :current-page="page"
-      style="margin-top: 8px;float: right"
+      style="margin-top: 8px;text-align: right"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
       @current-change="pageChange"
@@ -44,6 +45,7 @@
 
 <script>
 import initData from "@/mixins/initData";
+import {incentiveList} from '@/dataSource'
 export default {
   mixins: [initData],
   data() {
@@ -55,12 +57,7 @@ export default {
   },
   mounted() {
     this.loading = false;
-    this.data = [
-      {aa:"测试",bb:"测试",cc:"测试",dd:"测试",ee:"测试"},
-      {aa:"测试",bb:"测试",cc:"测试",dd:"测试",ee:"测试"},
-      {aa:"测试",bb:"测试",cc:"测试",dd:"测试",ee:"测试"},
-      {aa:"测试",bb:"测试",cc:"测试",dd:"测试",ee:"测试"},
-    ];
+    this.data = incentiveList;
   },
   methods: {
     toQuery(name) {

@@ -52,7 +52,7 @@
     <el-pagination
       :total="total"
       :current-page="page"
-      style="margin-top: 8px;float: right"
+      style="margin-top: 8px;text-align: right"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
       @current-change="pageChange"
@@ -63,6 +63,7 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
+import {riskOtherStandard} from '@/dataSource';
 export default {
   components: { eform },
   mixins: [initData],
@@ -75,12 +76,7 @@ export default {
   },
   mounted() {
     this.loading = false;
-    this.data = [
-      {aa:"测试",bb:"测试",cc:"测试",dd:"测试",ee:"测试"},
-      {aa:"测试",bb:"测试",cc:"测试",dd:"测试",ee:"测试"},
-      {aa:"测试",bb:"测试",cc:"测试",dd:"测试",ee:"测试"},
-      {aa:"测试",bb:"测试",cc:"测试",dd:"测试",ee:"测试"},
-    ];
+    this.data =riskOtherStandard;
   },
   methods: {
     toQuery(name) {

@@ -262,22 +262,22 @@ export const asyncRoutes = [
         meta: { title: 'externalInspection' }
       },
       {
-        path: 'incidentInvestigation',
-        component: () => import('@/views/infoDatabase/incidentInvestigation/index'),
-        name: 'incidentInvestigation',
-        meta: { title: 'incidentInvestigation' }
+        path: 'safeInvestigation',
+        component: () => import('@/views/infoDatabase/safeInvestigation/index'),
+        name: 'safeInvestigation',
+        meta: { title: 'safeInvestigation' }
       },
       {
-        path: 'voluntaryReport',
-        component: () => import('@/views/infoDatabase/voluntaryReport/index'),
-        name: 'voluntaryReport',
-        meta: { title: 'voluntaryReport' }
+        path: 'qualityInvestigation',
+        component: () => import('@/views/infoDatabase/qualityInvestigation/index'),
+        name: 'qualityInvestigation',
+        meta: { title: 'qualityInvestigation' }
       },
       {
-        path: 'mandatoryReport',
-        component: () => import('@/views/infoDatabase/mandatoryReport/index'),
-        name: 'mandatoryReport',
-        meta: { title: 'mandatoryReport' }
+        path: 'customerComplaints',
+        component: () => import('@/views/infoDatabase/customerComplaints/index'),
+        name: 'customerComplaints',
+        meta: { title: 'customerComplaints' }
       },
     ]
   },
@@ -411,12 +411,12 @@ export const asyncRoutes = [
         name: 'safetyHazardControlList',
         meta: { title: 'safetyHazardControlList' }
       },
-      {
-        path: 'safetyHazardsStatistics',
-        component: () => import('@/views/hiddenDangerInvestigation/safetyHazardsStatistics/index'),
-        name: 'safetyHazardsStatistics',
-        meta: { title: 'safetyHazardsStatistics' }
-      },
+      // {
+      //   path: 'safetyHazardsStatistics',
+      //   component: () => import('@/views/hiddenDangerInvestigation/safetyHazardsStatistics/index'),
+      //   name: 'safetyHazardsStatistics',
+      //   meta: { title: 'safetyHazardsStatistics' }
+      // },
       {
         path: 'safetyHazardsFollow',
         component: () => import('@/views/hiddenDangerInvestigation/safetyHazardsFollow/index'),
@@ -437,12 +437,12 @@ export const asyncRoutes = [
         name: 'qualityEvaluate',
         meta: { title: 'qualityEvaluate' }
       },
-      {
-        path: 'customerComplaints',
-        component: () => import('@/views/qualityEvaluation/customerComplaints/index'),
-        name: 'customerComplaints',
-        meta: { title: 'customerComplaints' }
-      }
+      // {
+      //   path: 'customerComplaints',
+      //   component: () => import('@/views/qualityEvaluation/customerComplaints/index'),
+      //   name: 'customerComplaints',
+      //   meta: { title: 'customerComplaints' }
+      // }
     ]
   },
   /* {

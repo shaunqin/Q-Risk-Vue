@@ -59,7 +59,7 @@
     <el-pagination
       :total="total"
       :current-page="page"
-      style="margin-top: 8px;float: right"
+      style="margin-top: 8px;text-align: right"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
       @current-change="pageChange"

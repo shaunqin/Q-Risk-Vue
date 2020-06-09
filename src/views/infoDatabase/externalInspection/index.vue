@@ -33,11 +33,11 @@
     >
       <el-table-column type="index" width="50" />
       <el-table-column prop="aa" label="参考号" />
-      <el-table-column prop="bb" label="发生时间" />
-      <el-table-column prop="cc" label="责任单位一" width="100" />
-      <el-table-column prop="dd" label="责任单位二" width="100" />
+      <el-table-column prop="bb" label="发生时间" width="100" />
+      <el-table-column prop="cc" label="责任单位一" width="120" />
+      <el-table-column prop="dd" label="责任单位二" width="120" />
       <el-table-column prop="ee" label="责任部门" />
-      <el-table-column prop="ff" label="产品" />
+      <el-table-column prop="ff" label="产品" width="120" />
       <el-table-column prop="gg" label="系统" />
       <el-table-column prop="hh" label="问题描述" />
       <el-table-column prop="ii" label="危险源分类一" width="110" />
@@ -69,7 +69,7 @@
     <el-pagination
       :total="total"
       :current-page="page"
-      style="margin-top: 8px;float: right"
+      style="margin-top: 8px;text-align: right"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
       @current-change="pageChange"
@@ -80,6 +80,7 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
+import {infoDatabase} from '@/dataSource';
 export default {
   components: { eform },
   mixins: [initData],
@@ -92,24 +93,7 @@ export default {
   },
   mounted() {
     this.loading = false;
-    for (let i = 0; i < 5; i++) {
-      this.data.push({
-        aa: "测试",
-        bb: "测试",
-        cc: "测试",
-        dd: "测试",
-        ee: "测试",
-        ff: "测试",
-        gg: "测试",
-        hh: "测试",
-        ii: "测试",
-        jj: "测试",
-        kk: "测试",
-        ll: "测试",
-        mm: "测试",
-        nn: "测试"
-      });
-    }
+    this.data=infoDatabase;
   },
   methods: {
     toQuery(name) {
