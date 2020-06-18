@@ -1,15 +1,15 @@
 <template>
   <div class="dataSource">
-    <eform ref="form" :is-add="isAdd"></eform>
+    <eform ref="form" :is-add="isAdd" :roleOptions="[]"></eform>
     <div class="head-container">
-      <el-select v-model="query" size="mini" placeholder="请选择产品">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
+      <el-input
+        size="mini"
+        v-model="query"
+        clearable
+        placeholder="请输入你要搜索的内容"
+        style="width: 200px;"
+        class="filter-item"
+      />
       <el-button
         class="filter-item"
         size="mini"
@@ -30,10 +30,9 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="name" label="系统名称" />
-      <el-table-column prop="remark" label="备注" />
-      <el-table-column prop="belong" label="所属产品" />
-      <el-table-column prop="aa" label="是否启用" width="120px" />
+      <el-table-column prop="aa" label="关键风险" />
+      <el-table-column prop="bb" label="编号" />
+      <el-table-column prop="cc" label="危险源" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
@@ -62,30 +61,21 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
+import {cruxRisk} from '@/dataSource'
 export default {
+  name: "dataSources",
   components: { eform },
   mixins: [initData],
   data() {
     return {
       isSuperAdmin: false,
       userInfo: {},
-      selections: [],
-      options: [
-        { value: "航线维护", label: "航线维护" },
-        { value: "飞机定检/大修", label: "飞机定检/大修" },
-        { value: "附件/起落架", label: "附件/起落架" },
-        { value: "发动机/APU", label: "发动机/APU" },
-        { value: "飞机客舱", label: "飞机客舱" }
-      ]
+      selections: []
     };
   },
   mounted() {
     this.loading = false;
-    this.data = [
-      { name: "维修实施", remark: "生产调度、航线维护、航线勤务、故障处理、机体维修、工具设备使用、器材使用", belong: "航线维护" , aa: "是"},
-      { name: "生产控制", remark: "工卡编写、维修计划、指令控制、生产支援与协调、运行控制、数据管理", belong: "航线维护", aa: "是" },
-      { name: "工程技术", remark: "排故、飞机状态监控、AO下发、技术资料管理", belong: "航线维护" , aa: "是"},
-    ];
+    this.data = cruxRisk;
   },
   methods: {
     toQuery(name) {
@@ -108,7 +98,7 @@ export default {
     edit(row) {
       this.isAdd = false;
       let _this = this.$refs.form;
-      _this.form = Object.assign({}, row);
+      _this.form = row;
       _this.dialog = true;
     },
     subDelete(id) {

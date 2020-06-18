@@ -118,7 +118,7 @@ export const asyncRoutes = [
   {
     path: '/notice',
     component: Layout,
-    meta: { title: 'notice', icon: 'notice' },
+    meta: { title: 'agencyMatters', icon: 'notice' },
     redirect: 'noRedirect',
     children: [
       {
@@ -132,6 +132,12 @@ export const asyncRoutes = [
         component: () => import('@/views/notice/workDone/index'),
         name: 'workDone',
         meta: { title: 'workDone' }
+      },
+      {
+        path: 'myLaunch',
+        component: () => import('@/views/notice/myLaunch/index'),
+        name: 'myLaunch',
+        meta: { title: 'myLaunch' }
       },
     ]
   },
@@ -182,11 +188,17 @@ export const asyncRoutes = [
             component: () => import('@/views/standard/infoCategory/incentiveList/index'),
             name: 'incentiveList',
             meta: { title: 'incentiveList' }
+          },
+          {
+            path: 'cruxRisk',
+            component: () => import('@/views/standard/infoCategory/cruxRisk/index'),
+            name: 'cruxRisk',
+            meta: { title: 'cruxRisk' }
           }
         ]
       },
       {
-        path: '/riskManagement',
+        path: 'riskManagement',
         component: () => import('@/views/standard/riskManagement/index'),
         meta: { title: 'riskManagement', icon: 'clipboard' },
         redirect: 'noRedirect',
@@ -226,9 +238,21 @@ export const asyncRoutes = [
             component: () => import('@/views/standard/riskManagement/unitRisk/index'),
             name: 'unitRisk',
             meta: { title: 'unitRisk' }
+          },
+          {
+            path: 'conditionalProbability',
+            component: () => import('@/views/standard/riskManagement/conditionalProbability/index'),
+            name: 'conditionalProbability',
+            meta: { title: 'conditionalProbability' }
           }
         ]
       },
+      {
+        path: 'otherStandard',
+        component: () => import('@/views/standard/otherStandard/index'),
+        meta: { title: 'otherStandard', icon: 'clipboard' },
+        name: 'otherStandard',
+      }
     ]
   },
   {
@@ -279,6 +303,12 @@ export const asyncRoutes = [
         name: 'customerComplaints',
         meta: { title: 'customerComplaints' }
       },
+      {
+        path: 'riskAssessment',
+        component: () => import('@/views/infoDatabase/riskAssessment/index'),
+        name: 'riskAssessment',
+        meta: { title: 'riskAssessment' }
+      }
     ]
   },
   {
@@ -318,6 +348,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: { title: 'dangerEvaluate', icon: 'risk-valuate' },
     redirect: 'noRedirect',
+    // hidden:true,
     children: [
       {
         path: 'riskListManager',
@@ -409,7 +440,7 @@ export const asyncRoutes = [
         path: 'safetyHazardControlList',
         component: () => import('@/views/hiddenDangerInvestigation/safetyHazardControlList/index'),
         name: 'safetyHazardControlList',
-        meta: { title: 'safetyHazardControlList' }
+        meta: { title: 'hiddenDangerInvestigation' }
       },
       // {
       //   path: 'safetyHazardsStatistics',
@@ -417,12 +448,12 @@ export const asyncRoutes = [
       //   name: 'safetyHazardsStatistics',
       //   meta: { title: 'safetyHazardsStatistics' }
       // },
-      {
-        path: 'safetyHazardsFollow',
-        component: () => import('@/views/hiddenDangerInvestigation/safetyHazardsFollow/index'),
-        name: 'safetyHazardsFollow',
-        meta: { title: 'safetyHazardsFollow' }
-      },
+      // {
+      //   path: 'safetyHazardsFollow',
+      //   component: () => import('@/views/hiddenDangerInvestigation/safetyHazardsFollow/index'),
+      //   name: 'safetyHazardsFollow',
+      //   meta: { title: 'safetyHazardsFollow' }
+      // },
     ]
   },
   {

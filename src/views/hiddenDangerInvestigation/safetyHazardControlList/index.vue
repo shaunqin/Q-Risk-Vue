@@ -39,23 +39,16 @@
       <el-table-column prop="gg" label="发现时间" />
       <el-table-column prop="hh" label="来源" />
       <el-table-column prop="ii" label="整改进展" />
-      <el-table-column label="操作" width="200px" align="center" fixed="right">
+      <el-table-column label="操作" width="330px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary">详细</el-button>
-          <el-button
-            :disabled="scope.row.userName !== userInfo.userName"
-            size="mini"
-            type="primary"
-            icon="el-icon-edit"
-            @click="edit(scope.row)"
-          />
-          <el-button
-            slot="reference"
-            type="danger"
-            icon="el-icon-delete"
-            size="mini"
-            @click="subDelete(scope.row.id)"
-          />
+          <el-button-group>
+            <el-button size="mini" @click="reject(scope.row)">驳回</el-button>
+            <el-button size="mini" @click="hairdown(scope.row)">下发</el-button>
+            <el-button size="mini" @click="hairdown(scope.row)">跟踪</el-button>
+            <el-button size="mini" @click="approval(scope.row)">审批</el-button>
+            <el-button size="mini" icon="el-icon-edit" @click="edit(scope.row)"></el-button>
+            <el-button size="mini" icon="el-icon-delete" @click="subDelete(scope.row.id)"></el-button>
+          </el-button-group>
         </template>
       </el-table-column>
     </el-table>
@@ -68,15 +61,23 @@
       @size-change="sizeChange"
       @current-change="pageChange"
     />
-
+    <!-- 驳回 -->
+    <reject-dialog ref="rejectDialog"></reject-dialog>
+    <!-- 下发 -->
+    <hairdown-dialog ref="hairdownDialog"></hairdown-dialog>
+    <!-- 审批 -->
+    <approval-dialog ref="approvalDialog"></approval-dialog>
   </div>
 </template>
 
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
+import rejectDialog from "./components/rejectDialog";
+import hairdownDialog from "./components/hairdownDialog";
+import approvalDialog from "./components/approvalDialog";
 export default {
-  components: { eform },
+  components: { eform,hairdownDialog,approvalDialog,rejectDialog },
   mixins: [initData],
   data() {
     return {
@@ -89,20 +90,15 @@ export default {
     this.loading = false;
     for (let i = 0; i < 5; i++) {
       this.data.push({
-        aa: "测试",
-        bb: "测试",
-        cc: "测试",
-        dd: "测试",
-        ee: "测试",
-        ff: "测试",
-        gg: "测试",
-        hh: "测试",
-        ii: "测试",
-        jj: "测试",
-        kk: "测试",
-        ll: "测试",
-        mm: "测试",
-        nn: "测试"
+        aa: "隐患-"+i,
+        bb: "20200602",
+        cc: "起落架隐患",
+        dd: "三级",
+        ee: "起落架异常",
+        ff: "1级",
+        gg: "20200602",
+        hh: "安全检查",
+        ii:"整改中"
       });
     }
   },
@@ -143,6 +139,19 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    reject(row){
+      let _this = this.$refs.rejectDialog;
+      _this.form = Object.assign({}, row);
+      _this.dialog = true;
+    },
+    hairdown(row){
+      let _this = this.$refs.hairdownDialog;
+      _this.dialog = true;
+    },
+    approval(row){
+       let _this = this.$refs.approvalDialog;
+      _this.dialog = true;
     }
   }
 };

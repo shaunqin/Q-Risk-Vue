@@ -18,7 +18,6 @@
         @click="toQuery(query)"
       >搜索</el-button>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
-      <el-button class="filter-item" size="mini" type="success">批准/发布</el-button>
     </div>
     <!--表格渲染-->
     <el-table
@@ -36,6 +35,7 @@
       <el-table-column prop="cc" label="等级(概率法）" />
       <el-table-column prop="dd" label="等级（最低标准）" />
       <el-table-column prop="ee" label="事件等级标准" />
+      <el-table-column prop="ff" label="是否启用" width="120px" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />

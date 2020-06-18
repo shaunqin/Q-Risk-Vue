@@ -18,7 +18,6 @@
         @click="toQuery(query)"
       >搜索</el-button>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
-      <el-button class="filter-item" size="mini" type="success">批准/发布</el-button>
     </div>
     <!--表格渲染-->
     <el-table
@@ -34,6 +33,7 @@
       <el-table-column prop="name" label="名称" />
       <el-table-column prop="createName" label="创建人" />
       <el-table-column prop="createTime" label="创建时间" />
+      <el-table-column prop="aa" label="是否启用" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
@@ -76,10 +76,10 @@ export default {
   mounted() {
     this.loading = false;
     this.data = [
-      { name: "111", createName: "admin", createTime: "2020-05-26" },
-      { name: "222", createName: "admin", createTime: "2020-05-26" },
-      { name: "333", createName: "admin", createTime: "2020-05-26" },
-      { name: "444", createName: "admin", createTime: "2020-05-26" }
+      { name: "111", createName: "admin", createTime: "2020-05-26", aa: "是" },
+      { name: "222", createName: "admin", createTime: "2020-05-26", aa: "是" },
+      { name: "333", createName: "admin", createTime: "2020-05-26", aa: "是" },
+      { name: "444", createName: "admin", createTime: "2020-05-26", aa: "是" }
     ];
   },
   methods: {

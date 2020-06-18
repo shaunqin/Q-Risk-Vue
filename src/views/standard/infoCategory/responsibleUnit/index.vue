@@ -18,7 +18,6 @@
         @click="toQuery(query)"
       >搜索</el-button>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
-      <el-button class="filter-item" size="mini" type="success">批准/发布</el-button>
     </div>
     <!--表格渲染-->
     <el-table
@@ -34,6 +33,7 @@
       <el-table-column prop="name" label="部门名称" />
       <el-table-column prop="nameEN" label="英文名称" />
       <el-table-column prop="belong" label="所属部门" />
+      <el-table-column prop="aa" label="是否启用" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
@@ -75,9 +75,19 @@ export default {
   mounted() {
     this.loading = false;
     this.data = [
-      { name: "技术部", nameEN: "Technology Department", belong: "总部" },
-      { name: "开发部", nameEN: "Development Department", belong: "技术部" },
-      { name: "测试部", nameEN: "Test Department", belong: "技术部" }
+      {
+        name: "技术部",
+        nameEN: "Technology Department",
+        belong: "总部",
+        aa: "是"
+      },
+      {
+        name: "开发部",
+        nameEN: "Development Department",
+        belong: "技术部",
+        aa: "是"
+      },
+      { name: "测试部", nameEN: "Test Department", belong: "技术部", aa: "是" }
     ];
   },
   methods: {

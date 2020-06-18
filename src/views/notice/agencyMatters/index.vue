@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <detail ref="detail"></detail>
     <div class="head-container">
       <el-input
         size="mini"
@@ -29,11 +30,18 @@
     >
       <el-table-column type="index" width="50" />
       <el-table-column prop="aa" label="单据号" />
-      <el-table-column prop="bb" label="内容" />
+      <el-table-column label="任务名称">
+        <template slot-scope="scope">
+          <router-link :to="jumpdetail(scope.row)">
+            <el-button size="mini" type="text">{{scope.row.bb}}</el-button>
+          </router-link>
+        </template>
+      </el-table-column>
+      <el-table-column prop="dd" label="发起时间-截至时间" />
       <el-table-column prop="cc" label="类型" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" @click="jumpdetail(scope.row)">查看</el-button>
+          <el-button size="mini" type="text" @click="detail(scope.row)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -51,7 +59,9 @@
 
 <script>
 import initData from "@/mixins/initData";
+import detail from "../components/detail";
 export default {
+  components: { detail },
   mixins: [initData],
   data() {
     return {
@@ -69,9 +79,24 @@ export default {
   mounted() {
     this.loading = false;
     this.data = [
-      { aa: "123456", bb: "测试内容111", cc: "风险清单" },
-      { aa: "156325", bb: "测试内容222", cc: "风险措施" },
-      { aa: "961258", bb: "测试内容333", cc: "实施结果" }
+      {
+        aa: "123456",
+        bb: "测试内容111",
+        cc: "风险清单",
+        dd: "2020/06/01 - 2020/06/30"
+      },
+      {
+        aa: "156325",
+        bb: "测试内容222",
+        cc: "风险措施",
+        dd: "2020/06/01 - 2020/06/30"
+      },
+      {
+        aa: "961258",
+        bb: "测试内容333",
+        cc: "实施结果",
+        dd: "2020/06/01 - 2020/06/30"
+      }
     ];
   },
   methods: {
@@ -105,7 +130,11 @@ export default {
             "/dangerEvaluate/implementationResultsReport/riskImplementationConfirm";
           break;
       }
-      this.$router.push(url);
+      return url;
+    },
+    detail(row) {
+      let _this = this.$refs.detail;
+      _this.dialog = true;
     }
   }
 };

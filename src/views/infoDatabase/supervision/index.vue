@@ -18,7 +18,6 @@
         @click="toQuery(query)"
       >搜索</el-button>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-s-data">统计</el-button>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-download">导出</el-button>
     </div>
     <!--表格渲染-->

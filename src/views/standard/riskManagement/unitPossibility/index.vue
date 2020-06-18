@@ -35,6 +35,7 @@
       <el-table-column prop="cc" label="风险等级" />
       <el-table-column prop="dd" label="创建人" />
       <el-table-column prop="ee" label="创建时间" />
+      <el-table-column prop="ff" label="是否启用" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />

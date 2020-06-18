@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <eform ref="form" :is-add="isAdd"></eform>
-    <div class="head-container">
+    <!-- <div class="head-container">
       <el-button class="filter-item" size="mini" type="success">新开航站风险分析</el-button>
       <el-button class="filter-item" size="mini" type="success">新能力申请风险分析</el-button>
       <el-button class="filter-item" size="mini" type="success">其他专项风险分析</el-button>
-    </div>
+    </div> -->
     <!--表格渲染-->
     <el-table
       v-loading="loading"
@@ -31,15 +31,27 @@
       <el-table-column prop="ll" label="背景" />
       <el-table-column prop="mm" label="存在的安全风险" />
       <el-table-column prop="nn" label="风险防范措施" />
-      <el-table-column label="操作" width="130px" align="center" fixed="right">
+      <el-table-column label="操作" width="150px" align="center" fixed="right">
         <template slot-scope="scope">
+           <el-button
+            :disabled="scope.row.userName !== userInfo.userName"
+            size="mini"
+            type="warning"
+            @click="inputRisk(scope.row)"
+          >填写</el-button>
           <el-button
+            :disabled="scope.row.userName !== userInfo.userName"
+            size="mini"
+            type="success"
+            @click="inputRisk(scope.row)"
+          >确认</el-button>
+          <!-- <el-button
             :disabled="scope.row.userName !== userInfo.userName"
             size="mini"
             type="primary"
             icon="el-icon-plus"
             @click="edit(scope.row)"
-          >通知</el-button>
+          >通知</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -52,14 +64,16 @@
       @size-change="sizeChange"
       @current-change="pageChange"
     />
+    <risk-input-dialog ref="riskInputDialog" />
   </div>
 </template>
 
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
+import riskInputDialog from './components/riskInputDialog'
 export default {
-  components: { eform },
+  components: { eform,riskInputDialog },
   mixins: [initData],
   data() {
     return {
@@ -72,20 +86,20 @@ export default {
     this.loading = false;
     for (let i = 0; i < 5; i++) {
       this.data.push({
-        aa: "测试",
-        bb: "测试",
-        cc: "测试",
-        dd: "测试",
-        ee: "测试",
-        ff: "测试",
-        gg: "测试",
-        hh: "测试",
-        ii: "测试",
-        jj: "测试",
-        kk: "测试",
-        ll: "测试",
-        mm: "测试",
-        nn: "测试",
+        aa: "PM20200618-"+i,
+        bb: "总部",
+        cc: "北京分公司",
+        dd: "这是通知标题",
+        ee: "通知内容XXXXX",
+        ff: "成都分公司",
+        gg: "admin",
+        hh: "1388888888",
+        ii: "9527",
+        jj: "飞机结构",
+        kk: "全部",
+        ll: "自定义背景",
+        mm: "起落架安全风险",
+        nn: "检查起落架",
       });
     }
   },
@@ -126,6 +140,10 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    inputRisk(row){
+      let _this=this.$refs.riskInputDialog;
+      _this.dialog=true;
     }
   }
 };
