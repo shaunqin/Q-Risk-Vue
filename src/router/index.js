@@ -348,7 +348,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: { title: 'dangerEvaluate', icon: 'risk-valuate' },
     redirect: 'noRedirect',
-    // hidden:true,
+    hidden:true,
     children: [
       {
         path: 'riskListManager',
