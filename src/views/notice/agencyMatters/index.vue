@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <detail ref="detail"></detail>
+    <feedback ref="feedback"></feedback>
     <div class="head-container">
       <el-input
         size="mini"
@@ -30,18 +31,36 @@
     >
       <el-table-column type="index" width="50" />
       <el-table-column prop="aa" label="单据号" />
-      <el-table-column label="任务名称">
-        <template slot-scope="scope">
-          <router-link :to="jumpdetail(scope.row)">
-            <el-button size="mini" type="text">{{scope.row.bb}}</el-button>
-          </router-link>
-        </template>
-      </el-table-column>
+      <el-table-column prop="bb" label="任务名称" />
       <el-table-column prop="dd" label="发起时间-截至时间" />
       <el-table-column prop="cc" label="类型" />
-      <el-table-column label="操作" width="130px" align="center" fixed="right">
+      <el-table-column label="操作" width="130px" align="left" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" @click="detail(scope.row)">查看</el-button>
+          <el-button
+            v-if="scope.row.cc=='安全风险提示'"
+            size="mini"
+            type="text"
+            @click="fillin(scope.row)"
+          >填报</el-button>
+          <el-button
+            v-if="scope.row.cc=='安全风险提示'"
+            size="mini"
+            type="text"
+            @click="shenpi(scope.row)"
+          >审批</el-button>
+          <el-button
+            v-if="scope.row.cc=='安全风险提示'"
+            size="mini"
+            type="text"
+            @click="xiafa(scope.row)"
+          >下发</el-button>
+          <el-button
+            v-if="scope.row.cc=='专项风险评估'"
+            size="mini"
+            type="text"
+            @click="feedback(scope.row)"
+          >反馈</el-button>
+          <el-button v-if="scope.row.cc=='隐患排查'" size="mini" type="text">待定</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -60,15 +79,15 @@
 <script>
 import initData from "@/mixins/initData";
 import detail from "../components/detail";
+import feedback from "../components/feedback";
 export default {
-  components: { detail },
+  components: { detail, feedback },
   mixins: [initData],
   data() {
     return {
       isSuperAdmin: false,
       userInfo: {},
-      selections: [],
-      title: ""
+      selections: []
     };
   },
   // created () {
@@ -82,19 +101,19 @@ export default {
       {
         aa: "123456",
         bb: "测试内容111",
-        cc: "风险清单",
+        cc: "安全风险提示",
         dd: "2020/06/01 - 2020/06/30"
       },
       {
         aa: "156325",
         bb: "测试内容222",
-        cc: "风险措施",
+        cc: "专项风险评估",
         dd: "2020/06/01 - 2020/06/30"
       },
       {
         aa: "961258",
         bb: "测试内容333",
-        cc: "实施结果",
+        cc: "隐患排查",
         dd: "2020/06/01 - 2020/06/30"
       }
     ];
@@ -133,8 +152,55 @@ export default {
       return url;
     },
     detail(row) {
+      // let _this = this.$refs.detail;
+      // _this.dialog = true;
+    },
+    fillin(row) {
       let _this = this.$refs.detail;
+      _this.form = row;
+      _this.title = "填报";
       _this.dialog = true;
+    },
+    shenpi(row) {
+      let _this = this.$refs.detail;
+      _this.title = "审批";
+      _this.form = row;
+      _this.dialog = true;
+    },
+    xiafa(row) {
+      let _this = this.$refs.detail;
+      _this.title = "下发";
+      _this.form = row;
+      _this.dialog = true;
+    },
+    feedback(row) {
+      let _this = this.$refs.feedback;
+      _this.title = "反馈";
+      _this.form = {
+        aa:"重复故障影响飞机安全运行的风险提示",
+        bb:`2020 年 6 月 5 日，A321/B-1833 飞机执行 CA1948 航班，成都起
+飞后地面监控出现 AIR R WING LEAK 警告信息，飞机返航，该机 5
+月 3 日曾出现相同的故障信息，并造成飞机返航。 
+自 2020 年以来，A320 系列飞机曾多次发生大翼引气渗漏故
+障，给航班的安全正常运行带来了一定的影响。 `,
+        cc:`飞机在运行过程中出现大翼引气渗漏等重复性故障后，存在返
+航、备降、中断起飞的安全风险`
+      };
+      _this.dialog = true;
+      _this.data = [
+        {
+          aa: "杭州",
+          bb: `认真做好重复性故障的管控工作。各单位要高度重视飞机出
+现的重复性故障，加强对排故力量的组织...`,
+          cc: ""
+        },
+        {
+          aa: "上海",
+          bb: `严格飞机航后和飞机定检维修质量。维修人员要严格按工作
+单卡执行飞机航后检查工作，及时发现并处理飞机故障，... `,
+          cc: ""
+        }
+      ];
     }
   }
 };

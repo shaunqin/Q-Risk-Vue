@@ -128,6 +128,7 @@ export default {
     },
     detail(row) {
       let _this = this.$refs.detail;
+      _this.form=row;
       _this.dialog = true;
     }
   }

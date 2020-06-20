@@ -333,13 +333,15 @@ export const asyncRoutes = [
         path: 'safetyRiskPrompt',
         component: () => import('@/views/dangerManagerment/safetyRiskPrompt/index'),
         name: 'safetyRiskPrompt',
-        meta: { title: 'safetyRiskPrompt' }
+        meta: { title: 'safetyRiskPrompt' },
+        hidden:true
       },
       {
         path: 'riskAssessmentProcess',
         component: () => import('@/views/dangerManagerment/riskAssessmentProcess/index'),
         name: 'riskAssessmentProcess',
-        meta: { title: 'riskAssessmentProcess' }
+        meta: { title: 'riskAssessmentProcess' },
+        hidden:true
       },
     ]
   },

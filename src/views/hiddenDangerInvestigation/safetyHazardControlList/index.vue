@@ -39,12 +39,10 @@
       <el-table-column prop="gg" label="发现时间" />
       <el-table-column prop="hh" label="来源" />
       <el-table-column prop="ii" label="整改进展" />
-      <el-table-column label="操作" width="330px" align="center" fixed="right">
+      <el-table-column label="操作" width="230px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button-group>
-            <el-button size="mini" @click="reject(scope.row)">驳回</el-button>
             <el-button size="mini" @click="hairdown(scope.row)">下发</el-button>
-            <el-button size="mini" @click="hairdown(scope.row)">跟踪</el-button>
             <el-button size="mini" @click="approval(scope.row)">审批</el-button>
             <el-button size="mini" icon="el-icon-edit" @click="edit(scope.row)"></el-button>
             <el-button size="mini" icon="el-icon-delete" @click="subDelete(scope.row.id)"></el-button>
