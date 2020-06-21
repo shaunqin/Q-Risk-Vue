@@ -10,31 +10,19 @@
       <el-form ref="form" :model="form" size="small" label-width="auto">
         <el-row :gutter="16">
           <el-col :span="12">
-            <el-form-item label="名称" prop="aa">
-              <el-input v-model="form.aa" style="width: 100%;" />
+            <el-form-item label="单据号">
+              <el-input v-model="form.aa" placeholder readonly></el-input>
             </el-form-item>
-            <el-form-item label="隐患风险" prop="bb">
-              <el-input v-model="form.bb" style="width: 100%;" />
-            </el-form-item>
-            <el-form-item label="隐患等级">
-              <el-input v-model="form.cc" style="width: 100%;" />
-            </el-form-item>
-            <el-form-item label="风险描述">
-              <el-input v-model="form.dd" style="width: 100%;" />
+            <el-form-item label="任务名称">
+              <el-input v-model="form.bb" placeholder readonly></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="风险等级">
-              <el-input v-model="form.ee" style="width: 100%;" />
+            <el-form-item label="起止时间">
+              <el-input v-model="form.dd" placeholder readonly></el-input>
             </el-form-item>
-            <el-form-item label="发现时间">
-              <el-input v-model="form.ff" style="width: 100%;" />
-            </el-form-item>
-            <el-form-item label="来源">
-              <el-input v-model="form.gg" style="width: 100%;" />
-            </el-form-item>
-            <el-form-item label="整改进展">
-              <el-input v-model="form.hh" style="width: 100%;" />
+            <el-form-item label="类型">
+              <el-input v-model="form.cc" placeholder readonly></el-input>
             </el-form-item>
           </el-col>
         </el-row>

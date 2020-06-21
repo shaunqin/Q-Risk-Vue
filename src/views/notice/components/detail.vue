@@ -4,30 +4,18 @@
       <el-row :gutter="16">
         <el-col :span="12">
           <el-form-item label="单据号">
-            <el-input v-model="form.aa" placeholder="" readonly ></el-input>
+            <el-input v-model="form.aa" placeholder="" ></el-input>
           </el-form-item>
            <el-form-item label="任务名称">
-            <el-input v-model="form.bb" placeholder="" readonly ></el-input>
+            <el-input v-model="form.bb" placeholder="" ></el-input>
           </el-form-item>
         </el-col>
          <el-col :span="12">
           <el-form-item label="起止时间">
-            <el-input v-model="form.dd" placeholder="" readonly ></el-input>
+            <el-input v-model="form.dd" placeholder="" ></el-input>
           </el-form-item>
            <el-form-item label="类型">
-            <el-input v-model="form.cc" placeholder="" readonly ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24" v-if="title=='审批'">
-           <el-form-item label="审批">
-            <el-input v-model="shenpi" placeholder="" type="textarea" rows="4" ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24" v-if="title=='下发'">
-           <el-form-item label="下发">
-           <el-select v-model="xiafa" placeholder="请选择部门" style="width:100%">
-             <el-option :label="'请选择部门'" :value="'请选择部门'"></el-option>
-           </el-select>
+            <el-input v-model="form.cc" placeholder="" ></el-input>
           </el-form-item>
         </el-col>
       </el-row>

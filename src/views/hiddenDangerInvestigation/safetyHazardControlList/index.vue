@@ -145,10 +145,12 @@ export default {
     },
     hairdown(row){
       let _this = this.$refs.hairdownDialog;
+       _this.form = Object.assign({}, row);
       _this.dialog = true;
     },
     approval(row){
        let _this = this.$refs.approvalDialog;
+        _this.form = Object.assign({}, row);
       _this.dialog = true;
     }
   }

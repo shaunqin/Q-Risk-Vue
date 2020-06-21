@@ -2,6 +2,8 @@
   <div class="app-container">
     <detail ref="detail"></detail>
     <feedback ref="feedback"></feedback>
+    <approval-dialog ref="approvalDialog"></approval-dialog>
+    <hairdown-dialog ref="hairdownDialog"></hairdown-dialog>
     <div class="head-container">
       <el-input
         size="mini"
@@ -80,8 +82,10 @@
 import initData from "@/mixins/initData";
 import detail from "../components/detail";
 import feedback from "../components/feedback";
+import approvalDialog from "../components/approvalDialog";
+import hairdownDialog from "../components/hairdownDialog";
 export default {
-  components: { detail, feedback },
+  components: { detail, feedback ,approvalDialog,hairdownDialog},
   mixins: [initData],
   data() {
     return {
@@ -162,13 +166,13 @@ export default {
       _this.dialog = true;
     },
     shenpi(row) {
-      let _this = this.$refs.detail;
+      let _this = this.$refs.approvalDialog;
       _this.title = "审批";
       _this.form = row;
       _this.dialog = true;
     },
     xiafa(row) {
-      let _this = this.$refs.detail;
+      let _this = this.$refs.hairdownDialog;
       _this.title = "下发";
       _this.form = row;
       _this.dialog = true;
