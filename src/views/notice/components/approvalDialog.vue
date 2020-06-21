@@ -37,7 +37,7 @@
         <el-table-column label="备注" prop="dd" />
       </el-table>
     </el-card>
-    <el-card header="审批" style="margin-top:20px">
+    <el-card header="审批" style="margin-top:20px" v-if="shenpi">
       <el-form label-width="auto" size="small">
         <el-row>
           <el-col :span="24">
@@ -65,6 +65,12 @@
 
 <script>
 export default {
+  props: {
+    shenpi: {
+      type: Boolean,
+      default: true
+    },
+  },
   data() {
     return {
       dialog: false,

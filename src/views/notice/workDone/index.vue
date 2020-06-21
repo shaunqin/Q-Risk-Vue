@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <detail ref="detail"></detail>
+    <approval-dialog ref="approvalDialog" :shenpi="false"></approval-dialog>
     <div class="head-container">
       <el-input
         size="mini"
@@ -53,9 +53,9 @@
 
 <script>
 import initData from "@/mixins/initData";
-import detail from "../components/detail";
+import approvalDialog from "../components/approvalDialog";
 export default {
-  components: { detail },
+  components: { approvalDialog },
   mixins: [initData],
   data() {
     return {
@@ -127,7 +127,7 @@ export default {
       return url;
     },
     detail(row) {
-      let _this = this.$refs.detail;
+      let _this = this.$refs.approvalDialog;
       _this.form=row;
       _this.dialog = true;
     }
