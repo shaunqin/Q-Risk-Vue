@@ -35,7 +35,11 @@
       <el-table-column prop="cc" label="等级(概率法）" />
       <el-table-column prop="dd" label="等级（最低标准）" />
       <el-table-column prop="ee" label="事件等级标准" />
-      <el-table-column prop="ff" label="是否启用" width="120px" />
+      <el-table-column prop="ff" label="是否启用" width="120px" >
+        <template slot-scope="scope">
+          <el-switch v-model="scope.row.ff" active-value="是"></el-switch>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />

@@ -30,7 +30,11 @@
       <el-table-column type="index" width="50" />
       <el-table-column prop="aa" label="编号" />
       <el-table-column prop="bb" label="危险源" />
-      <el-table-column prop="cc" label="是否启用" />
+      <el-table-column prop="cc" label="是否启用" >
+        <template slot-scope="scope">
+          <el-switch v-model="scope.row.cc" active-value="是"></el-switch>
+        </template>
+      </el-table-column>
     </el-table>
     <!--分页组件-->
     <el-pagination

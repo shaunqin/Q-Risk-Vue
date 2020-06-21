@@ -33,7 +33,11 @@
       <el-table-column prop="name" label="部门名称" />
       <el-table-column prop="nameEN" label="英文名称" />
       <el-table-column prop="belong" label="所属部门" />
-      <el-table-column prop="aa" label="是否启用" />
+      <el-table-column prop="aa" label="是否启用" >
+        <template slot-scope="scope">
+          <el-switch v-model="scope.row.aa" active-value="是"></el-switch>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />

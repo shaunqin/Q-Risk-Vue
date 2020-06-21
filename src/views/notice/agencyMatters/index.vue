@@ -42,6 +42,12 @@
             v-if="scope.row.cc=='安全风险提示'"
             size="mini"
             type="text"
+            @click="xiafa(scope.row)"
+          >下发</el-button>
+          <el-button
+            v-if="scope.row.cc=='安全风险提示'"
+            size="mini"
+            type="text"
             @click="fillin(scope.row)"
           >填报</el-button>
           <el-button
@@ -50,12 +56,6 @@
             type="text"
             @click="shenpi(scope.row)"
           >审批</el-button>
-          <el-button
-            v-if="scope.row.cc=='安全风险提示'"
-            size="mini"
-            type="text"
-            @click="xiafa(scope.row)"
-          >下发</el-button>
           <el-button
             v-if="scope.row.cc=='专项风险评估'"
             size="mini"
@@ -85,7 +85,7 @@ import feedback from "../components/feedback";
 import approvalDialog from "../components/approvalDialog";
 import hairdownDialog from "../components/hairdownDialog";
 export default {
-  components: { detail, feedback ,approvalDialog,hairdownDialog},
+  components: { detail, feedback, approvalDialog, hairdownDialog },
   mixins: [initData],
   data() {
     return {
@@ -181,13 +181,13 @@ export default {
       let _this = this.$refs.feedback;
       _this.title = "反馈";
       _this.form = {
-        aa:"重复故障影响飞机安全运行的风险提示",
-        bb:`2020 年 6 月 5 日，A321/B-1833 飞机执行 CA1948 航班，成都起
+        aa: "重复故障影响飞机安全运行的风险提示",
+        bb: `2020 年 6 月 5 日，A321/B-1833 飞机执行 CA1948 航班，成都起
 飞后地面监控出现 AIR R WING LEAK 警告信息，飞机返航，该机 5
 月 3 日曾出现相同的故障信息，并造成飞机返航。 
 自 2020 年以来，A320 系列飞机曾多次发生大翼引气渗漏故
 障，给航班的安全正常运行带来了一定的影响。 `,
-        cc:`飞机在运行过程中出现大翼引气渗漏等重复性故障后，存在返
+        cc: `飞机在运行过程中出现大翼引气渗漏等重复性故障后，存在返
 航、备降、中断起飞的安全风险`
       };
       _this.dialog = true;

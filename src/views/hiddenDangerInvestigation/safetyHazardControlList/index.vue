@@ -30,6 +30,7 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
+      <el-table-column prop="jj" label="编号" />
       <el-table-column prop="aa" label="名称" />
       <el-table-column prop="bb" label="发生时间" />
       <el-table-column prop="cc" label="隐患风险" />
@@ -96,7 +97,8 @@ export default {
         ff: "1级",
         gg: "20200602",
         hh: "安全检查",
-        ii:"整改中"
+        ii:"整改中",
+        jj:"YP202005050"+i
       });
     }
   },
