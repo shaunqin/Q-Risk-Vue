@@ -6,36 +6,46 @@
     :visible.sync="dialog"
     custom-class="big_dialog"
   >
-    <el-form :model="form">
+    <el-form :model="form" size="small" label-width="auto">
       <el-row :gutter="16">
+        <el-col :span="12">
+          <el-form-item label="编号">
+            <el-input v-model="form.jj" style="width: 100%;" />
+          </el-form-item>
+        </el-col>
         <el-col :span="24">
           <el-form-item label="主题">
             <el-input v-model="form.aa" placeholder></el-input>
           </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="安全风险">
+            <el-input v-model="form.cc" placeholder></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
           <el-form-item label="背景">
             <el-input v-model="form.bb" placeholder type="textarea" rows="2"></el-input>
           </el-form-item>
         </el-col>
+
         <el-col :span="24">
-          <el-form-item label="安全风险">
-            <el-input v-model="form.cc" placeholder type="textarea" rows="2"></el-input>
+          <el-form-item label="风险防范">
+            <el-table :data="data" size="small" style="width: 100%;">
+              <el-table-column label="责任单位" prop="aa" />
+              <el-table-column label="风险防范" prop="bb" />
+              <el-table-column label="反馈内容">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.cc" placeholder="反馈内容"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作">
+                <template slot-scope="scope">
+                  <el-button type="text" @click="updata(scope.row)">上传</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
           </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-table :data="data" size="small" style="width: 100%;">
-            <el-table-column label="责任单位" prop="aa" />
-            <el-table-column label="风险防范" prop="bb" />
-            <el-table-column label="反馈内容">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.cc" placeholder="反馈内容"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <el-button type="text" @click="updata(scope.row)">上传</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
         </el-col>
       </el-row>
     </el-form>
