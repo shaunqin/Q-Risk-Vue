@@ -31,20 +31,20 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="aa" label="参考号" />
-      <el-table-column prop="bb" label="发生时间" width="100" />
-      <el-table-column prop="cc" label="责任单位一" width="120" />
-      <el-table-column prop="dd" label="责任单位二" width="120" />
-      <el-table-column prop="ee" label="责任部门" />
-      <el-table-column prop="ff" label="产品" width="120" />
-      <el-table-column prop="gg" label="系统" />
-      <el-table-column prop="hh" label="问题描述" />
-      <el-table-column prop="ii" label="危险源分类一" width="110" />
-      <el-table-column prop="jj" label="危险源分类二" width="110" />
-      <el-table-column prop="kk" label="危险源" />
-      <el-table-column prop="ll" label="风险" />
-      <el-table-column prop="mm" label="诱因" />
-      <el-table-column prop="nn" label="危险源次数" width="100" />
+      <el-table-column prop="aa" label="信息来源" width="100" />
+      <el-table-column prop="bb" label="发生日期" width="100" />
+      <el-table-column prop="dd" label="机型" />
+      <el-table-column prop="ee" label="事件概述" />
+      <el-table-column prop="ff" label="原因分析" width="120" />
+      <el-table-column prop="gg" label="责任单位" />
+      <el-table-column prop="hh" label="产品" />
+      <el-table-column prop="ii" label="系统" width="110" />
+      <el-table-column prop="jj" label="危险源层级一" width="110" />
+      <el-table-column prop="kk" label="危险源层级二" width="110" />
+      <el-table-column prop="ll" label="危险源" />
+      <el-table-column prop="mm" label="风险" />
+      <el-table-column prop="nn" label="诱因" />
+      <el-table-column prop="oo" label="附件报告" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -79,7 +79,7 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import {infoDatabase} from '@/dataSource';
+import { infoDatabase } from "@/dataSource";
 export default {
   components: { eform },
   mixins: [initData],
@@ -92,7 +92,42 @@ export default {
   },
   mounted() {
     this.loading = false;
-    this.data=infoDatabase;
+    this.data = [
+      {
+        aa: "客户直接投诉",
+        bb: "2019/06/09",
+        cc: "上海浦东",
+        dd: "B737",
+        ee: "",
+        ff: "具体原因描述",
+        gg: "运管部",
+        hh: "动机/APU",
+        ii: "外部检查",
+        jj: "管理文件",
+        kk: "工作程序",
+        ll: "程序编写存在缺陷",
+        mm: "程序编写存在缺陷",
+        nn: "未构成差错不安全事件",
+        oo: ""
+      },
+      {
+        aa: "市场部",
+        bb: "2019/06/09",
+        cc: "上海浦东",
+        dd: "A320",
+        ee: "",
+        ff: "具体原因描述",
+        gg: "运管部",
+        hh: "动机/APU",
+        ii: "外部检查",
+        jj: "管理文件",
+        kk: "工作程序",
+        ll: "程序编写存在缺陷",
+        mm: "程序编写存在缺陷",
+        nn: "未构成差错不安全事件",
+        oo: ""
+      }
+    ];
   },
   methods: {
     toQuery(name) {
