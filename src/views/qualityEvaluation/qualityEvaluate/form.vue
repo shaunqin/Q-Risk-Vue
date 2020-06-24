@@ -4,25 +4,17 @@
     :close-on-click-modal="false"
     :before-close="cancel"
     :visible.sync="dialog"
-    :title="isAdd ? '新增清单' : '编辑清单'"
+    :title="isAdd ? '新增' : '编辑'"
     custom-class="big_dialog"
   >
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="评价指标" prop="aa">
+        <el-col :span="24">
+          <el-form-item label="一级菜单" prop="aa">
             <el-input v-model="form.aa" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="单位" prop="bb">
+          <el-form-item label="二级菜单" prop="bb">
             <el-input v-model="form.bb" style="width: 100%;" />
-          </el-form-item>
-        </el-col>
-         <el-col :span="12">
-          <el-form-item label="权重">
-            <el-input v-model="form.cc" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="数据来源">
-            <el-input v-model="form.dd" style="width: 100%;" />
           </el-form-item>
         </el-col>
       </el-row>

@@ -30,10 +30,10 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="aa" label="评价指标" />
-      <el-table-column prop="bb" label="单位" />
-      <el-table-column prop="cc" label="权重" />
-      <el-table-column prop="dd" label="数据来源" />
+      <el-table-column prop="aa" label="一级菜单" />
+      <el-table-column prop="bb" label="二级菜单" />
+      <el-table-column prop="cc" label="创建时间" />
+      <el-table-column prop="dd" label="创建人" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button
