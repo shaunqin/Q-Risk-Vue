@@ -12,10 +12,13 @@
           <el-form-item label="标题">
             <el-input v-model="form.aa" style="width: 100%;" />
           </el-form-item>
-        </el-col>
-        <el-col :span="24">
           <el-form-item label="日期" prop="bb">
-            <el-input v-model="form.bb" style="width: 100%;"  />
+            <el-input v-model="form.bb" style="width: 100%;" />
+          </el-form-item>
+          <el-form-item label="选择部门">
+            <el-select v-model="bumen" placeholder="选择部门">
+              <el-option :label="'选择部门'" :value="'选择部门'"></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>

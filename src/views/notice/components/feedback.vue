@@ -20,7 +20,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="安全风险">
-            <el-input v-model="form.cc" placeholder></el-input>
+            <el-input v-model="form.cc" placeholder type="textarea" rows="2"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="24">

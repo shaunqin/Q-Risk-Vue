@@ -7,72 +7,110 @@
     title="填报"
     custom-class="big_dialog"
   >
-    <el-button type="primary" size="mini" @click="addTable" style="margin-bottom:10px">新增一行</el-button>
-    <el-button type="warning" size="mini" style="margin-bottom:10px">上传附件</el-button>
-    <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;" height="50vh">
-      <el-table-column type="index" width="50" />
-      <el-table-column prop="aa" label="危险源" width="200">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.aa" placeholder></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column prop="bb" label="问题描述" width="200">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.bb" placeholder></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column prop="cc" label="ID" width="200">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.cc" placeholder></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column prop="dd" label="可能性" width="200">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.dd" placeholder></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column prop="ee" label="严重性" width="200">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.ee" placeholder></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column prop="ff" label="可能导致的风险" width="200">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.ff" placeholder></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column prop="gg" label="风险等级" width="200">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.gg" placeholder></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column prop="hh" label="根原因分析" width="200">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.hh" placeholder></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column prop="ii" label="控制措施" width="200">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.ii" placeholder></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column prop="jj" label="责任单位" width="200">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.jj" placeholder></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column prop="kk" label="控制状态" width="200">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.kk" placeholder></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column prop="ll" label="完成期限" width="200">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.ll" placeholder></el-input>
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-card header="详细信息">
+      <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
+        <el-row :gutter="16">
+          <el-col :span="12">
+            <el-form-item label="编号">
+              <el-input v-model="form.jj" style="width: 100%;" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="标题" prop="aa">
+              <el-input v-model="form.aa" style="width: 100%;" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="单位/部门">
+              <el-input v-model="form.bb" style="width: 100%;" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="分析人">
+              <el-input v-model="form.cc" style="width: 100%;" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="批准">
+              <el-input v-model="form.dd" style="width: 100%;" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="日期">
+              <el-input v-model="form.ee" style="width: 100%;" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-card>
+    <el-card style="margin-top:20px">
+      <el-button type="primary" size="mini" @click="addTable" style="margin-bottom:10px">新增一行</el-button>
+      <el-button type="warning" size="mini" style="margin-bottom:10px">上传附件</el-button>
+      <!--表格渲染-->
+      <el-table v-loading="loading" :data="data" size="small" style="width: 100%;" max-height="400px">
+        <el-table-column type="index" width="50" />
+        <el-table-column prop="aa" label="危险源" width="200">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.aa" placeholder></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="bb" label="问题描述" width="200">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.bb" placeholder></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="cc" label="ID" width="200">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.cc" placeholder></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="dd" label="可能性" width="200">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.dd" placeholder></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="ee" label="严重性" width="200">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.ee" placeholder></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="ff" label="可能导致的风险" width="200">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.ff" placeholder></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="gg" label="风险等级" width="200">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.gg" placeholder></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="hh" label="根原因分析" width="200">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.hh" placeholder></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="ii" label="控制措施" width="200">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.ii" placeholder></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="jj" label="责任单位" width="200">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.jj" placeholder></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="kk" label="控制状态" width="200">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.kk" placeholder></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="ll" label="完成期限" width="200">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.ll" placeholder></el-input>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
       <el-button :loading="loading" type="primary" @click="doSubmit">确认</el-button>

@@ -8,6 +8,8 @@
     <yh-hairdown-dialog ref="yhHairdownDialog"></yh-hairdown-dialog>
     <!-- 隐患审批 -->
     <yh-approval-dialog ref="yhApprovalDialog"></yh-approval-dialog>
+    <!-- 验证 -->
+    <check ref="check"></check>
     <div class="head-container">
       <el-input
         size="mini"
@@ -66,6 +68,12 @@
             type="text"
             @click="feedback(scope.row)"
           >反馈</el-button>
+          <el-button
+            v-if="scope.row.cc=='安全风险提示'"
+            size="mini"
+            type="text"
+            @click="check(scope.row)"
+          >验证</el-button>
           <el-button v-if="scope.row.cc=='隐患排查'" size="mini" type="text" @click="yinhuan_xiafa(scope.row)">下发</el-button>
           <el-button v-if="scope.row.cc=='隐患排查'" size="mini" type="text" @click="yinhuan_shenpi(scope.row)">审批</el-button>
         </template>
@@ -87,6 +95,7 @@
 import initData from "@/mixins/initData";
 import detail from "../components/detail";
 import feedback from "../components/feedback";
+import check from "../components/check";
 import approvalDialog from "../components/approvalDialog";
 import hairdownDialog from "../components/hairdownDialog";
 import yhHairdownDialog from "@/views/hiddenDangerInvestigation/safetyHazardControlList/components/hairdownDialog";
@@ -98,7 +107,8 @@ export default {
     approvalDialog,
     hairdownDialog,
     yhHairdownDialog,
-    yhApprovalDialog
+    yhApprovalDialog,
+    check
   },
   mixins: [initData],
   data() {
@@ -175,7 +185,15 @@ export default {
     },
     fillin(row) {
       let _this = this.$refs.detail;
-      _this.form = row;
+       _this.form = {
+        aa:
+          "飞机在运行过程中出现大翼引气渗漏等重复性故障后，存在返 航、备降、中断起飞的安全风险。",
+        bb: "上海",
+        cc: "admin",
+        dd: "是",
+        ee: "2020-06-06",
+        jj: "FP2020050501"
+      };
       _this.title = "填报";
       _this.dialog = true;
     },
@@ -251,6 +269,31 @@ export default {
         hh: "安全检查",
         ii:"整改中",
         jj:"YP2020050501"
+      };
+      _this.dialog = true;
+    },
+    check(row) {
+      let _this = this.$refs.check;
+      _this.form = {
+        aa:
+          "飞机在运行过程中出现大翼引气渗漏等重复性故障后，存在返 航、备降、中断起飞的安全风险。",
+        bb: "FP2020050501",
+        cc: "批准",
+        dd: "上海",
+        ee: "2020-06-06",
+        ff: "上海",
+        gg: "杭州",
+        hh: `2020 年 6 月 5 日，A321/B-1833 飞机执行 CA1948 航班，成都起飞后地面监控出现 AIR R WING LEAK 警告信息，飞机返航，该机 5月 3 日曾出现相同的故障信息，并造成飞机返航`,
+        jj: "FP2020050501"
+      };
+      _this.riskForm = {
+        aa: "出现大翼引气渗漏等",
+        bb:
+          "A321/B-1833 飞机执行 CA1948 航班，成都起飞后地面监控出现 AIR R WING LEAK 警告信息",
+        cc: "出现相同的故障信息，并造成飞机返航",
+        dd: "高",
+        ee: "高",
+        ff: "3"
       };
       _this.dialog = true;
     }

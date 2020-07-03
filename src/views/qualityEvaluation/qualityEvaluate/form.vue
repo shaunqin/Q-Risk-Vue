@@ -10,11 +10,42 @@
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
       <el-row>
         <el-col :span="24">
-          <el-form-item label="一级菜单" prop="aa">
-            <el-input v-model="form.aa" style="width: 100%;" />
+          <el-form-item label="产品" prop="aa">
+            <el-select v-model="form.aa" placeholder="请选择产品" style="width: 100%;">
+              <el-option
+                v-for="item in option"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="二级菜单" prop="bb">
-            <el-input v-model="form.bb" style="width: 100%;" />
+          <el-form-item label="质量评价表" prop="bb">
+            <el-select v-model="form.bb" placeholder style="width: 100%;">
+              <el-option
+                v-for="item in pList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="评价表字段">
+            <el-table :data="data" size="mini">
+              <el-table-column label="名称">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.aa" placeholder=""></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column label="备注">
+                 <template slot-scope="scope">
+                  <el-input v-model="scope.row.bb" placeholder=""></el-input>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-form-item>
+          <el-form-item label="备注">
+            <el-input v-model="form.cc" placeholder type="textarea" rows="3"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -39,14 +70,38 @@ export default {
         bb: "",
         cc: "",
         dd: "",
-        ee: "",
+        ee: ""
       },
       roleSelect: [],
       formRules: {
         aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
         bb: [{ required: true, message: "请填写名称", trigger: "blur" }]
       },
-      entArr: []
+      entArr: [],
+      option: [
+        { label: "定检产品", value: "1" },
+        { label: "发动机APU产品", value: "2" },
+        { label: "附件产品", value: "3" },
+        { label: "航线产品", value: "4" }
+      ],
+      qList: [],
+      totalList: [
+        { label: "出厂检发现问题万时率", value: "1", pid: "1" },
+        { label: "定检出厂首班机械原因不正常万时率", value: "2", pid: "1" },
+        { label: "定检出场一周机械原因不正常万时率", value: "3", pid: "1" },
+        { label: "客户满意度调查平均值", value: "4", pid: "1" },
+        { label: "客户质量投诉", value: "5", pid: "1" },
+        { label: "质量事件调查万时率", value: "6", pid: "1" },
+        { label: "发动机APU基础数据", value: "7", pid: "2" },
+        { label: "产品质量评价体系分项指标", value: "8", pid: "3" },
+        { label: "附件产品质量评价数据2020优化版", value: "9", pid: "3" },
+        { label: "航线不正常千次率", value: "10", pid: "4" },
+        { label: "航线机组报告率", value: "11", pid: "4" },
+        { label: "客户质量投诉万分率", value: "12", pid: "4" },
+        { label: "质量事件调查万次率", value: "13", pid: "4" },
+        { label: "重复故障率", value: "14", pid: "4" }
+      ],
+      data: []
     };
   },
   props: {
@@ -56,6 +111,28 @@ export default {
     }
   },
   created() {},
+  watch: {
+    "form.aa": {
+      handler(val) {
+        if (val) {
+          this.form.bb = "";
+          this.pList = this.totalList.filter(r => r.pid == val);
+        }
+      }
+    },
+    "form.bb": {
+      handler(val) {
+        let label = this.pList.find(r => r.value == val).label;
+          this.data=[];
+        for (let i = 0; i < 3; i++) {
+          this.data.push({
+            aa: label + " - 字段" + i,
+            bb: "备注" + i
+          });
+        }
+      }
+    }
+  },
   methods: {
     cancel() {
       this.resetForm();
@@ -134,7 +211,7 @@ export default {
         bb: "",
         cc: "",
         dd: "",
-        ee: "",
+        ee: ""
       };
       this.roleSelect = [];
     },

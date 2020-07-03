@@ -470,12 +470,12 @@ export const asyncRoutes = [
         name: 'qualityEvaluate',
         meta: { title: 'qualityEvaluate' }
       },
-      // {
-      //   path: 'customerComplaints',
-      //   component: () => import('@/views/qualityEvaluation/customerComplaints/index'),
-      //   name: 'customerComplaints',
-      //   meta: { title: 'customerComplaints' }
-      // }
+      {
+        path: 'qualityFillIn',
+        component: () => import('@/views/qualityEvaluation/fillIn/index'),
+        name: 'qualityFillIn',
+        meta: { title: 'qualityFillIn' }
+      }
     ]
   },
   /* {

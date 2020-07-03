@@ -33,7 +33,6 @@
       <el-table-column type="index" width="50" />
       <el-table-column prop="aa" label="信息来源" width="100" />
       <el-table-column prop="bb" label="发生日期" width="100" />
-      <el-table-column prop="dd" label="机型" />
       <el-table-column prop="ee" label="事件概述" />
       <el-table-column prop="ff" label="原因分析" width="120" />
       <el-table-column prop="gg" label="责任单位" />
