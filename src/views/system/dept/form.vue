@@ -4,28 +4,18 @@
     :close-on-click-modal="false"
     :before-close="cancel"
     :visible.sync="dialog"
-    :title="isAdd ? '新增数据' : '编辑数据'"
+    :title="isAdd ? '新增功能' : '编辑功能'"
     custom-class="common_dialog"
   >
-    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="70px">
-      <el-form-item v-if="form.parentId || isAdd" label="父级">
-        <el-select v-model="form.parentId" placeholder="请选择" class="select">
-          <el-option
-            v-for="item in data"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
+    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="auto">
+      <el-form-item label="父级">
+        <department :value="form.parentCode" @change="deptChange" :text="name" disabled />
       </el-form-item>
-      <el-form-item label="字典描述" prop="name">
-        <el-input v-model="form.dicDesc" style="width: 100%;" />
+      <el-form-item label="名称(中文)" prop="departmentNameCn">
+        <el-input v-model="form.departmentNameCn" style="width: 100%;" />
       </el-form-item>
-      <el-form-item label="字典编码">
-        <el-input v-model="form.dicCode" style="width: 100%;" />
-      </el-form-item>
-      <el-form-item label="值">
-        <el-input v-model="form.dicValue" style="width: 100%;" />
+      <el-form-item label="名称(英文)">
+        <el-input v-model="form.departmentNameEn" style="width: 100%;" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -36,16 +26,13 @@
 </template>
 
 <script>
-import { add, modify } from "@/api/dict";
-
+import { add, modify } from "@/api/dept";
+import department from "@/components/Department";
 export default {
+  components: { department },
   props: {
     isAdd: {
       type: Boolean,
-      required: true
-    },
-    data: {
-      type: Array,
       required: true
     }
   },
@@ -54,15 +41,15 @@ export default {
       loading: false,
       dialog: false,
       form: {
-        dicCode: "",
-        dicDesc: "",
-        dicValue: "",
-        parentId: null
+        departmentNameCn: "",
+        departmentNameEn: "",
+        parentCode: ""
       },
       rules: {
-        funcDesc: [{ required: true, message: "请输入名称", trigger: "blur" }]
+        departmentNameCn: [{ required: true, message: "请输入名称", trigger: "blur" }]
       },
-      entArr: []
+      entArr: [],
+      name:""
     };
   },
   created() {},
@@ -94,7 +81,6 @@ export default {
           this.resetForm();
           this.loading = false;
           this.$parent.init();
-          this.$parent.getParentId();
         })
         .catch(err => {
           console.log(err);
@@ -115,7 +101,6 @@ export default {
           this.resetForm();
           this.loading = false;
           this.$parent.init();
-          this.$parent.getParentId();
         })
         .catch(err => {
           console.log(err);
@@ -126,18 +111,17 @@ export default {
       this.dialog = false;
       this.$refs["form"].resetFields();
       this.form = {
-        dicCode: "",
-        dicDesc: "",
-        dicValue: "",
-        parentId: null
+        departmentNameCn: "",
+        departmentNameEn: "",
+        parentCode: ""
       };
+    },
+    deptChange(val) {
+      console.log(val);
     }
   }
 };
 </script>
 
-<style lang="scss">
-.el-select-dropdown {
-  z-index: 9999999999999999 !important;
-}
+<style scoped>
 </style>

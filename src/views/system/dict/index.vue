@@ -1,23 +1,7 @@
 <template>
   <div class="app-container">
     <eform ref="form" :is-add="isAdd" :data="parentIdList" />
-    <!-- <Search :query="query" /> -->
     <div class="head-container">
-      <!-- <el-input
-        v-model="query"
-        clearable
-        placeholder="请输入你要搜索的内容"
-        style="width: 200px;"
-        class="filter-item"
-        @keyup.enter.native="toQuery(query)"
-      />
-      <el-button
-        class="filter-item"
-        size="mini"
-        type="success"
-        icon="el-icon-search"
-        @click="toQuery(query)"
-      >搜索</el-button>-->
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
     </div>
     <!--表格渲染-->
@@ -31,12 +15,12 @@
       row-key="key"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
       @selection-change="selectionChange"
+      border
     >
-      <el-table-column type="index" width="80" />
-      <el-table-column prop="name" label="字典描述" />
-      <el-table-column prop="dicCode" label="字典编码">
-        <template slot-scope="scope">
-          <span>{{ scope.row.externMap.dicCode }}</span>
+      <el-table-column prop="name" label="字典描述" align="left" />
+      <el-table-column label="字典编码">
+        <template slot-scope="{row}">
+          <span>{{row.externMap.dicCode}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="value" label="值" />
@@ -54,15 +38,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <!--分页组件-->
-    <el-pagination
-      :total="total"
-      :current-page="page"
-      style="margin-top: 8px;text-align: right"
-      layout="total, prev, pager, next, sizes"
-      @size-change="sizeChange"
-      @current-change="pageChange"
-    />
   </div>
 </template>
 
@@ -90,6 +65,8 @@ export default {
       },
       selections: [], // 列表选中列
       parentIdList: []
+      // data:[],
+      // loading:true
     };
   },
   created() {
@@ -108,10 +85,8 @@ export default {
   },
   methods: {
     beforeInit() {
-      this.url =
-        "/sys_mgr/sys_dic/query/pageList/" + this.page + "/" + this.size;
-      const sort = "id,desc";
-      this.params = { page: this.page, size: this.size, sort: sort };
+      // this.url =        "/sys_mgr/sys_dic/query/allList/" + this.page + "/" + this.size;
+      this.url = "/sys_mgr/sys_dic/query/tree";
       return true;
     },
     subDelete(row) {
@@ -230,7 +205,7 @@ export default {
         const parent = [];
         let obj = {};
         for (let i = 0; i < data.length; i++) {
-          if (!data[i].externMap.parentId) {
+          if (!data[i].extern.parentId) {
             obj.value = data[i].key;
             obj.label = data[i].name;
             parent.push(obj);
@@ -253,20 +228,8 @@ export default {
 </script>
 
 <style lang="scss">
-.demo-table-expand {
-  font-size: 0;
-}
-.demo-table-expand label {
-  width: 70px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-right: 0;
-  margin-bottom: 0;
-  width: 100%;
-}
-.demo-table-expand .el-form-item__content {
-  font-size: 12px;
+.el-table--border td:first-child .cell {
+  padding-left: 40px;
 }
 .filter-item {
   > .el-input__inner {

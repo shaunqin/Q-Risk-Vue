@@ -30,8 +30,8 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="name" label="系统名称" />
-      <el-table-column prop="remark" label="备注" />
+      <el-table-column prop="diskSystemName" label="系统名称" />
+      <el-table-column prop="diskSystemDesc" label="备注" />
       <el-table-column prop="belong" label="所属产品" />
       <el-table-column prop="aa" label="是否启用" width="120px" >
         <template slot-scope="scope">
@@ -83,15 +83,14 @@ export default {
       ]
     };
   },
-  mounted() {
-    this.loading = false;
-    this.data = [
-      { name: "维修实施", remark: "生产调度、航线维护、航线勤务、故障处理、机体维修、工具设备使用、器材使用", belong: "航线维护" , aa: "是"},
-      { name: "生产控制", remark: "工卡编写、维修计划、指令控制、生产支援与协调、运行控制、数据管理", belong: "航线维护", aa: "是" },
-      { name: "工程技术", remark: "排故、飞机状态监控、AO下发、技术资料管理", belong: "航线维护" , aa: "是"},
-    ];
+  created () {
+    this.init();
   },
   methods: {
+    beforeInit(){
+      this.url=`/info_mgr/prod_mgr/query/pageList/${this.page}/${this.size}`;
+      return true;
+    },
     toQuery(name) {
       this.$message("功能正在创建中");
       // if (!name) {

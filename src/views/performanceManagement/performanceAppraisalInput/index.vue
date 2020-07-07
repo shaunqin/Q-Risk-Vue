@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import initData from "../../mixins/initData";
+import initData from "@/mixins/initData";
 export default {
   mixins: [initData],
   data() {

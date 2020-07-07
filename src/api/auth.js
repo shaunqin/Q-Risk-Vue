@@ -24,3 +24,27 @@ export function resetAllModuleRoleAuth() {
     method: 'put'
   })
 }
+
+// 新增菜单
+export function add(data) {
+  return request({
+    url: '/sys_mgr/module_mgr/add',
+    method: 'post',
+    data
+  })
+}
+// 编辑菜单
+export function modify(data) {
+  return request({
+    url: '/sys_mgr/module_mgr/modify',
+    method: 'put',
+    data
+  })
+}
+// 删除菜单
+export function del(id) {
+  return request({
+    url: `/sys_mgr/module_mgr/delete/${id}`,
+    method: 'delete'
+  })
+}

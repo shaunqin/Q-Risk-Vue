@@ -84,41 +84,10 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  // {
-  //   path: '/audit',
-  //   component: Layout,
-  //   redirect: '/audit/plan',
-  //   name: 'Audit',
-  //   meta: {
-  //     title: 'audit',
-  //     icon: 'component'
-  //   },
-  //   children: [
-  //     {
-  //       path: 'plan',
-  //       component: () => import('@/views/audit/audit-plan'),
-  //       name: 'AuditPlan',
-  //       meta: { title: 'auditPlan' }
-  //     },
-  //     {
-  //       path: 'task',
-  //       component: () => import('@/views/audit/audit-task'),
-  //       name: 'AuditTask',
-  //       meta: { title: 'auditTask' }
-  //     },
-  //     {
-  //       path: 'conclusion',
-  //       component: () => import('@/views/audit/audit-conclusion'),
-  //       name: 'AuditConclusion',
-  //       hidden: true,
-  //       meta: { title: 'auditConclusion' }
-  //     }
-  //   ]
-  // },
   {
     path: '/notice',
     component: Layout,
-    meta: { title: 'agencyMatters', icon: 'notice' },
+    meta: { title: 'agencyMatters', icon: 'notice'},
     redirect: 'noRedirect',
     children: [
       {
@@ -443,19 +412,7 @@ export const asyncRoutes = [
         component: () => import('@/views/hiddenDangerInvestigation/safetyHazardControlList/index'),
         name: 'safetyHazardControlList',
         meta: { title: 'hiddenDangerInvestigation' }
-      },
-      // {
-      //   path: 'safetyHazardsStatistics',
-      //   component: () => import('@/views/hiddenDangerInvestigation/safetyHazardsStatistics/index'),
-      //   name: 'safetyHazardsStatistics',
-      //   meta: { title: 'safetyHazardsStatistics' }
-      // },
-      // {
-      //   path: 'safetyHazardsFollow',
-      //   component: () => import('@/views/hiddenDangerInvestigation/safetyHazardsFollow/index'),
-      //   name: 'safetyHazardsFollow',
-      //   meta: { title: 'safetyHazardsFollow' }
-      // },
+      }
     ]
   },
   {
@@ -478,11 +435,11 @@ export const asyncRoutes = [
       }
     ]
   },
-  /* {
+  {
     path: '/system',
     component: Layout,
-    redirect: '/system/user',
-    name: 'SystemManage',
+    redirect: 'noRedirect',
+    name: 'systemManage',
     meta: {
       title: 'systemManage',
       icon: 'component'
@@ -513,7 +470,7 @@ export const asyncRoutes = [
         meta: { title: 'dataDictionary' }
       }
     ]
-  }, */
+  }, 
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

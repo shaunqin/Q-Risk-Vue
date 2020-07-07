@@ -1,6 +1,6 @@
 // const jwt = require('jsonwebtoken')
-// import { login, logout } from '@/api/login'
-// import { findEmployByUserName } from '@/api/emplotee'
+import { login, logout } from '@/api/login'
+import { findCurrentUser } from '@/api/emplotee'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -27,6 +27,7 @@ const state = {
 
 const mutations = {
   SET_TOKEN: (state, token) => {
+    setToken('Token', token)
     state.token = token
   },
   SET_JWTOBJ: (state, jwtObj) => {
@@ -45,35 +46,29 @@ const mutations = {
 
 const actions = {
   // user login
-  login({ commit }, userInfo) {
-    // const { userName, password } = userInfo
+  login({ commit, dispatch }, userInfo) {
+    const { userName, password } = userInfo
     return new Promise((resolve, reject) => {
-      commit('SET_TOKEN', 'token')
-      setToken('Token', 'token')
-      resolve(true)
-      /* login({ userName: userName.trim(), password: password }).then(response => {
+      login({
+        userName: userName.trim(),
+        password: password
+      }).then(response => {
         if (response.ok === false) {
           resolve(false)
         }
-        commit('SET_TOKEN', response)
-        setToken('Token', response)
+        // console.log(response)
+        commit('SET_TOKEN', response.obj)
         resolve(true)
       }).catch(error => {
         reject(error)
-      }) */
+      })
     })
   },
 
   // get user info
   getInfo({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      const data = {
-        roles: ['admin']
-      }
-      commit('SET_ROLES', ['admin'])
-      resolve(data)
-      /* commit('SET_JWTOBJ', jwt.decode(state.token))
-      findEmployByUserName(state.jwtObj.sub).then(response => {
+      findCurrentUser().then(response => {
         if (response.code === '200') {
           const data = {
             roles: ['admin']
@@ -86,24 +81,14 @@ const actions = {
         }
       }).catch(error => {
         reject(error)
-      }) */
+      })
     })
   },
 
   // user logout
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      commit('SET_TOKEN', '')
-      commit('SET_ROLES', [])
-      removeToken('Token')
-      resetRouter()
-
-      // reset visited views and cached views
-      // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
-      dispatch('tagsView/delAllViews', null, { root: true })
-
-      resolve()
-      /* logout().then(() => {
+      logout().then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
         removeToken('Token')
@@ -116,7 +101,7 @@ const actions = {
         resolve()
       }).catch(error => {
         reject(error)
-      }) */
+      })
     })
   },
 
@@ -134,23 +119,23 @@ const actions = {
   changeRoles({ commit, dispatch }, role) {
     return new Promise(async resolve => {
       const token = role + '-token'
-
       commit('SET_TOKEN', token)
       setToken(token)
-
       const { roles } = await dispatch('getInfo')
-
       resetRouter()
-
       // generate accessible routes map based on roles
       const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
-
       // dynamically add accessible routes
       router.addRoutes(accessRoutes)
-
       // reset visited views and cached views
       dispatch('tagsView/delAllViews', null, { root: true })
+      resolve()
+    })
+  },
 
+  changeToken({ commit }, token) {
+    return new Promise(resolve => {
+      commit('SET_TOKEN', token)
       resolve()
     })
   }

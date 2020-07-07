@@ -33,7 +33,15 @@ export const detail = (id) => {
 // 分页
 export const getPageList = (page, size) => {
   return request({
-    url: `/sys_mgr/sys_dic/query/pageList/${page}/${size}`,
+    url: `/sys_mgr/sys_dic/query/allList`,
+    method: 'get'
+  })
+}
+
+// 字典树
+export const getDictTree = () => {
+  return request({
+    url: `/sys_mgr/sys_dic/query/tree`,
     method: 'get'
   })
 }

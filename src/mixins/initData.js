@@ -24,7 +24,7 @@ export default {
       }
       return new Promise((resolve, reject) => {
         this.loading = true
-        initData(this.url).then(res => {
+        initData(this.url,this.params).then(res => {
           if (res.code === '200') {
             this.data = res.obj
             this.nodeData = res.obj

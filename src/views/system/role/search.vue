@@ -1,0 +1,37 @@
+<template>
+  <el-form :model="queryForm" size="mini" inline class="search-form">
+    <el-form-item label="部门">
+      <department :value="queryForm.deptId" @change="change" />
+    </el-form-item>
+    <el-form-item label="名称">
+      <el-input v-model="queryForm.roleDesc" placeholder="请输入工号" style="width:130px"></el-input>
+    </el-form-item>
+    <el-form-item label="编号">
+      <el-input v-model="queryForm.code" placeholder="请输入姓名" style="width:130px"></el-input>
+    </el-form-item>
+  </el-form>
+</template>
+
+<script>
+import department from "@/components/Department";
+export default {
+  components: { department },
+  data() {
+    return {
+      queryForm: { deptId: "", roleDesc: "", code: "" }
+    };
+  },
+  methods: {
+    change(val) {
+      this.queryForm.deptId = val;
+      console.log(val);
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.search-form{
+  display: inline;
+}
+</style>

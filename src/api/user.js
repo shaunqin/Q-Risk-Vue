@@ -46,3 +46,11 @@ export const findPermissions = (params) => {
     params
   })
 }
+
+// 查询路由
+export const getRouters = () => {
+  return request({
+    url: '/sys_mgr/getRouters',
+    method: 'get'
+  })
+}
