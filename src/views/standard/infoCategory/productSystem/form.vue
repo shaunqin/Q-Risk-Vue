@@ -10,14 +10,46 @@
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="100px">
       <el-row>
         <el-col :span="24">
-          <el-form-item label="系统名称" prop="name">
-            <el-input v-model="form.name" style="width: 100%;" />
+          <el-form-item label="所属产品" prop="productId">
+            <el-select
+              v-model="form.productId"
+              size="mini"
+              clearable
+              placeholder="请选择产品"
+              style="width: 100%;"
+            >
+              <el-option
+                v-for="item in data"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="备注" prop="remark">
-            <el-input v-model="form.remark" style="width: 100%;" />
+          <el-form-item label="系统名称" prop="systemId">
+            <el-select
+              v-model="form.systemId"
+              size="mini"
+              clearable
+              placeholder="请选择系统"
+              style="width: 100%;"
+            >
+              <el-option
+                v-for="item in systemList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="所属产品" prop="belong">
-            <el-input v-model="form.belong" style="width: 100%;" />
+          <el-form-item label="备注">
+            <el-input v-model="form.diskSystemDesc" style="width: 100%;" />
+          </el-form-item>
+          <el-form-item label="启用">
+            <el-radio-group v-model="form.enable">
+              <el-radio label="1">是</el-radio>
+              <el-radio label="0">否</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-col>
       </el-row>
@@ -30,35 +62,43 @@
 </template>
 
 <script>
-import { add, modify } from "@/api/emplotee.js";
+import { addProd, modifyProd } from "@/api/standard";
 import { re } from "../../../../utils/config-re";
-
+import { queryDictByName } from "@/api/dict";
 export default {
   data() {
     return {
       loading: false,
       dialog: false,
       form: {
-        name: "",
-        remark: "",
-        belong: ""
+        systemId: "",
+        diskSystemDesc: "",
+        productId: "",
+        enable: ""
       },
-      roleSelect: [],
       formRules: {
-        name: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        remark: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        belong: [{ required: true, message: "请填写名称", trigger: "blur" }]
+        systemId: [
+          { required: true, message: "请填写系统名称", trigger: "blur" }
+        ],
+        productId: [{ required: true, message: "请选择产品", trigger: "blur" }]
       },
-      entArr: []
+      entArr: [],
+      systemList: []
     };
   },
   props: {
     isAdd: {
       type: Boolean,
       required: true
+    },
+    data: {
+      type: Array,
+      required: true
     }
   },
-  created() {},
+  created() {
+    this.getSystemList();
+  },
   methods: {
     cancel() {
       this.resetForm();
@@ -66,33 +106,15 @@ export default {
     doSubmit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          // this.loading = true;
-          // if (this.isAdd) {
-          //   this.doAdd()
-          // } else this.doModify()
-
-          this.dialog = false;
-          this.$message({
-            message: "添加成功",
-            type: "success"
-          });
-          this.resetForm();
+          this.loading = true;
+          if (this.isAdd) {
+            this.doAdd()
+          } else this.doModify()
         }
       });
     },
     doAdd() {
-      // this.delwithRoleList()
-      const data = this.roleSelect;
-      let arr = [];
-      for (let i = 0; i < data.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = data[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
-      add(this.form)
+      addProd(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -111,7 +133,7 @@ export default {
         });
     },
     doModify() {
-      modify(this.form)
+      modifyProd(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -133,46 +155,22 @@ export default {
       this.dialog = false;
       this.$refs["form"].resetFields();
       this.form = {
-        name: "",
-        remark: "",
-        belong: ""
+        systemId: "",
+        diskSystemDesc: "",
+        productId: "",
+        enable: ""
       };
-      this.roleSelect = [];
     },
-    roleChange(e) {
-      if (e.length <= 1) {
-        this.form.roleList = e[0];
-      }
-      let arr = [];
-      for (let i = 0; i < e.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = e[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
-    },
-    roleRemove(e) {}
-    // delwithRoleList() {
-    //   const roleList = this.roleList
-    //   const checkList = this.form.roleList
-    //   let newList = []
-    //   let obj = {}
-    //   for (let i = 0; i < checkList.length; i++) {
-    //     for (let j = 0; j < roleList.length; j++) {
-    //       if (checkList[i] === roleList[j].id) {
-    //         obj.id = Number(checkList[i])
-    //         obj.code = roleList[j].code
-    //         obj.roleDesc = roleList[j].roleDesc
-    //         // obj.sn = roleList[j].sn
-    //         newList.push(obj)
-    //         obj = {}
-    //       }
-    //     }
-    //   }
-    //   this.form.roleList = newList
-    // }
+    getSystemList() {
+      queryDictByName("system").then(res => {
+        res.obj[0].children.map(item => {
+          this.systemList.push({
+            label: item.name,
+            value: item.value
+          });
+        });
+      });
+    }
   }
 };
 </script>

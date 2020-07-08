@@ -2,7 +2,13 @@
   <div class="app-container">
     <eform ref="form" :is-add="isAdd" :data="parentIdList" />
     <div class="head-container">
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add(0)">新增</el-button>
+      <el-button
+        class="filter-item"
+        size="mini"
+        type="success"
+        icon="el-icon-plus"
+        @click="add('0')"
+      >新增</el-button>
     </div>
 
     <!--表格渲染-->
@@ -16,16 +22,20 @@
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
       >
         <el-table-column label="菜单名称" prop="name" align="left"></el-table-column>
-        <el-table-column label="路径" prop="value"></el-table-column>
+        <el-table-column label="图标" width="80">
+          <template slot-scope="{row}">
+            <svg-icon v-if="!!row.externMap.icon" :icon-class="row.externMap.icon"></svg-icon>
+          </template>
+        </el-table-column>
+        <el-table-column label="排序" width="80">
+          <template slot-scope="{row}">{{row.externMap.orderNum}}</template>
+        </el-table-column>
+        <el-table-column label="组件路径" align="left">
+          <template slot-scope="{row}">{{row.externMap.component}}</template>
+        </el-table-column>
         <el-table-column label="操作" width="200px" align="right" fixed="right">
           <template slot-scope="scope">
-            <el-button
-              v-if="scope.row.externMap.parentId==null"
-              size="mini"
-              type="success"
-              icon="el-icon-plus"
-              @click="add(scope.row.key)"
-            />
+            <el-button size="mini" type="success" icon="el-icon-plus" @click="add(scope.row.key)" />
             <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
             <el-button
               slot="reference"
@@ -88,12 +98,15 @@ export default {
       let _this = this.$refs.form;
       _this.form = {
         id: row.key,
-        isMenu: row.externMap.isMenu + "",
-        moduleCode: row.externMap.moduleCode,
+        isMenu: row.externMap.isMenu,
+        icon: row.externMap.icon || "",
         moduleDesc: row.name,
+        isFrame: row.externMap.isFrame,
+        component: row.externMap.component,
         modulePath: row.value,
         orderNum: row.externMap.orderNum,
-        parentId: row.externMap.parentId
+        parentId: row.externMap.parentId || "0",
+        enable: row.externMap.enable
       };
       _this.dialog = true;
     },

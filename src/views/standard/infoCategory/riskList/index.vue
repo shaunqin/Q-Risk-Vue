@@ -10,6 +10,7 @@
         style="width: 200px;"
         class="filter-item"
       />
+      <el-checkbox border size="mini" v-model="enable" :true-label="1" :false-label="0" class="ck">启用</el-checkbox>
       <el-button
         class="filter-item"
         size="mini"
@@ -30,25 +31,34 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="aa" label="风险清单" />
-      <el-table-column prop="bb" label="分类备注" />
-      <el-table-column prop="cc" label="等级(概率法）" />
-      <el-table-column prop="dd" label="等级（最低标准）" />
-      <el-table-column prop="ee" label="事件等级标准" />
-      <el-table-column prop="ff" label="是否启用" width="120px" >
+      <el-table-column prop="riskNo" label="编号" />
+      <el-table-column prop="riskName" label="名称" />
+      <el-table-column prop="riskDesc" label="描述" min-width="200px" />
+      <el-table-column prop="levelDesc" label="等级描述" />
+      <el-table-column label="是否启用" width="120px">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.ff" active-value="是"></el-switch>
+          <el-switch
+            v-model="scope.row.enable"
+            :active-value="1"
+            :inactive-value="0"
+            @change="enableChange($event,scope.row.riskListId)"
+          ></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
+          <el-button
+            size="mini"
+            type="primary"
+            icon="el-icon-edit"
+            @click="edit(scope.row.riskListId)"
+          />
           <el-button
             slot="reference"
             type="danger"
             icon="el-icon-delete"
             size="mini"
-            @click="subDelete(scope.row.id)"
+            @click="subDelete(scope.row.riskListId)"
           />
         </template>
       </el-table-column>
@@ -68,7 +78,7 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import {riskList} from '@/dataSource'
+import { queryRiskDetail, delRisk, modifyRisk } from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
@@ -76,21 +86,34 @@ export default {
     return {
       isSuperAdmin: false,
       userInfo: {},
-      selections: []
+      selections: [],
+      enable: 0
     };
   },
+  // watch: {
+  //   enable(val){
+  //     if(val){
+  //       this.params.enable=val;
+  //     }else{
+  //       this.params.enable=val;
+  //     }
+  //   }
+  // },
   mounted() {
-    this.loading = false;
-    this.data = riskList;
+    this.init();
   },
   methods: {
+    beforeInit() {
+      this.url = `/info_mgr/riskList_mgr/query/pageList/${this.page}/${this.size}`;
+      return true;
+    },
     toQuery(name) {
-      this.$message("功能正在创建中");
-      // if (!name) {
-      //   this.page = 1;
-      //   this.init();
-      //   return;
-      // }
+      this.page = 1;
+      if (!name) this.params = {};
+      else this.params = { riskName: name };
+      if (this.enable) this.params.enable = this.enable;
+      else delete this.params.enable;
+      this.init();
     },
     // 选择切换
     selectionChange: function(selections) {
@@ -101,26 +124,39 @@ export default {
       this.isAdd = true;
       this.$refs.form.dialog = true;
     },
-    edit(row) {
+    edit(id) {
       this.isAdd = false;
       let _this = this.$refs.form;
-      _this.form = Object.assign({}, row);
-      _this.dialog = true;
+      queryRiskDetail(id).then(res => {
+        _this.form = res.obj;
+        _this.dialog = true;
+      });
     },
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!"
+          delRisk(id).then(res => {
+            this.$message({
+              type: "success",
+              message: "删除成功!"
+            });
+            this.init();
           });
         })
-        .catch(() => {
+        .catch(() => {});
+    },
+    enableChange(val, id) {
+      let modelForm = {};
+      queryRiskDetail(id).then(res => {
+        modelForm = res.obj;
+        modelForm.enable = val;
+        modifyRisk(modelForm).then(res => {
           this.$message({
-            type: "info",
-            message: "已取消删除"
+            type: "success",
+            message: "更新成功!"
           });
         });
+      });
     }
   }
 };
@@ -134,5 +170,9 @@ export default {
 }
 .head-container {
   margin-bottom: 20px;
+}
+.ck{
+  margin: 0 15px;
+  top: -2px;
 }
 </style>

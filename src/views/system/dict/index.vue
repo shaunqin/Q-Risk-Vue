@@ -227,8 +227,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.el-table--border td:first-child .cell {
+<style lang="scss" scoped>
+/deep/ .el-table--border td:first-child .cell {
   padding-left: 40px;
 }
 .filter-item {

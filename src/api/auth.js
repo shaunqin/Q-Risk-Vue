@@ -48,3 +48,11 @@ export function del(id) {
     method: 'delete'
   })
 }
+
+// 菜单树
+export function getMenuTree() {
+  return request({
+    url: `/sys_mgr/module_mgr/query/tree`,
+    method: 'get'
+  })
+}

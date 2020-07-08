@@ -3,6 +3,7 @@ import store from '@/store'
 import {
   getToken
 } from '@/utils/auth'
+import router from '../router/index'
 
 // create an axios instance
 const service = axios.create({
@@ -51,6 +52,10 @@ service.interceptors.response.use(
   }, (error) => {
     if (error.response) {
       if (error.response.status === 401) {
+        router.push({
+          path:'/login',
+          redirect: encodeURIComponent(window.location.href)
+        })
         return false
       }
       return Promise.reject(error)

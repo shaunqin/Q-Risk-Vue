@@ -45,3 +45,11 @@ export const getDictTree = () => {
     method: 'get'
   })
 }
+
+// 查询第一层字典树
+export const queryDictByName = (name) => {
+  return request({
+    url: `/sys_mgr/sys_dic/query/dict/${name}`,
+    method: 'get'
+  })
+}

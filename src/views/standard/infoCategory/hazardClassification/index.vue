@@ -30,14 +30,14 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="aa" label="危险源" />
-      <el-table-column prop="bb" label="描述" />
-      <el-table-column prop="cc" label="问题分类" />
-      <el-table-column prop="dd" label="诱因" />
-      <el-table-column prop="ee" label="风险" />
-      <el-table-column prop="ff" label="是否启用" width="120px" >
+      <el-table-column prop="diskNo" label="编号" />
+      <el-table-column prop="diskName" label="危险源" />
+      <el-table-column prop="diskDesc" label="描述" />
+      <el-table-column prop="incentives" label="诱因" />
+      <el-table-column prop="diskRiskVos" label="风险" />
+      <el-table-column label="是否启用" width="120px">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.ff" active-value="是"></el-switch>
+          <el-switch v-model="scope.row.enable" active-value="1" inactive-value="0"></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="130px" align="center" fixed="right">
@@ -68,7 +68,6 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import { hazardClassification } from "@/dataSource";
 export default {
   components: { eform },
   mixins: [initData],
@@ -79,11 +78,14 @@ export default {
       selections: []
     };
   },
-  mounted() {
-    this.loading = false;
-    this.data = hazardClassification;
+  created() {
+    this.init();
   },
   methods: {
+    beforeInit() {
+      this.url = `/info_mgr/hazard_mgr/query/list`;
+      return true;
+    },
     toQuery(name) {
       this.$message("功能正在创建中");
       // if (!name) {

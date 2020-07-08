@@ -27,14 +27,16 @@
       style="width: 100%;"
       @selection-change="selectionChange"
     >
-      <el-table-column type="index" width="50" />
-      <el-table-column prop="aa" label="编号" />
-      <el-table-column prop="bb" label="危险源" />
-      <el-table-column prop="cc" label="是否启用" >
+      <el-table-column type="index" width="50" :index="getIndex" />
+      <el-table-column prop="cate" label="类别" />
+      <el-table-column prop="diskNo" label="编号" />
+      <el-table-column prop="diskName" label="危险源" />
+      <el-table-column prop="diskDesc" label="描述" />
+      <!-- <el-table-column prop="cc" label="是否启用" >
         <template slot-scope="scope">
           <el-switch v-model="scope.row.cc" active-value="是"></el-switch>
         </template>
-      </el-table-column>
+      </el-table-column>-->
     </el-table>
     <!--分页组件-->
     <el-pagination
@@ -50,7 +52,7 @@
 
 <script>
 import initData from "@/mixins/initData";
-import {incentiveList} from '@/dataSource'
+import { incentiveList } from "@/dataSource";
 export default {
   mixins: [initData],
   data() {
@@ -61,17 +63,18 @@ export default {
     };
   },
   mounted() {
-    this.loading = false;
-    this.data = incentiveList;
+    this.init();
   },
   methods: {
+    beforeInit() {
+      this.url = `/info_mgr/incentive_mgr/query/pageList/${this.page}/${this.size}`;
+      return true;
+    },
     toQuery(name) {
-      this.$message("功能正在创建中");
-      // if (!name) {
-      //   this.page = 1;
-      //   this.init();
-      //   return;
-      // }
+      this.page = 1;
+      if (!name) this.params = {};
+      else this.params = { diskName: name };
+      this.init();
     },
     // 选择切换
     selectionChange: function(selections) {
@@ -102,6 +105,9 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    getIndex(index) {
+      return (this.page - 1) * this.size + index + 1;
     }
   }
 };

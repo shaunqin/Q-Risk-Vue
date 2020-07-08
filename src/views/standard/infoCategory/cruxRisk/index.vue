@@ -17,7 +17,7 @@
         icon="el-icon-search"
         @click="toQuery(query)"
       >搜索</el-button>
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
+     
     </div>
     <!--表格渲染-->
     <el-table
@@ -30,38 +30,17 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="aa" label="关键风险" />
-      <el-table-column prop="bb" label="编号" />
-      <el-table-column prop="cc" label="危险源" />
-      <el-table-column label="操作" width="130px" align="center" fixed="right">
-        <template slot-scope="scope">
-          <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
-          <el-button
-            slot="reference"
-            type="danger"
-            icon="el-icon-delete"
-            size="mini"
-            @click="subDelete(scope.row.id)"
-          />
-        </template>
-      </el-table-column>
+      <el-table-column prop="riskName" label="关键风险" />
+      <el-table-column prop="riskNo" label="编号" />
+      <el-table-column prop="riskDesc" label="危险源" />
     </el-table>
-    <!--分页组件-->
-    <el-pagination
-      :total="total"
-      :current-page="page"
-      style="margin-top: 8px;text-align: right"
-      layout="total, prev, pager, next, sizes"
-      @size-change="sizeChange"
-      @current-change="pageChange"
-    />
+    
   </div>
 </template>
 
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import {cruxRisk} from '@/dataSource'
 export default {
   name: "dataSources",
   components: { eform },
@@ -74,17 +53,18 @@ export default {
     };
   },
   mounted() {
-    this.loading = false;
-    this.data = cruxRisk;
+   this.init();
   },
   methods: {
+    beforeInit() {
+      this.url = `/info_mgr/riskList_mgr/query/criticalRisk`;
+      return true;
+    },
     toQuery(name) {
-      this.$message("功能正在创建中");
-      // if (!name) {
-      //   this.page = 1;
-      //   this.init();
-      //   return;
-      // }
+      this.page = 1;
+      if (!name) this.params = {};
+      else this.params = { riskName: name };
+      this.init();
     },
     // 选择切换
     selectionChange: function(selections) {

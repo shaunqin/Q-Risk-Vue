@@ -1,8 +1,8 @@
 <template>
   <div class="dataSource">
-    <eform ref="form" :is-add="isAdd"></eform>
+    <eform ref="form" :is-add="isAdd" :data="options"></eform>
     <div class="head-container">
-      <el-select v-model="query" size="mini" placeholder="请选择产品">
+      <el-select v-model="query" size="mini" clearable placeholder="请选择产品">
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -29,13 +29,18 @@
       style="width: 100%;"
       @selection-change="selectionChange"
     >
-      <el-table-column type="index" width="50" />
-      <el-table-column prop="diskSystemName" label="系统名称" />
+      <el-table-column type="index" width="50" :index="getIndex" />
+      <el-table-column prop="system" label="系统名称" />
       <el-table-column prop="diskSystemDesc" label="备注" />
-      <el-table-column prop="belong" label="所属产品" />
-      <el-table-column prop="aa" label="是否启用" width="120px" >
+      <el-table-column prop="product" label="所属产品" />
+      <el-table-column label="是否启用" width="120px">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.aa" active-value="是"></el-switch>
+          <el-switch
+            v-model="scope.row.enable"
+            active-value="1"
+            inactive-value="0"
+            @change="enableChange($event,scope.row)"
+          ></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="130px" align="center" fixed="right">
@@ -46,7 +51,7 @@
             type="danger"
             icon="el-icon-delete"
             size="mini"
-            @click="subDelete(scope.row.id)"
+            @click="subDelete(scope.row.diskSystemId)"
           />
         </template>
       </el-table-column>
@@ -66,6 +71,8 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
+import { queryDictByName } from "@/api/dict";
+import { queryProdDetail, delProd, modifyProd } from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
@@ -74,30 +81,23 @@ export default {
       isSuperAdmin: false,
       userInfo: {},
       selections: [],
-      options: [
-        { value: "航线维护", label: "航线维护" },
-        { value: "飞机定检/大修", label: "飞机定检/大修" },
-        { value: "附件/起落架", label: "附件/起落架" },
-        { value: "发动机/APU", label: "发动机/APU" },
-        { value: "飞机客舱", label: "飞机客舱" }
-      ]
+      options: []
     };
   },
-  created () {
+  created() {
+    this.getProductList();
     this.init();
   },
   methods: {
-    beforeInit(){
-      this.url=`/info_mgr/prod_mgr/query/pageList/${this.page}/${this.size}`;
+    beforeInit() {
+      this.url = `/info_mgr/prod_mgr/query/pageList/${this.page}/${this.size}`;
       return true;
     },
     toQuery(name) {
-      this.$message("功能正在创建中");
-      // if (!name) {
-      //   this.page = 1;
-      //   this.init();
-      //   return;
-      // }
+      this.page = 1;
+      if (!name) this.params = {};
+      else this.params = { productId: name };
+      this.init();
     },
     // 选择切换
     selectionChange: function(selections) {
@@ -111,23 +111,49 @@ export default {
     edit(row) {
       this.isAdd = false;
       let _this = this.$refs.form;
-      _this.form = Object.assign({}, row);
-      _this.dialog = true;
+      queryProdDetail(row.diskSystemId).then(res => {
+        _this.form = res.obj;
+        _this.dialog = true;
+      });
     },
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!"
+          delProd(id).then(res => {
+            this.$message({
+              type: "success",
+              message: "删除成功!"
+            });
+            this.init();
           });
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
+        .catch(() => {});
+    },
+    getProductList() {
+      queryDictByName("product").then(res => {
+        res.obj[0].children.map(item => {
+          this.options.push({
+            label: item.name,
+            value: item.value
           });
         });
+      });
+    },
+    enableChange(val, row) {
+      let modelForm = {};
+      queryProdDetail(row.diskSystemId).then(res => {
+        modelForm = res.obj;
+        modelForm.enable = val;
+        modifyProd(modelForm).then(res2 => {
+          this.$message({
+            message: "更新成功",
+            type: "success"
+          });
+        });
+      });
+    },
+    getIndex(index) {
+      return (this.page - 1) * this.size + index + 1;
     }
   }
 };

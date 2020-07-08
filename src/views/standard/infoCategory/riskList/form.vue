@@ -10,22 +10,38 @@
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
       <el-row>
         <el-col :span="24">
-          <el-form-item label="风险清单" prop="aa">
-            <el-input v-model="form.aa" style="width: 100%;" />
+          <el-form-item label="编号" prop="riskNo">
+            <el-input v-model="form.riskNo" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="分类备注" prop="bb">
-            <el-input v-model="form.bb" style="width: 100%;" />
+          <el-form-item label="名称" prop="riskName">
+            <el-input v-model="form.riskName" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="等级(概率法）">
-            <el-input v-model="form.cc" style="width: 100%;" />
+          <el-form-item label="描述">
+            <el-input v-model="form.riskDesc" style="width: 100%;" />
           </el-form-item>
         </el-col>
-         <el-col :span="24">
-          <el-form-item label="等级（最低标准）">
-            <el-input v-model="form.dd" style="width: 100%;" />
+        <el-col :span="24">
+          <el-form-item label="等级描述">
+            <el-select v-model="form.levels" placeholder>
+              <el-option
+                v-for="item in levelList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="事件等级标准">
-            <el-input v-model="form.ee" style="width: 100%;" />
+          <el-form-item label="启用">
+            <el-radio-group v-model="form.enable">
+              <el-radio :label="1">是</el-radio>
+              <el-radio :label="0">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="关键风险">
+            <el-radio-group v-model="form.isKey">
+              <el-radio :label="1">是</el-radio>
+              <el-radio :label="0">否</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-col>
       </el-row>
@@ -38,7 +54,8 @@
 </template>
 
 <script>
-import { add, modify } from "@/api/emplotee.js";
+import { addRisk, modifyRisk } from "@/api/standard";
+import { queryDictByName } from "@/api/dict";
 import { re } from "../../../../utils/config-re";
 
 export default {
@@ -47,18 +64,20 @@ export default {
       loading: false,
       dialog: false,
       form: {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: "",
+        riskNo: "",
+        riskName: "",
+        riskDesc: "",
+        levels: 0,
+        enable: 0,
+        isKey: 0
       },
       roleSelect: [],
       formRules: {
         aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
         bb: [{ required: true, message: "请填写名称", trigger: "blur" }]
       },
-      entArr: []
+      entArr: [],
+      levelList: []
     };
   },
   props: {
@@ -67,7 +86,9 @@ export default {
       required: true
     }
   },
-  created() {},
+  created() {
+    this.getLevelList();
+  },
   methods: {
     cancel() {
       this.resetForm();
@@ -75,33 +96,15 @@ export default {
     doSubmit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          // this.loading = true;
-          // if (this.isAdd) {
-          //   this.doAdd()
-          // } else this.doModify()
-
-          this.dialog = false;
-          this.$message({
-            message: "添加成功",
-            type: "success"
-          });
-          this.resetForm();
+          this.loading = true;
+          if (this.isAdd) {
+            this.doAdd();
+          } else this.doModify();
         }
       });
     },
     doAdd() {
-      // this.delwithRoleList()
-      const data = this.roleSelect;
-      let arr = [];
-      for (let i = 0; i < data.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = data[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
-      add(this.form)
+      addRisk(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -120,7 +123,7 @@ export default {
         });
     },
     doModify() {
-      modify(this.form)
+      modifyRisk(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -142,48 +145,25 @@ export default {
       this.dialog = false;
       this.$refs["form"].resetFields();
       this.form = {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: "",
+        riskNo: "",
+        riskName: "",
+        riskDesc: "",
+        levels: "",
+        levelDesc: "",
+        enable: ""
       };
       this.roleSelect = [];
     },
-    roleChange(e) {
-      if (e.length <= 1) {
-        this.form.roleList = e[0];
-      }
-      let arr = [];
-      for (let i = 0; i < e.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = e[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
-    },
-    roleRemove(e) {}
-    // delwithRoleList() {
-    //   const roleList = this.roleList
-    //   const checkList = this.form.roleList
-    //   let newList = []
-    //   let obj = {}
-    //   for (let i = 0; i < checkList.length; i++) {
-    //     for (let j = 0; j < roleList.length; j++) {
-    //       if (checkList[i] === roleList[j].id) {
-    //         obj.id = Number(checkList[i])
-    //         obj.code = roleList[j].code
-    //         obj.roleDesc = roleList[j].roleDesc
-    //         // obj.sn = roleList[j].sn
-    //         newList.push(obj)
-    //         obj = {}
-    //       }
-    //     }
-    //   }
-    //   this.form.roleList = newList
-    // }
+    getLevelList() {
+      queryDictByName("severity_level").then(res => {
+        res.obj[0].children.map(item => {
+          this.levelList.push({
+            label: item.name,
+            value: Number(item.value)
+          });
+        });
+      });
+    }
   }
 };
 </script>

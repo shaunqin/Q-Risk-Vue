@@ -129,23 +129,23 @@ export default {
     this.$nextTick(() => {
       this.init();
     });
-    this.getRole();
+    // this.getRole();
 
-    const userToken = getToken("Token");
-    const token = jwtDecode(userToken);
-    console.log(token);
-    findEmployByUserName(token.sub).then(res => {
-      console.log(res);
-      if (res.code === "200") {
-        this.userInfo = res.obj;
-        const data = res.obj.roleList;
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].code === "ROLE_super_admin") {
-            this.isSuperAdmin = true;
-          }
-        }
-      }
-    });
+    // const userToken = getToken("Token");
+    // const token = jwtDecode(userToken);
+    // console.log(token);
+    // findEmployByUserName(token.sub).then(res => {
+    //   console.log(res);
+    //   if (res.code === "200") {
+    //     this.userInfo = res.obj;
+    //     const data = res.obj.roleList;
+    //     for (let i = 0; i < data.length; i++) {
+    //       if (data[i].code === "ROLE_super_admin") {
+    //         this.isSuperAdmin = true;
+    //       }
+    //     }
+    //   }
+    // });
   },
   beforeRouteLeave: function(to, from, next) {
     if (to.path === this.toPath) {
@@ -233,6 +233,7 @@ export default {
     toQuery() {
       let _this = this.$refs.search;
       this.queryForm = _this.queryForm;
+      this.page = 1;
       this.init();
     },
     // 获取角色列表
