@@ -3,7 +3,6 @@
     v-model="selectValue"
     :options="options"
     :normalizer="normalizer"
-    :default-expand-level="1"
     :disabled="disabled"
   />
 </template>
@@ -11,13 +10,14 @@
 <script>
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import { queryDepartmentTree } from "@/api/emplotee";
+import { getDictTree } from "@/api/dict";
 export default {
   components: { Treeselect },
   data() {
     return {
       options: [],
       treeData: [],
+      name: "请选择部门"
     };
   },
   computed: {
@@ -41,11 +41,15 @@ export default {
     }
   },
   created() {
-    queryDepartmentTree().then(res => {
+    getDictTree().then(res => {
       this.options = res.obj;
     });
   },
   methods: {
+    nodeClick(data, node, item) {
+      this.name = data.name;
+      this.selectValue = data.key;
+    },
     normalizer(node) {
       return {
         id: node.key,

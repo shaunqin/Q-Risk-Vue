@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 
 // 部门树
-export const getDeptTree = () => {
+export const getDeptTree = (params) => {
   return request({
     url: '/sys_mgr/department_mgr/query/tree',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
@@ -31,5 +32,13 @@ export const deleteDept = (deptId) => {
   return request({
     url: `/sys_mgr/department_mgr/delete/${deptId}`,
     method: 'delete'
+  })
+}
+
+// 根据id查询父部门
+export const queryParentDept = (deptId) => {
+  return request({
+    url: `/sys_mgr/department_mgr/query/parent/${deptId}`,
+    method: 'get'
   })
 }

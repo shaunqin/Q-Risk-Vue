@@ -1,7 +1,22 @@
 <template>
   <div class="app-container">
-    <eform ref="form" :is-add="isAdd" :data="parentIdList" />
+    <eform ref="form" :is-add="isAdd" />
     <div class="head-container">
+      <el-input
+        size="mini"
+        v-model="query"
+        clearable
+        placeholder="请输入你要搜索的内容"
+        style="width: 200px;"
+        class="filter-item"
+      />
+      <el-button
+        class="filter-item"
+        size="mini"
+        type="success"
+        icon="el-icon-search"
+        @click="toQuery(query)"
+      >搜索</el-button>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
     </div>
     <!--表格渲染-->
@@ -63,8 +78,7 @@ export default {
         type: Boolean,
         default: true
       },
-      selections: [], // 列表选中列
-      parentIdList: []
+      selections: [] // 列表选中列
       // data:[],
       // loading:true
     };
@@ -73,7 +87,6 @@ export default {
     this.$nextTick(() => {
       this.init();
     });
-    this.getParentId();
   },
   beforeRouteLeave: function(to, from, next) {
     if (to.path === this.toPath) {
@@ -85,7 +98,6 @@ export default {
   },
   methods: {
     beforeInit() {
-      // this.url =        "/sys_mgr/sys_dic/query/allList/" + this.page + "/" + this.size;
       this.url = "/sys_mgr/sys_dic/query/tree";
       return true;
     },
@@ -112,9 +124,6 @@ export default {
                 this.$message.error(res.msg);
               }
               this.delLoading = false;
-              this.parentIdList = [];
-              this.getParentId();
-              this.dleChangePage();
               this.init();
             })
             .catch(err => {
@@ -140,9 +149,6 @@ export default {
                 this.$message.error(res.msg);
               }
               this.delLoading = false;
-              this.parentIdList = [];
-              this.getParentId();
-              this.dleChangePage();
               this.init();
             })
             .catch(err => {
@@ -166,7 +172,7 @@ export default {
             dicDesc: res.obj.name,
             dicValue: res.obj.value,
             dicCode: res.obj.extern.dicCode,
-            parentId: ""
+            parentId: res.obj.parentId
           };
           if (!res.obj.extern.parentId) {
             _this.form.parentId = null;
@@ -184,44 +190,9 @@ export default {
       this.selections = selections;
       this.$emit("selectionChange", { selections: selections });
     },
-    /* toQuery(id) {
-      if (!id) {
-        this.page = 1
-        this.init()
-        return
-      }
-      query(id).then((res) => {
-        if (res.code === '200') {
-          this.data = res.obj
-          // // this.init()
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-    }, */
-    getParentId() {
-      getPageList(1, 100).then(res => {
-        const data = res.obj;
-        const parent = [];
-        let obj = {};
-        for (let i = 0; i < data.length; i++) {
-          if (!data[i].extern.parentId) {
-            obj.value = data[i].key;
-            obj.label = data[i].name;
-            parent.push(obj);
-            obj = {};
-          }
-        }
-
-        // for (let i = 0; i < data.length; i++) {
-        //   for (let j = 0; j < parent.length; j++) {
-        //     if (data[i].externMap.parentId === parent[j].key) {
-        //       parent[j].children.push(data[i])
-        //     }
-        //   }
-        // }
-        this.parentIdList = parent;
-      });
+    toQuery(name) {
+      this.params = { dicDesc:name };
+      this.init();
     }
   }
 };

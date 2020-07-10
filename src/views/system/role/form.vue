@@ -8,7 +8,10 @@
     custom-class="common_dialog"
   >
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="70px">
-      <el-form-item label="角色名称" prop="name">
+      <el-form-item label="角色名称">
+        <department :value="form.deptPath" @change="change" style="width:100%;" />
+      </el-form-item>
+      <el-form-item label="角色名称">
         <el-input v-model="form.roleDesc" style="width: 100%;" />
       </el-form-item>
       <el-form-item label="角色编码">
@@ -26,9 +29,10 @@
 </template>
 
 <script>
-import { add, modify } from '@/api/role'
-
+import { add, modify } from "@/api/role";
+import department from "@/components/Department";
 export default {
+  components: { department },
   props: {
     isAdd: {
       type: Boolean,
@@ -37,84 +41,90 @@ export default {
   },
   data() {
     return {
-      loading: false, dialog: false,
+      loading: false,
+      dialog: false,
       form: {
-        roleDesc: '',
-        code: 'ROLE_',
+        deptPath: null,
+        roleDesc: "",
+        code: "ROLE_",
         sn: 0
       },
       rules: {
-        funcDesc: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
-        ]
+        funcDesc: [{ required: true, message: "请输入名称", trigger: "blur" }]
       },
       entArr: []
-    }
+    };
   },
-  created() {
-
-  },
+  created() {},
   methods: {
     cancel() {
-      this.resetForm()
+      this.resetForm();
     },
     doSubmit() {
-      this.$refs['form'].validate((valid) => {
+      this.$refs["form"].validate(valid => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           if (this.isAdd) {
-            this.doAdd()
-          } else this.doModify()
+            this.doAdd();
+          } else this.doModify();
         }
-      })
+      });
     },
     doAdd() {
-      add(this.form).then(res => {
-        if (res.code === '200') {
-          this.$message({
-            message: '添加成功',
-            type: 'success'
-          })
-        } else {
-          this.$message.error(res.msg)
-        }
-        this.resetForm()
-        this.loading = false
-        this.$parent.init()
-      }).catch(err => {
-        console.log(err)
-        this.loading = false
-      })
+      add(this.form)
+        .then(res => {
+          if (res.code === "200") {
+            this.$message({
+              message: "添加成功",
+              type: "success"
+            });
+          } else {
+            this.$message.error(res.msg);
+          }
+          this.resetForm();
+          this.loading = false;
+          this.$parent.init();
+        })
+        .catch(err => {
+          console.log(err);
+          this.loading = false;
+        });
     },
     doModify() {
-      modify(this.form).then(res => {
-        if (res.code === '200') {
-          this.$message({
-            message: '修改成功',
-            type: 'success'
-          })
-        } else {
-          this.$message.error(res.msg)
-        }
-        this.resetForm()
-        this.loading = false
-        this.$parent.init()
-      }).catch(err => {
-        console.log(err)
-        this.loading = false
-      })
+      modify(this.form)
+        .then(res => {
+          if (res.code === "200") {
+            this.$message({
+              message: "修改成功",
+              type: "success"
+            });
+          } else {
+            this.$message.error(res.msg);
+          }
+          this.resetForm();
+          this.loading = false;
+          this.$parent.init();
+        })
+        .catch(err => {
+          console.log(err);
+          this.loading = false;
+        });
     },
     resetForm() {
-      this.dialog = false
-      this.$refs['form'].resetFields()
+      this.dialog = false;
+      this.$refs["form"].resetFields();
       this.form = {
-        roleDesc: '',
-        code: 'ROLE_',
+        deptPath: null,
+        roleDesc: "",
+        code: "ROLE_",
         sn: 0
-      }
+      };
+    },
+    change(val) {
+      this.form.deptPath = val;
     }
   }
-}
+};
 </script>
 
 <style scoped>

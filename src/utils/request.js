@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from '@/store'
 import {
-  getToken
+  getToken, removeToken
 } from '@/utils/auth'
 import router from '../router/index'
 
@@ -48,13 +48,19 @@ service.interceptors.response.use(
         return Promise.reject(res)
       }
     }
+    if (res.code == '401') {
+      store.dispatch('user/logout').then(() => {
+        location.reload();
+      })
+
+      return Promise.reject(res)
+    }
     return res
   }, (error) => {
     if (error.response) {
-      if (error.response.status === 401) {
-        router.push({
-          path:'/login',
-          redirect: encodeURIComponent(window.location.href)
+      if (error.response.data.code == '401') {
+        store.dispatch('user/logout').then(() => {
+          location.reload();
         })
         return false
       }

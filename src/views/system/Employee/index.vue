@@ -46,10 +46,15 @@
     >
       <el-table-column type="index" width="50" />
       <el-table-column prop="realname" label="员工名称" />
-      <el-table-column prop="username" label="用户名" />
+      <el-table-column prop="sqlUserId" label="用户名" />
       <el-table-column prop="mobile" label="手机" />
       <el-table-column prop="mail" label="邮箱" />
-      <el-table-column prop="birthday" label="出生年月" />
+      <el-table-column prop="isSysUser" label="系统用户" >
+        <template slot-scope="{row}">
+          <span v-if="row.isSysUser=='1'">是</span>
+          <span v-else>否</span>
+        </template>
+      </el-table-column>
       <!-- <el-table-column prop="roleList" label="角色">
         <template slot-scope="scope">{{scope.row.list}}</template>
       </el-table-column>-->

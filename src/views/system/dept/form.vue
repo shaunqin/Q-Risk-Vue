@@ -9,7 +9,7 @@
   >
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="auto">
       <el-form-item label="父级">
-        <department :value="form.parentCode" @change="deptChange" :text="name" disabled />
+        <department :value="form.parentCode" @change="deptChange" :disabled="disabled" />
       </el-form-item>
       <el-form-item label="名称(中文)" prop="departmentNameCn">
         <el-input v-model="form.departmentNameCn" style="width: 100%;" />
@@ -46,10 +46,12 @@ export default {
         parentCode: ""
       },
       rules: {
-        departmentNameCn: [{ required: true, message: "请输入名称", trigger: "blur" }]
+        departmentNameCn: [
+          { required: true, message: "请输入名称", trigger: "blur" }
+        ]
       },
       entArr: [],
-      name:""
+      disabled: true
     };
   },
   created() {},
@@ -115,9 +117,11 @@ export default {
         departmentNameEn: "",
         parentCode: ""
       };
+      this.disabled=true;
     },
     deptChange(val) {
       console.log(val);
+      this.form.parentCode=val;
     }
   }
 };

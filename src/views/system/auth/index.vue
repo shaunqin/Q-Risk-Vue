@@ -2,6 +2,21 @@
   <div class="app-container">
     <eform ref="form" :is-add="isAdd" :data="parentIdList" />
     <div class="head-container">
+      <el-input
+        size="mini"
+        v-model="query"
+        clearable
+        placeholder="请输入你要搜索的内容"
+        style="width: 200px;"
+        class="filter-item"
+      />
+      <el-button
+        class="filter-item"
+        size="mini"
+        type="success"
+        icon="el-icon-search"
+        @click="toQuery(query)"
+      >搜索</el-button>
       <el-button
         class="filter-item"
         size="mini"
@@ -21,7 +36,12 @@
         default-expand-all
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
       >
-        <el-table-column label="菜单名称" prop="name" align="left"></el-table-column>
+        <el-table-column label="菜单名称" align="left">
+          <template slot-scope="{row}">
+            <span v-if="row.children.length==0" style="margin-left: -22px">{{row.name}}</span>
+            <span v-else>{{row.name}}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="图标" width="80">
           <template slot-scope="{row}">
             <svg-icon v-if="!!row.externMap.icon" :icon-class="row.externMap.icon"></svg-icon>
@@ -82,6 +102,11 @@ export default {
     }
   },
   methods: {
+    toQuery(name) {
+      if (!name) this.params = {};
+      else this.params = { moduleDesc:name };
+      this.init();
+    },
     beforeInit() {
       this.url = "/sys_mgr/module_mgr/query/tree";
       return true;
@@ -106,7 +131,8 @@ export default {
         modulePath: row.value,
         orderNum: row.externMap.orderNum,
         parentId: row.externMap.parentId || "0",
-        enable: row.externMap.enable
+        enable: row.externMap.enable,
+        moduleCode: row.externMap.moduleCode
       };
       _this.dialog = true;
     },

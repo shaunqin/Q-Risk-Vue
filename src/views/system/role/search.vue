@@ -1,7 +1,7 @@
 <template>
   <el-form :model="queryForm" size="mini" inline class="search-form">
     <el-form-item label="部门">
-      <department :value="queryForm.deptId" @change="change" />
+      <department :value="queryForm.deptId" @change="change" style="width:300px" />
     </el-form-item>
     <el-form-item label="名称">
       <el-input v-model="queryForm.roleDesc" placeholder="请输入工号" style="width:130px"></el-input>
@@ -18,7 +18,7 @@ export default {
   components: { department },
   data() {
     return {
-      queryForm: { deptId: "", roleDesc: "", code: "" }
+      queryForm: { deptId: null, roleDesc: "", code: "" }
     };
   },
   methods: {
@@ -33,5 +33,13 @@ export default {
 <style lang="scss" scoped>
 .search-form{
   display: inline;
+}
+/deep/ .vue-treeselect{
+  .vue-treeselect__control{
+    height: 28px;
+    .vue-treeselect__single-value,.vue-treeselect__placeholder{
+      line-height: 28px;
+    }
+  }
 }
 </style>

@@ -1,7 +1,30 @@
 <template>
   <div class="app-container">
     <eform ref="form" :is-add="isAdd" />
-
+    <div class="head-container">
+      <el-input
+        size="mini"
+        v-model="query"
+        clearable
+        placeholder="请输入你要搜索的内容"
+        style="width: 200px;"
+        class="filter-item"
+      />
+      <el-button
+        class="filter-item"
+        size="mini"
+        type="success"
+        icon="el-icon-search"
+        @click="toQuery(query)"
+      >搜索</el-button>
+      <el-button
+        class="filter-item"
+        size="mini"
+        type="success"
+        icon="el-icon-plus"
+        @click="add()"
+      >新增</el-button>
+    </div>
     <!--表格渲染-->
     <el-table
       v-loading="loading"
@@ -14,15 +37,18 @@
       row-key="key"
       border
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      :expand-row-keys="['000003']"
     >
       >
       <el-table-column label="部门名称" align="left">
         <template slot-scope="{row}">
-          <span v-if="row.children.length==0" style="margin-left: -22px">{{row.name}}</span>
+          <span v-if="row.children&&row.children.length==0" style="margin-left: -22px">{{row.name}}</span>
           <span v-else>{{row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="key" label="key" />
+      <el-table-column label="部门名称(英文名)">
+        <template slot-scope="{row}">{{row.externMap.departmentNameEn}}</template>
+      </el-table-column>
       <el-table-column label="操作" width="230px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -49,7 +75,7 @@
 <script>
 import { format } from "@/utils/datetime";
 import eform from "./form";
-import { deleteDept, query, getDeptTree } from "@/api/dept";
+import { deleteDept, getDeptTree, queryParentDept } from "@/api/dept";
 
 export default {
   name: "Role",
@@ -68,7 +94,7 @@ export default {
         default: true
       },
       selections: [], // 列表选中列
-      queryForm: null,
+      queryForm: {},
       query: "",
       data: [],
       loading: true,
@@ -92,7 +118,7 @@ export default {
     format,
     init() {
       this.loading = true;
-      getDeptTree().then(res => {
+      getDeptTree(this.queryForm).then(res => {
         this.data = res.obj;
         this.loading = false;
       });
@@ -127,20 +153,24 @@ export default {
       this.isAdd = true;
       const _this = this.$refs.form;
       _this.dialog = true;
-      _this.name = row.name;
-      _this.form.parentCode = row.key;
+      if (row) {
+        _this.form.parentCode = row.key;
+      } else {
+        _this.disabled = false;
+      }
     },
     edit(row) {
       this.isAdd = false;
       const _this = this.$refs.form;
-      _this.name = row.externMap.departmentNameEn;
-      _this.form = {
-        departmentId: row.value,
-        departmentNameCn: row.name,
-        departmentNameEn: "",
-        parentCode: row.externMap.parentId
-      };
-      _this.dialog = true;
+      queryParentDept(row.value).then(res => {
+        _this.form = {
+          departmentId: row.value,
+          departmentNameCn: row.name,
+          departmentNameEn: row.externMap.departmentNameEn,
+          parentCode: res.obj.departmentPath
+        };
+        _this.dialog = true;
+      });
     },
     // 选择切换
     selectionChange: function(selections) {
@@ -148,7 +178,7 @@ export default {
       this.$emit("selectionChange", { selections: selections });
     },
     toQuery(name) {
-      if (!name) this.queryForm = null;
+      if (!name) this.queryForm = {};
       else this.queryForm = { departmentNameCn: name };
       this.init();
     }

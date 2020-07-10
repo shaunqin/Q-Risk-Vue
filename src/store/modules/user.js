@@ -53,7 +53,7 @@ const actions = {
         userName: userName.trim(),
         password: password
       }).then(response => {
-        if (response.ok === false) {
+        if (!response || response.ok === false) {
           resolve(false)
         }
         // console.log(response)

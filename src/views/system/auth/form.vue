@@ -39,6 +39,12 @@
           <el-form-item label="组件路径" prop="component">
             <el-input v-model="form.component" style="width: 100%;" />
           </el-form-item>
+          <el-form-item label="菜单状态">
+            <el-radio-group v-model="form.enable">
+              <el-radio label="1">是</el-radio>
+              <el-radio label="0">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="菜单排序" prop="orderNum">
@@ -47,11 +53,8 @@
           <el-form-item label="路由地址" prop="modulePath">
             <el-input v-model="form.modulePath" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="菜单状态">
-            <el-radio-group v-model="form.enable">
-              <el-radio label="1">是</el-radio>
-              <el-radio label="0">否</el-radio>
-            </el-radio-group>
+          <el-form-item label="菜单权限">
+            <el-input v-model="form.moduleCode" style="width: 100%;" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -67,9 +70,9 @@
 import { add, modify } from "@/api/auth";
 import department from "@/components/Department";
 import menuTreeSelect from "@/components/MenuTreeSelect";
-import iconSelect from '@/components/IconSelect/index'
+import iconSelect from "@/components/IconSelect/index";
 export default {
-  components: { department, menuTreeSelect,iconSelect },
+  components: { department, menuTreeSelect, iconSelect },
   props: {
     isAdd: {
       type: Boolean,
@@ -93,7 +96,8 @@ export default {
         modulePath: "",
         orderNum: 0,
         parentId: "0",
-        enable: ""
+        enable: "",
+        moduleCode: ""
       },
       rules: {
         departmentNameCn: [
@@ -163,12 +167,16 @@ export default {
       this.dialog = false;
       this.$refs["form"].resetFields();
       this.form = {
-        isMenu: "",
-        moduleCode: "",
+        isMenu: 0,
+        icon: "",
         moduleDesc: "",
+        isFrame: "",
+        component: "",
         modulePath: "",
-        orderNum: "",
-        parentId: "0"
+        orderNum: 0,
+        parentId: "0",
+        enable: "",
+        moduleCode: ""
       };
     },
     deptChange(val) {
@@ -177,7 +185,7 @@ export default {
     parentChange(val) {
       this.form.parentId = val;
     },
-     iconChange(val) {
+    iconChange(val) {
       this.form.icon = val;
     }
   }

@@ -12,7 +12,7 @@
     <el-form-item label="超级管理员">
       <el-radio-group v-model="queryForm.isSysUser">
         <el-radio label="1">是</el-radio>
-        <el-radio label="2">否</el-radio>
+        <el-radio label="0">否</el-radio>
       </el-radio-group>
     </el-form-item>
   </el-form>

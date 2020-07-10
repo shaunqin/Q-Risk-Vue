@@ -23,11 +23,23 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="80" />
+      <el-table-column prop="deptNameCn" label="部门" />
       <el-table-column prop="roleDesc" label="角色名称" />
-      <el-table-column prop="code" label="角色编码" />
       <el-table-column prop="sn" label="排序" />
-      <el-table-column label="操作" width="130px" align="center" fixed="right">
+      <el-table-column label="操作" width="360px" align="center" fixed="right">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="warning"
+            icon="el-icon-star-off"
+            @click="authSetting(scope.row)"
+          >数据权限</el-button>
+          <el-button
+            size="mini"
+            type="success"
+            icon="el-icon-user"
+            @click="userSetting(scope.row)"
+          >分配用户</el-button>
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row.id)" />
           <el-button
             slot="reference"
@@ -48,6 +60,10 @@
       @size-change="sizeChange"
       @current-change="pageChange"
     />
+    <!-- 数据权限 -->
+    <auth-setting ref="authSetting"></auth-setting>
+    <!-- 分配用户 -->
+    <user-setting ref="userSetting"></user-setting>
   </div>
 </template>
 
@@ -57,10 +73,12 @@ import { format } from "@/utils/datetime";
 import eform from "./form";
 import search from "./search";
 import { del, query, detail } from "@/api/role";
+import authSetting from "./components/authSetting";
+import userSetting from "./components/userSetting";
 
 export default {
   name: "Role",
-  components: { eform, search },
+  components: { eform, search, authSetting, userSetting },
   mixins: [initData],
   data() {
     return {
@@ -76,7 +94,7 @@ export default {
         default: true
       },
       selections: [], // 列表选中列
-      queryForm: null
+      queryForm: null,
     };
   },
   created() {
@@ -144,7 +162,8 @@ export default {
             id: res.obj.id,
             roleDesc: res.obj.roleDesc,
             code: res.obj.code,
-            sn: res.obj.sn
+            sn: res.obj.sn,
+            deptPath: res.obj.deptPath
           };
           _this.dialog = true;
         } else {
@@ -158,8 +177,19 @@ export default {
       this.$emit("selectionChange", { selections: selections });
     },
     toQuery() {
-      this.queryForm=this.$refs.search.queryForm;
-      this.init();  
+      this.queryForm = this.$refs.search.queryForm;
+      this.init();
+    },
+    authSetting(row) {
+      const _this = this.$refs.authSetting;
+      _this.roleId = row.id;
+      _this.dialog = true;
+    },
+    userSetting(row) {
+      const _this = this.$refs.userSetting;
+      _this.roleId = row.id;
+      _this.init();
+      _this.dialog = true;
     }
   }
 };

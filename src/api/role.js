@@ -44,3 +44,37 @@ export const query = (id) => {
     method: 'get'
   })
 }
+
+// 为某个角色授权
+export const setAuthByRoleId = (roleId,data) => {
+  return request({
+    url: `/sys_mgr/role_mgr/auth/${roleId}`,
+    method: 'post',
+    data
+  })
+}
+// 查询角色的权限
+export const queryRoleAuth = (roleId) => {
+  return request({
+    url: `/sys_mgr/role_mgr/query/authIds/${roleId}`,
+    method: 'get'
+  })
+}
+
+//为某个角色批量分配人员 
+export const setAssignUserByRoleId = (roleId,data) => {
+  return request({
+    url: `/sys_mgr/role_mgr/assign/${roleId}`,
+    method: 'post',
+    data
+  })
+}
+
+// 为某个角色批量/单个删除人员
+export const unassignByRoleId = (roleId,data) => {
+  return request({
+    url: `/sys_mgr/role_mgr/unassign/${roleId}`,
+    method: 'delete',
+    data
+  })
+}

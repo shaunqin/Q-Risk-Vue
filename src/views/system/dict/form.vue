@@ -9,14 +9,7 @@
   >
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="70px">
       <el-form-item v-if="form.parentId || isAdd" label="父级">
-        <el-select v-model="form.parentId" placeholder="请选择" class="select">
-          <el-option
-            v-for="item in data"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
+        <dict-select :value="form.parentId" @change="parentIdChange"></dict-select>
       </el-form-item>
       <el-form-item label="字典描述" prop="name">
         <el-input v-model="form.dicDesc" style="width: 100%;" />
@@ -37,15 +30,12 @@
 
 <script>
 import { add, modify } from "@/api/dict";
-
+import dictSelect from "@/components/DictTreeSelect";
 export default {
+  components: { dictSelect },
   props: {
     isAdd: {
       type: Boolean,
-      required: true
-    },
-    data: {
-      type: Array,
       required: true
     }
   },
@@ -131,6 +121,9 @@ export default {
         dicValue: "",
         parentId: null
       };
+    },
+    parentIdChange(val) {
+      this.form.parentId = val;
     }
   }
 };
