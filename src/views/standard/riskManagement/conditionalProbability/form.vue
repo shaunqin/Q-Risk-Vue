@@ -5,33 +5,27 @@
     :before-close="cancel"
     :visible.sync="dialog"
     :title="isAdd ? '新增数据来源' : '编辑数据来源'"
-    custom-class="big_dialog"
   >
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="100px">
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="编号" prop="aa">
-            <el-input v-model="form.aa" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="危险源" prop="bb">
-            <el-input v-model="form.bb" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="关联后果">
-            <el-input v-model="form.cc" style="width: 100%;" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="关联信息">
-            <el-input v-model="form.dd" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="信息总数">
-            <el-input v-model="form.ee" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="条件概率">
-            <el-input v-model="form.ff" style="width: 100%;" />
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item label="危险源">
+        <el-select v-model="form.diskId" placeholder="请选择危险源" filterable popper-class="disk-select" style="width:100%">
+          <el-option
+            v-for="item in diskList"
+            :key="item.diskId"
+            :label="item.diskDesc"
+            :value="item.diskId"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="关联后果">
+        <el-input-number v-model="form.relatedResult" />
+      </el-form-item>
+      <el-form-item label="关联信息">
+        <el-input-number v-model="form.relatedInformation" />
+      </el-form-item>
+      <el-form-item label="条件概率">
+        <el-input-number v-model="form.conditionalProbability" />
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
@@ -41,7 +35,11 @@
 </template>
 
 <script>
-import { add, modify } from "@/api/emplotee.js";
+import {
+  queryHazardList,
+  addProbability,
+  modifyProbability
+} from "@/api/standard";
 
 export default {
   data() {
@@ -49,13 +47,12 @@ export default {
       loading: false,
       dialog: false,
       form: {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: ""
+        diskId: "",
+        relatedResult: 0,
+        relatedInformation: 0,
+        conditionalProbability: 0
       },
-      roleSelect: [],
+      diskList: [],
       formRules: {
         aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
         bb: [{ required: true, message: "请填写名称", trigger: "blur" }]
@@ -69,7 +66,18 @@ export default {
       required: true
     }
   },
-  created() {},
+  created() {
+    queryHazardList().then(res => {
+      if (res.ok) {
+        res.obj.map(item => {
+          this.diskList.push({
+            diskId: item.diskId,
+            diskDesc: item.diskDesc
+          });
+        });
+      }
+    });
+  },
   methods: {
     cancel() {
       this.resetForm();
@@ -77,33 +85,15 @@ export default {
     doSubmit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          // this.loading = true;
-          // if (this.isAdd) {
-          //   this.doAdd()
-          // } else this.doModify()
-
-          this.dialog = false;
-          this.$message({
-            message: "添加成功",
-            type: "success"
-          });
-          this.resetForm();
+          this.loading = true;
+          if (this.isAdd) {
+            this.doAdd();
+          } else this.doModify();
         }
       });
     },
     doAdd() {
-      // this.delwithRoleList()
-      const data = this.roleSelect;
-      let arr = [];
-      for (let i = 0; i < data.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = data[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
-      add(this.form)
+      addProbability(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -122,7 +112,7 @@ export default {
         });
     },
     doModify() {
-      modify(this.form)
+      modifyProbability(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -144,60 +134,25 @@ export default {
       this.dialog = false;
       this.$refs["form"].resetFields();
       this.form = {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: ""
+        diskId: "",
+        relatedResult: 0,
+        relatedInformation: 0,
+        conditionalProbability: 0
       };
-      this.roleSelect = [];
-    },
-    roleChange(e) {
-      if (e.length <= 1) {
-        this.form.roleList = e[0];
-      }
-      let arr = [];
-      for (let i = 0; i < e.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = e[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
-    },
-    roleRemove(e) {}
-    // delwithRoleList() {
-    //   const roleList = this.roleList
-    //   const checkList = this.form.roleList
-    //   let newList = []
-    //   let obj = {}
-    //   for (let i = 0; i < checkList.length; i++) {
-    //     for (let j = 0; j < roleList.length; j++) {
-    //       if (checkList[i] === roleList[j].id) {
-    //         obj.id = Number(checkList[i])
-    //         obj.code = roleList[j].code
-    //         obj.roleDesc = roleList[j].roleDesc
-    //         // obj.sn = roleList[j].sn
-    //         newList.push(obj)
-    //         obj = {}
-    //       }
-    //     }
-    //   }
-    //   this.form.roleList = newList
-    // }
+    }
   }
 };
 </script>
 
-<style scoped>
-</style>
 
-<style lang="scss">
+<style lang="scss" scope>
 .roleSelect {
   width: 370px;
 }
 .el-select-dropdown {
   z-index: 99999999999999 !important;
+}
+.disk-select{
+  width: 400px;
 }
 </style>

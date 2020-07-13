@@ -30,12 +30,12 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="aa" label="编号" />
-      <el-table-column prop="bb" label="危险源" />
-      <el-table-column prop="cc" label="关联后果" />
-      <el-table-column prop="dd" label="关联信息" />
-      <el-table-column prop="ee" label="信息总数" />
-      <el-table-column prop="ff" label="条件概率" />
+      <el-table-column prop="diskId" label="编号" />
+      <el-table-column prop="diskDesc" label="危险源" min-width="200px" />
+      <el-table-column prop="relatedResult" label="关联后果" />
+      <el-table-column prop="relatedInformation" label="关联信息" />
+      <el-table-column prop="count" label="信息总数" />
+      <el-table-column prop="conditionalProbability" label="条件概率" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
@@ -64,7 +64,8 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import {conditionalProbability} from '@/dataSource';
+import { conditionalProbability } from "@/dataSource";
+import { detailProbability, delProbability } from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
@@ -76,17 +77,17 @@ export default {
     };
   },
   mounted() {
-    this.loading = false;
-    this.data = conditionalProbability;
+    this.init();
   },
   methods: {
+    beforeInit() {
+      this.url = `/info_mgr/probability_mgr/query/pageList/${this.page}/${this.size}`;
+      return true;
+    },
     toQuery(name) {
-      this.$message("功能正在创建中");
-      // if (!name) {
-      //   this.page = 1;
-      //   this.init();
-      //   return;
-      // }
+      this.params = { diskDesc: name };
+      this.page = 1;
+      this.init();
     },
     // 选择切换
     selectionChange: function(selections) {
@@ -100,23 +101,38 @@ export default {
     edit(row) {
       this.isAdd = false;
       let _this = this.$refs.form;
-      _this.form = Object.assign({}, row);
-      _this.dialog = true;
+      detailProbability(row.id).then(res => {
+        let { obj } = res;
+        if (res.ok) {
+          _this.form = {
+            id: obj.id,
+            diskId: obj.diskId,
+            relatedResult: obj.relatedResult,
+            relatedInformation: obj.relatedInformation,
+            conditionalProbability: obj.conditionalProbability
+          };
+          _this.dialog = true;
+        } else {
+          this.$message.error(res.msg);
+        }
+      });
     },
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!"
+          delProbability(id).then(res => {
+            if (res.ok) {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+              this.init();
+            } else {
+              this.$message.error(res.msg);
+            }
           });
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+        .catch(() => {});
     }
   }
 };

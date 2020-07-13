@@ -8,27 +8,41 @@
     custom-class="big_dialog"
   >
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
-      <el-row gutter="16">
-        <el-col :span="12">
-          <el-form-item label="危险源" prop="aa">
-            <el-input v-model="form.aa" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="描述" prop="bb">
-            <el-input v-model="form.bb" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="问题分类">
-            <el-input v-model="form.cc" style="width: 100%;" />
-          </el-form-item>
-        </el-col>
-         <el-col :span="12">
-          <el-form-item label="诱因">
-            <el-input v-model="form.dd" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="风险">
-            <el-input v-model="form.ee" style="width: 100%;" />
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item label="编号">
+        <el-input v-model="form.diskNo" style="width: 100%;" />
+      </el-form-item>
+      <el-form-item label="危险源" prop="diskName">
+        <el-input v-model="form.diskName" style="width: 100%;" />
+      </el-form-item>
+      <el-form-item label="描述" prop="diskDesc">
+        <el-input v-model="form.diskDesc" style="width: 100%;" />
+      </el-form-item>
+      <el-form-item label="诱因">
+        <el-select v-model="selectIncentives" multiple filterable style="width: 100%;">
+          <el-option
+            v-for="item in incentivesList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="风险">
+        <el-select v-model="selectRisks" multiple filterable style="width: 100%;">
+          <el-option
+            v-for="item in risksList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="是否启用">
+        <el-radio-group v-model="form.enable">
+          <el-radio :label="1">是</el-radio>
+          <el-radio :label="0">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
@@ -38,7 +52,12 @@
 </template>
 
 <script>
-import { add, modify } from "@/api/emplotee.js";
+import {
+  addHazard,
+  modifyHazard,
+  queryHazardList,
+  queryRiskLisk
+} from "@/api/standard";
 import { re } from "../../../../utils/config-re";
 
 export default {
@@ -47,18 +66,22 @@ export default {
       loading: false,
       dialog: false,
       form: {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: "",
+        diskNo: "",
+        diskName: "",
+        diskDesc: "",
+        enable: 0
       },
-      roleSelect: [],
       formRules: {
-        aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        bb: [{ required: true, message: "请填写名称", trigger: "blur" }]
+        diskName: [
+          { required: true, message: "请填写危险源", trigger: "blur" }
+        ],
+        diskDesc: [{ required: true, message: "请填写描述", trigger: "blur" }]
       },
-      entArr: []
+      entArr: [],
+      incentivesList: [],
+      risksList: [],
+      selectIncentives: [],
+      selectRisks: []
     };
   },
   props: {
@@ -67,7 +90,18 @@ export default {
       required: true
     }
   },
-  created() {},
+  created() {
+    this.queryIncentives();
+    this.queryRisks();
+  },
+  computed: {
+    quertForm() {
+      return {
+        incentives: this.selectIncentives.join(","),
+        risks: this.selectRisks.join(",")
+      };
+    }
+  },
   methods: {
     cancel() {
       this.resetForm();
@@ -75,33 +109,15 @@ export default {
     doSubmit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          // this.loading = true;
-          // if (this.isAdd) {
-          //   this.doAdd()
-          // } else this.doModify()
-
-          this.dialog = false;
-          this.$message({
-            message: "添加成功",
-            type: "success"
-          });
-          this.resetForm();
+          this.loading = true;
+          if (this.isAdd) {
+            this.doAdd();
+          } else this.doModify();
         }
       });
     },
     doAdd() {
-      // this.delwithRoleList()
-      const data = this.roleSelect;
-      let arr = [];
-      for (let i = 0; i < data.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = data[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
-      add(this.form)
+      addHazard(this.form, this.quertForm)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -120,7 +136,7 @@ export default {
         });
     },
     doModify() {
-      modify(this.form)
+      modifyHazard(this.form, this.quertForm)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -142,48 +158,38 @@ export default {
       this.dialog = false;
       this.$refs["form"].resetFields();
       this.form = {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: "",
+        diskNo: "",
+        diskName: "",
+        diskDesc: "",
+        enable: 0
       };
-      this.roleSelect = [];
+      this.selectIncentives = [];
+      this.selectRisks = [];
     },
-    roleChange(e) {
-      if (e.length <= 1) {
-        this.form.roleList = e[0];
-      }
-      let arr = [];
-      for (let i = 0; i < e.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = e[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
+    queryIncentives() {
+      queryHazardList().then(res => {
+        if (res.ok) {
+          res.obj.map(item => {
+            this.incentivesList.push({
+              value: item.diskId,
+              label: item.diskName
+            });
+          });
+        }
+      });
     },
-    roleRemove(e) {}
-    // delwithRoleList() {
-    //   const roleList = this.roleList
-    //   const checkList = this.form.roleList
-    //   let newList = []
-    //   let obj = {}
-    //   for (let i = 0; i < checkList.length; i++) {
-    //     for (let j = 0; j < roleList.length; j++) {
-    //       if (checkList[i] === roleList[j].id) {
-    //         obj.id = Number(checkList[i])
-    //         obj.code = roleList[j].code
-    //         obj.roleDesc = roleList[j].roleDesc
-    //         // obj.sn = roleList[j].sn
-    //         newList.push(obj)
-    //         obj = {}
-    //       }
-    //     }
-    //   }
-    //   this.form.roleList = newList
-    // }
+    queryRisks() {
+      queryRiskLisk().then(res => {
+        if (res.ok) {
+          res.obj.map(item => {
+            this.risksList.push({
+              value: item.riskListId,
+              label: item.riskName
+            });
+          });
+        }
+      });
+    }
   }
 };
 </script>

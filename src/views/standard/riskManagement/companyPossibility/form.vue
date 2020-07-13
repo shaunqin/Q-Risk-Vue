@@ -4,31 +4,27 @@
     :close-on-click-modal="false"
     :before-close="cancel"
     :visible.sync="dialog"
-    :title="isAdd ? '新增数据来源' : '编辑数据来源'"
-    custom-class="big_dialog"
+    :title="isAdd ? '新增' : '编辑'"
   >
-    <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="100px">
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="名称" prop="aa">
-            <el-input v-model="form.aa" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="部门" prop="bb">
-            <el-input v-model="form.bb" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="风险等级">
-            <el-input v-model="form.cc" style="width: 100%;" />
-          </el-form-item>
-        </el-col>
-         <el-col :span="12">
-          <el-form-item label="创建人">
-            <el-input v-model="form.dd" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="创建时间">
-            <el-input v-model="form.ee" style="width: 100%;" />
-          </el-form-item>
-        </el-col>
-      </el-row>
+    <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
+      <el-form-item label="部门">
+        <department :value="form.deptPath" @change="deptChange" />
+      </el-form-item>
+      <el-form-item label="界定标准" prop="standard">
+        <el-input v-model="form.standard" style="width: 100%;" />
+      </el-form-item>
+      <el-form-item label="风险等级">
+        <el-input-number v-model="form.riskLevel" />
+      </el-form-item>
+      <el-form-item label="量化分值">
+        <el-input-number v-model="form.score" />
+      </el-form-item>
+      <el-form-item label="是否启用">
+        <el-radio-group v-model="form.enable">
+          <el-radio label="1">是</el-radio>
+          <el-radio label="0">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
@@ -38,24 +34,30 @@
 </template>
 
 <script>
-import { add, modify } from "@/api/emplotee.js";
+import { addRiskLevel, modifyRiskLevel } from "@/api/standard";
+import department from "@/components/Department";
 
 export default {
+  components: {
+    department
+  },
   data() {
     return {
       loading: false,
       dialog: false,
       form: {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: "",
+        deptPath: null,
+        standard: "",
+        riskLevel: 0,
+        score: 0,
+        enable: "",
+        type: "1"
       },
       roleSelect: [],
       formRules: {
-        aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        bb: [{ required: true, message: "请填写名称", trigger: "blur" }]
+        standard: [
+          { required: true, message: "请填写界定标准", trigger: "blur" }
+        ]
       },
       entArr: []
     };
@@ -74,33 +76,15 @@ export default {
     doSubmit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          // this.loading = true;
-          // if (this.isAdd) {
-          //   this.doAdd()
-          // } else this.doModify()
-
-          this.dialog = false;
-          this.$message({
-            message: "添加成功",
-            type: "success"
-          });
-          this.resetForm();
+          this.loading = true;
+          if (this.isAdd) {
+            this.doAdd();
+          } else this.doModify();
         }
       });
     },
     doAdd() {
-      // this.delwithRoleList()
-      const data = this.roleSelect;
-      let arr = [];
-      for (let i = 0; i < data.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = data[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
-      add(this.form)
+      addRiskLevel(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -119,7 +103,7 @@ export default {
         });
     },
     doModify() {
-      modify(this.form)
+      modifyRiskLevel(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -141,48 +125,17 @@ export default {
       this.dialog = false;
       this.$refs["form"].resetFields();
       this.form = {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: "",
+        deptPath: null,
+        standard: "",
+        riskLevel: 0,
+        score: 0,
+        enable: "",
+        type: "1"
       };
-      this.roleSelect = [];
     },
-    roleChange(e) {
-      if (e.length <= 1) {
-        this.form.roleList = e[0];
-      }
-      let arr = [];
-      for (let i = 0; i < e.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = e[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
-    },
-    roleRemove(e) {}
-    // delwithRoleList() {
-    //   const roleList = this.roleList
-    //   const checkList = this.form.roleList
-    //   let newList = []
-    //   let obj = {}
-    //   for (let i = 0; i < checkList.length; i++) {
-    //     for (let j = 0; j < roleList.length; j++) {
-    //       if (checkList[i] === roleList[j].id) {
-    //         obj.id = Number(checkList[i])
-    //         obj.code = roleList[j].code
-    //         obj.roleDesc = roleList[j].roleDesc
-    //         // obj.sn = roleList[j].sn
-    //         newList.push(obj)
-    //         obj = {}
-    //       }
-    //     }
-    //   }
-    //   this.form.roleList = newList
-    // }
+    deptChange(val) {
+      this.form.deptPath = val;
+    }
   }
 };
 </script>

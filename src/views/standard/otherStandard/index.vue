@@ -30,14 +30,21 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="aa" label="编号" />
-      <el-table-column prop="bb" label="名称" />
-      <el-table-column prop="cc" label="备注" />
-      <el-table-column prop="dd" label="创建人" />
-      <el-table-column prop="ee" label="创建时间" />
-      <el-table-column prop="ff" label="是否启用" >
+      <el-table-column prop="standardNo" label="编号" />
+      <el-table-column prop="name" label="名称" />
+      <el-table-column prop="remark" label="备注" />
+      <el-table-column prop="creater" label="创建人" />
+      <el-table-column label="创建时间">
+        <template slot-scope="{row}">{{format(row.createTime)}}</template>
+      </el-table-column>
+      <el-table-column label="是否启用">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.ff" active-value="是"></el-switch>
+          <el-switch
+            v-model="scope.row.enable"
+            active-value="1"
+            inactive-value="0"
+            @change="enableChange($event,scope.row.id)"
+          />
         </template>
       </el-table-column>
       <el-table-column label="操作" width="130px" align="center" fixed="right">
@@ -68,6 +75,12 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
+import { format } from "@/utils/datetime";
+import {
+  detailOtherStand,
+  modifyOtherStand,
+  delOtherStand
+} from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
@@ -78,28 +91,21 @@ export default {
       selections: []
     };
   },
-  mounted() {
-    this.loading = false;
-    this.data = [
-      {
-        aa: "A1-00",
-        bb: "其他标准",
-        cc: "其他标准的详细说明",
-        dd: "admin",
-        ee: "2020-06-18",
-        ff: "是"
-      }
-    ];
- 
+  created() {
+    this.$nextTick(() => {
+      this.init();
+    });
   },
   methods: {
+    format,
+    beforeInit() {
+      this.url = `/info_mgr/other_standard_mgr/query/pageList/${this.page}/${this.size}`;
+      return true;
+    },
     toQuery(name) {
-      this.$message("功能正在创建中");
-      // if (!name) {
-      //   this.page = 1;
-      //   this.init();
-      //   return;
-      // }
+      this.page = 1;
+      this.params = { name };
+      this.init();
     },
     // 选择切换
     selectionChange: function(selections) {
@@ -113,23 +119,43 @@ export default {
     edit(row) {
       this.isAdd = false;
       let _this = this.$refs.form;
-      _this.form = Object.assign({}, row);
-      _this.dialog = true;
+      detailOtherStand(row.id).then(res => {
+        let { id, standardNo, name, remark, enable, files } = res.obj;
+        _this.form = {
+          id,
+          standardNo,
+          name,
+          remark,
+          enable
+        };
+        _this.files = files;
+        _this.dialog = true;
+      });
     },
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!"
+          delOtherStand(id).then(res => {
+            this.$message({
+              type: "success",
+              message: "删除成功!"
+            });
+            this.init();
           });
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+        .catch(() => {});
+    },
+    enableChange(val, id) {
+      detailOtherStand(id).then(res => {
+        let { id, enable } = res.obj;
+        let editForm = { id, enable };
+        editForm.enable = val;
+        modifyOtherStand(editForm).then(res => {
+          if (res.code == "200") this.$message.success("设置成功!");
+          else this.$message.error(res.msg || "系统错误");
+          this.init();
         });
+      });
     }
   }
 };

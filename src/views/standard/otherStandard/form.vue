@@ -10,20 +10,41 @@
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="100px">
       <el-row>
         <el-col :span="24">
-          <el-form-item label="编号" prop="aa">
-            <el-input v-model="form.aa" style="width: 100%;" />
+          <el-form-item label="编号" prop="standardNo">
+            <el-input v-model="form.standardNo" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="名称" prop="bb">
-            <el-input v-model="form.bb" style="width: 100%;" />
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="form.name" style="width: 100%;" />
           </el-form-item>
           <el-form-item label="备注">
-            <el-input v-model="form.cc" style="width: 100%;" />
+            <el-input v-model="form.remark" style="width: 100%;" />
           </el-form-item>
           <el-form-item label="是否启用">
-            <el-input v-model="form.ff" style="width: 100%;" />
+            <el-radio-group v-model="form.enable">
+              <el-radio label="1">是</el-radio>
+              <el-radio label="0">否</el-radio>
+            </el-radio-group>
           </el-form-item>
-            <el-form-item label="">
-            <el-button>上传</el-button>
+          <el-form-item label>
+            <eupload @success="uploadSuccess"></eupload>
+          </el-form-item>
+          <el-form-item label>
+            <el-table :data="files" size="mini">
+              <el-table-column label="文件名" prop="originFileName" />
+              <el-table-column label="文件大小">
+                <template slot-scope="{row}">{{(row.fileSize/1024).toFixed(2)}}Kb</template>
+              </el-table-column>
+              <el-table-column label="操作" width="100px">
+                <template slot-scope="{row,$index}">
+                  <el-tooltip content="预览" placement="left">
+                    <el-link type="primary" :underline="false" :href="row.url" target="_blank">
+                      <svg-icon icon-class="eye-open"></svg-icon>
+                    </el-link>
+                  </el-tooltip>&nbsp;&nbsp;
+                  <el-button type="text" icon="el-icon-delete" @click="delFile($index)"></el-button>
+                </template>
+              </el-table-column>
+            </el-table>
           </el-form-item>
         </el-col>
       </el-row>
@@ -36,26 +57,31 @@
 </template>
 
 <script>
-import { add, modify } from "@/api/emplotee.js";
-
+import { addOtherStand, modifyOtherStand } from "@/api/standard";
+import eupload from "@/components/Upload/index";
 export default {
+  components: {
+    eupload
+  },
   data() {
     return {
       loading: false,
       dialog: false,
       form: {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: "",
+        standardNo: "",
+        name: "",
+        remark: "",
+        enable: "",
+        filesId: []
       },
-      roleSelect: [],
       formRules: {
-        aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        bb: [{ required: true, message: "请填写名称", trigger: "blur" }]
+        standardNo: [
+          { required: true, message: "请填写编号", trigger: "blur" }
+        ],
+        name: [{ required: true, message: "请填写名称", trigger: "blur" }]
       },
-      entArr: []
+      entArr: [],
+      files: []
     };
   },
   props: {
@@ -65,6 +91,12 @@ export default {
     }
   },
   created() {},
+  watch: {
+    files(val) {
+      if (val && val.length > 0) this.form.filesId = val.map(r => r.id);
+      else this.form.filesId = [];
+    }
+  },
   methods: {
     cancel() {
       this.resetForm();
@@ -72,33 +104,15 @@ export default {
     doSubmit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          // this.loading = true;
-          // if (this.isAdd) {
-          //   this.doAdd()
-          // } else this.doModify()
-
-          this.dialog = false;
-          this.$message({
-            message: "添加成功",
-            type: "success"
-          });
-          this.resetForm();
+          this.loading = true;
+          if (this.isAdd) {
+            this.doAdd();
+          } else this.doModify();
         }
       });
     },
     doAdd() {
-      // this.delwithRoleList()
-      const data = this.roleSelect;
-      let arr = [];
-      for (let i = 0; i < data.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = data[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
-      add(this.form)
+      addOtherStand(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -117,7 +131,7 @@ export default {
         });
     },
     doModify() {
-      modify(this.form)
+      modifyOtherStand(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -139,48 +153,21 @@ export default {
       this.dialog = false;
       this.$refs["form"].resetFields();
       this.form = {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: "",
+        standardNo: "",
+        name: "",
+        remark: "",
+        enable: "",
+        filesId: []
       };
-      this.roleSelect = [];
+      this.files = [];
     },
-    roleChange(e) {
-      if (e.length <= 1) {
-        this.form.roleList = e[0];
-      }
-      let arr = [];
-      for (let i = 0; i < e.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = e[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
+    uploadSuccess(response) {
+      console.log(response);
+      this.files.push(response.obj);
     },
-    roleRemove(e) {}
-    // delwithRoleList() {
-    //   const roleList = this.roleList
-    //   const checkList = this.form.roleList
-    //   let newList = []
-    //   let obj = {}
-    //   for (let i = 0; i < checkList.length; i++) {
-    //     for (let j = 0; j < roleList.length; j++) {
-    //       if (checkList[i] === roleList[j].id) {
-    //         obj.id = Number(checkList[i])
-    //         obj.code = roleList[j].code
-    //         obj.roleDesc = roleList[j].roleDesc
-    //         // obj.sn = roleList[j].sn
-    //         newList.push(obj)
-    //         obj = {}
-    //       }
-    //     }
-    //   }
-    //   this.form.roleList = newList
-    // }
+    delFile(index) {
+      this.files.splice(index, 1);
+    }
   }
 };
 </script>

@@ -30,14 +30,24 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="aa" label="名称" />
-      <el-table-column prop="bb" label="部门" />
-      <el-table-column prop="cc" label="风险等级" />
-      <el-table-column prop="dd" label="创建人" />
-      <el-table-column prop="ee" label="创建时间" />
-      <el-table-column prop="ff" label="是否启用" >
+      <el-table-column prop="standard" label="界定标准" />
+      <el-table-column prop="deptNameCn" label="部门" />
+      <el-table-column label="风险等级">
+        <template slot-scope="{row}">{{row.riskLevel}}级</template>
+      </el-table-column>
+      <el-table-column prop="score" label="量化分值" />
+      <el-table-column prop="creater" label="创建人" />
+      <el-table-column label="创建时间">
+        <template slot-scope="{row}">{{format(row.createTime)}}</template>
+      </el-table-column>
+      <el-table-column label="是否启用">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.ff" active-value="是"></el-switch>
+          <el-switch
+            v-model="scope.row.enable"
+            active-value="1"
+            inactive-value="0"
+            @change="enableChange($event,scope.row.id)"
+          ></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="130px" align="center" fixed="right">
@@ -68,7 +78,8 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import {riskOtherStandard} from '@/dataSource';
+import { format } from "@/utils/datetime";
+import { detailRiskLevel, modifyRiskLevel, delRiskLevel } from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
@@ -80,17 +91,18 @@ export default {
     };
   },
   mounted() {
-    this.loading = false;
-    this.data = riskOtherStandard;
+    this.init();
   },
   methods: {
+    format,
+    beforeInit() {
+      this.url = `/info_mgr/riskLevel_mgr/query/pageList/${this.page}/${this.size}`;
+      this.params = { type: 1, unitType: 1, standard: this.query };
+      return true;
+    },
     toQuery(name) {
-      this.$message("功能正在创建中");
-      // if (!name) {
-      //   this.page = 1;
-      //   this.init();
-      //   return;
-      // }
+      this.page = 1;
+      this.init();
     },
     // 选择切换
     selectionChange: function(selections) {
@@ -104,23 +116,58 @@ export default {
     edit(row) {
       this.isAdd = false;
       let _this = this.$refs.form;
-      _this.form = Object.assign({}, row);
-      _this.dialog = true;
+      detailRiskLevel(row.id).then(res => {
+        if (res.code != "200") {
+          this.$message.error(res.msg);
+        } else {
+          let { obj } = res;
+          _this.form = {
+            id: obj.id,
+            deptPath: obj.deptPath,
+            standard: obj.standard,
+            riskLevel: obj.riskLevel,
+            score: obj.score,
+            enable: obj.enable,
+            type: obj.type
+          };
+          _this.dialog = true;
+        }
+      });
     },
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!"
+          delRiskLevel(id).then(res => {
+            if (res.code != "200") {
+              this.$message.error(res.msg);
+            } else {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+              this.init();
+            }
           });
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
+        .catch(() => {});
+    },
+    enableChange(val, id) {
+      detailRiskLevel(id).then(res => {
+        if (res.code != "200") {
+          this.$message.error(res.msg);
+        } else {
+          let editForm = {
+            id: res.obj.id,
+            enable: val
+          };
+          modifyRiskLevel(editForm).then(res => {
+            if (res.code != "200") {
+              this.$message.error(res.msg);
+            } else this.$message.success("设置成功");
+            this.init();
           });
-        });
+        }
+      });
     }
   }
 };

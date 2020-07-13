@@ -33,11 +33,36 @@
       <el-table-column prop="diskNo" label="编号" />
       <el-table-column prop="diskName" label="危险源" />
       <el-table-column prop="diskDesc" label="描述" />
-      <el-table-column prop="incentives" label="诱因" />
-      <el-table-column prop="diskRiskVos" label="风险" />
+      <el-table-column label="诱因">
+        <template slot-scope="{row}">
+          <div v-if="row.incentives&&row.incentives.length>0">
+            <span
+              v-for="item in row.incentives"
+              :key="item.diskId"
+              style="margin-right:10px"
+            >{{item.diskNo}}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="风险">
+        <template slot-scope="{row}">
+          <div v-if="row.diskRiskVos&&row.diskRiskVos.length>0">
+            <span
+              v-for="item in row.diskRiskVos"
+              :key="item.riskId"
+              style="margin-right:10px"
+            >{{item.riskNo}}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="是否启用" width="120px">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.enable" active-value="1" inactive-value="0"></el-switch>
+          <el-switch
+            v-model="scope.row.enable"
+            :active-value="1"
+            :inactive-value="0"
+            @change="enableChange($event,scope.row)"
+          ></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="130px" align="center" fixed="right">
@@ -48,26 +73,27 @@
             type="danger"
             icon="el-icon-delete"
             size="mini"
-            @click="subDelete(scope.row.id)"
+            @click="subDelete(scope.row.diskId)"
           />
         </template>
       </el-table-column>
     </el-table>
     <!--分页组件-->
-    <el-pagination
+    <!-- <el-pagination
       :total="total"
       :current-page="page"
       style="margin-top: 8px;text-align: right"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
       @current-change="pageChange"
-    />
+    />-->
   </div>
 </template>
 
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
+import { delHazard, modifyHazard } from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
@@ -87,12 +113,8 @@ export default {
       return true;
     },
     toQuery(name) {
-      this.$message("功能正在创建中");
-      // if (!name) {
-      //   this.page = 1;
-      //   this.init();
-      //   return;
-      // }
+      this.params = { diskDesc: name };
+      this.init();
     },
     // 选择切换
     selectionChange: function(selections) {
@@ -107,22 +129,44 @@ export default {
       this.isAdd = false;
       let _this = this.$refs.form;
       _this.form = Object.assign({}, row);
+      if (row.incentives && row.incentives.length > 0) {
+        _this.selectIncentives = row.incentives.map(r => r.diskId);
+      }
+      if (row.diskRiskVos && row.diskRiskVos.length > 0) {
+        _this.selectRisks = row.diskRiskVos.map(r => r.riskId);
+      }
       _this.dialog = true;
     },
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!"
+          delHazard(id).then(res => {
+            if (res.ok) {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+              this.init();
+            } else {
+              this.$message.error(res.msg);
+            }
           });
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+        .catch(() => {});
+    },
+    enableChange(val, row) {
+      let editForm = {
+        diskId: row.diskId,
+        enable: val
+      };
+      modifyHazard(editForm).then(res => {
+        if (res.ok) {
+          this.$message.success("设置成功");
+        } else {
+          this.$message.error(res.msg);
+        }
+        this.init();
+      });
     }
   }
 };
