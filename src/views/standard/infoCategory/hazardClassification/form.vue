@@ -96,10 +96,14 @@ export default {
   },
   computed: {
     quertForm() {
-      return {
-        incentives: this.selectIncentives.join(","),
-        risks: this.selectRisks.join(",")
-      };
+      let obj = {};
+      if (this.selectIncentives.length > 0) {
+        obj.incentives = this.selectIncentives.join(",");
+      }
+      if (this.selectRisks.length > 0) {
+        obj.risks = this.selectRisks.join(",");
+      }
+      return obj;
     }
   },
   methods: {
