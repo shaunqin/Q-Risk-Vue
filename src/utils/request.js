@@ -1,8 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
-import {
-  getToken, removeToken
-} from '@/utils/auth'
+import { getToken, removeToken } from '@/utils/auth'
 import router from '../router/index'
 
 // create an axios instance

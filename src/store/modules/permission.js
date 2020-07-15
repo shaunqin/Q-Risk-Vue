@@ -1,7 +1,7 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 import Layout from '@/layout'
 
-import {  getRouters} from '@/api/user'
+import { getRouters } from '@/api/user'
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
@@ -51,7 +51,7 @@ function filterAsyncRouter(asyncRouterMap) {
   })
 }
 export const loadView = (view) => { // 路由懒加载
-  return (resolve) =>  require([`@/views${view}`], resolve);
+  return (resolve) => require([`@/views${view}`], resolve);
 }
 
 const state = {
@@ -68,7 +68,7 @@ const mutations = {
 
 const actions = {
   generateRoutes({ commit }, roles) {
-    return new Promise(resolve => {
+    return new Promise((resolve,reject) => {
       // 根据角色加载菜单
       // let accessedRoutes
       // if (roles.includes('admin')) {
@@ -80,10 +80,13 @@ const actions = {
 
       //获取个人菜单
       getRouters().then(res => {
-        let accessedRoutes = filterAsyncRouter(res.obj)
-        accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
-        commit('SET_ROUTES', accessedRoutes);
-        resolve(accessedRoutes)
+        if (res.ok) {
+          let accessedRoutes = filterAsyncRouter(res.obj)
+          accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
+          commit('SET_ROUTES', accessedRoutes);
+          resolve(accessedRoutes)
+        }
+        reject(res)
       })
     })
   }

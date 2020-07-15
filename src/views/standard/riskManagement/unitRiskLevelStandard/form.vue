@@ -4,21 +4,23 @@
     :close-on-click-modal="false"
     :before-close="cancel"
     :visible.sync="dialog"
-    :title="isAdd ? '新增功能' : '编辑功能'"
-    custom-class="common_dialog"
+    :title="isAdd ? '新增' : '编辑'"
   >
-    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="70px">
+    <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
       <el-form-item label="部门">
-        <department :value="form.deptPath" @change="change" style="width:100%;" />
+        <department :value="form.deptPath" @change="deptChange" :disabled="!isAdd"></department>
       </el-form-item>
-      <el-form-item label="角色名称">
-        <el-input v-model="form.roleDesc" style="width: 100%;" />
+      <el-form-item label="等级">
+        <el-input v-model="form.standardLevel" placeholder></el-input>
       </el-form-item>
-      <el-form-item label="角色编码">
-        <el-input v-model="form.code" style="width: 100%;" />
+      <el-form-item label="颜色">
+        <el-color-picker v-model="form.color"></el-color-picker>
       </el-form-item>
-      <el-form-item label="角色排序">
-        <el-input-number v-model="form.sn" :min="0" :max="1000" />
+      <el-form-item label="最小风险值">
+        <el-input v-model="form.minRiskValue" placeholder></el-input>
+      </el-form-item>
+      <el-form-item label="最大风险值">
+        <el-input v-model="form.maxRiskValue" placeholder></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -29,31 +31,35 @@
 </template>
 
 <script>
-import { add, modify } from "@/api/role";
+import { addRiskLevelStandard, modifyRiskLevelStandard } from "@/api/standard";
 import department from "@/components/Department";
+
 export default {
   components: { department },
-  props: {
-    isAdd: {
-      type: Boolean,
-      required: true
-    }
-  },
   data() {
     return {
       loading: false,
       dialog: false,
       form: {
         deptPath: null,
-        roleDesc: "",
-        code: "ROLE_",
-        sn: 0
+        standardLevel: "",
+        color: "",
+        minRiskValue: "",
+        maxRiskValue: ""
       },
-      rules: {
-        funcDesc: [{ required: true, message: "请输入名称", trigger: "blur" }]
+      roleSelect: [],
+      formRules: {
+        aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
+        bb: [{ required: true, message: "请填写名称", trigger: "blur" }]
       },
       entArr: []
     };
+  },
+  props: {
+    isAdd: {
+      type: Boolean,
+      required: true
+    }
   },
   created() {},
   methods: {
@@ -71,7 +77,7 @@ export default {
       });
     },
     doAdd() {
-      add(this.form)
+      addRiskLevelStandard(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -86,12 +92,11 @@ export default {
           this.$parent.init();
         })
         .catch(err => {
-          console.log(err);
           this.loading = false;
         });
     },
     doModify() {
-      modify(this.form)
+      modifyRiskLevelStandard(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -106,7 +111,6 @@ export default {
           this.$parent.init();
         })
         .catch(err => {
-          console.log(err);
           this.loading = false;
         });
     },
@@ -115,17 +119,24 @@ export default {
       this.$refs["form"].resetFields();
       this.form = {
         deptPath: null,
-        roleDesc: "",
-        code: "ROLE_",
-        sn: 0
+        standardLevel: "",
+        color: "",
+        minRiskValue: "",
+        maxRiskValue: ""
       };
     },
-    change(val) {
+    deptChange(val) {
       this.form.deptPath = val;
     }
   }
 };
 </script>
 
-<style scoped>
+
+<style lang="scss" scope>
+.el-color-picker {
+  .el-color-picker__trigger {
+    width: 80px;
+  }
+}
 </style>

@@ -32,7 +32,15 @@
       @selection-change="selectionChange"
       border
     >
-      <el-table-column prop="name" label="字典描述" align="left" />
+      <el-table-column label="字典描述" align="left">
+        <template slot-scope="{row}">
+          <span
+            v-if="row.children&&row.children.length==0&&row.externMap.parentId!=null"
+            style="margin-left: -22px"
+          >{{row.name}}</span>
+          <span v-else>{{row.name}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="字典编码">
         <template slot-scope="{row}">
           <span>{{row.externMap.dicCode}}</span>
@@ -191,7 +199,7 @@ export default {
       this.$emit("selectionChange", { selections: selections });
     },
     toQuery(name) {
-      this.params = { dicDesc:name };
+      this.params = { dicDesc: name };
       this.init();
     }
   }

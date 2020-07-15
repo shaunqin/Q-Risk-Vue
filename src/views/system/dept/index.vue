@@ -167,7 +167,7 @@ export default {
           departmentId: row.value,
           departmentNameCn: row.name,
           departmentNameEn: row.externMap.departmentNameEn,
-          parentCode: res.obj.departmentPath
+          parentCode: !!res.obj ? res.obj.departmentPath : null
         };
         _this.dialog = true;
       });

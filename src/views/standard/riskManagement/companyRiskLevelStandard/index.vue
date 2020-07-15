@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div>
     <eform ref="form" :is-add="isAdd"></eform>
     <div class="head-container">
       <el-input
@@ -27,31 +27,19 @@
       :stripe="true"
       :highlight-current-row="true"
       style="width: 100%;"
-      @selection-change="selectionChange"
     >
-      <el-table-column type="index" width="50" />
-      <el-table-column prop="formulaNo" label="编号" />
-      <el-table-column prop="name" label="名称" />
-      <el-table-column prop="remark" label="备注" />
-      <el-table-column label="是否启用">
+      <el-table-column prop="standardLevel" label="等级" />
+      <el-table-column prop="deptNameCn" label="部门" />
+      <el-table-column prop="color" label="颜色">
         <template slot-scope="{row}">
-          <el-switch
-            v-model="row.enable"
-            active-value="1"
-            inactive-value="0"
-            @change="enableChange($event,row)"
-          ></el-switch>
+          <span class="color-item" :style="'background-color:'+row.color"></span>
         </template>
       </el-table-column>
-      <el-table-column label="计算公式" width="130px" align="center">
+      <el-table-column prop="minRiskValue" label="最小风险值" />
+      <el-table-column prop="maxRiskValue" label="最大风险值" />
+      <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button
-            :disabled="scope.row.userName !== userInfo.userName"
-            size="mini"
-            type="primary"
-            icon="el-icon-edit"
-            @click="edit(scope.row)"
-          />
+          <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
           <el-button
             slot="reference"
             type="danger"
@@ -77,15 +65,16 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import { modifyModel, delModel } from "@/api/risk";
+import { detailRiskLevelStandard, delRiskLevelStandard } from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
   data() {
     return {
-      isSuperAdmin: false,
-      userInfo: {},
-      selections: []
+      form: {
+        color1: "",
+        value1: ""
+      }
     };
   },
   created() {
@@ -93,18 +82,14 @@ export default {
   },
   methods: {
     beforeInit() {
-      this.url = `/risk_mgr/model_mgr/query/pageList/${this.page}/${this.size}`;
+      this.url = `/info_mgr/risk_value_standard_mgr/query/pageList/${this.page}/${this.size}`;
+      this.params.unitType = 1;
       return true;
     },
     toQuery(name) {
+      this.params.standardLevel = name;
       this.page = 1;
-      this.params = { name };
       this.init();
-    },
-    // 选择切换
-    selectionChange: function(selections) {
-      this.selections = selections;
-      this.$emit("selectionChange", { selections: selections });
     },
     add() {
       this.isAdd = true;
@@ -113,15 +98,32 @@ export default {
     edit(row) {
       this.isAdd = false;
       let _this = this.$refs.form;
-      _this.form = Object.assign({}, row);
-      _this.dialog = true;
+      detailRiskLevelStandard(row.id).then(res => {
+        if (res.ok) {
+          let { obj } = res;
+          _this.form = {
+            id: obj.id,
+            deptPath: obj.deptPath,
+            standardLevel: obj.standardLevel,
+            color: obj.color,
+            minRiskValue: obj.minRiskValue,
+            maxRiskValue: obj.maxRiskValue
+          };
+          _this.dialog = true;
+        } else {
+          this.$message.error(res.msg);
+        }
+      });
     },
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
-          delModel(id).then(res => {
+          delRiskLevelStandard(id).then(res => {
             if (res.ok) {
-              this.$message.success("删除成功");
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
               this.init();
             } else {
               this.$message.error(res.msg);
@@ -129,30 +131,17 @@ export default {
           });
         })
         .catch(() => {});
-    },
-    enableChange(val, row) {
-      let editForm = {
-        id: row.id,
-        enable: val
-      };
-      modifyModel(editForm).then(res => {
-        if (res.ok) {
-          this.$message.success("设置成功");
-        } else {
-          this.$message.error(res.msg);
-        }
-        this.init();
-      });
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.filter-item {
-  > .el-input__inner {
-    height: 32px !important;
-  }
+.color-item {
+  width: 80px;
+  height: 22px;
+  display: inline-block;
+  border: 1px solid #ccc;
 }
 .head-container {
   margin-bottom: 20px;

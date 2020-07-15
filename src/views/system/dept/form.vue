@@ -43,7 +43,7 @@ export default {
       form: {
         departmentNameCn: "",
         departmentNameEn: "",
-        parentCode: ""
+        parentCode: null
       },
       rules: {
         departmentNameCn: [
@@ -115,7 +115,7 @@ export default {
       this.form = {
         departmentNameCn: "",
         departmentNameEn: "",
-        parentCode: ""
+        parentCode: null
       };
       this.disabled=true;
     },

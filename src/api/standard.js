@@ -209,3 +209,34 @@ export const delProbability = (id) => {
     method: 'delete'
   })
 }
+
+// 风险等级标准 add
+export const addRiskLevelStandard = (data) => {
+  return request({
+    url: `/info_mgr/risk_value_standard_mgr/add`,
+    method: 'post',
+    data
+  })
+}
+// 风险等级标准 detail
+export const detailRiskLevelStandard = (id) => {
+  return request({
+    url: `/info_mgr/risk_value_standard_mgr/query/detail/${id}`,
+    method: 'get'
+  })
+}
+// 风险等级标准 modify
+export const modifyRiskLevelStandard = (data) => {
+  return request({
+    url: `/info_mgr/risk_value_standard_mgr/modify`,
+    method: 'put',
+    data
+  })
+}
+// 风险等级标准 del
+export const delRiskLevelStandard = (id) => {
+  return request({
+    url: `/info_mgr/risk_value_standard_mgr/delete/${id}`,
+    method: 'delete'
+  })
+}

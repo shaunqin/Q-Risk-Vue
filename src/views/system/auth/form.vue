@@ -9,9 +9,6 @@
   >
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="auto">
       <el-form-item label="父级">
-        <!-- <el-select disabled v-model="form.parentId" placeholder="请选择" class="select">
-          <el-option v-for="item in data" :key="item.key" :label="item.name" :value="item.key" />
-        </el-select>-->
         <menu-tree-select :value="form.parentId" @change="parentChange"></menu-tree-select>
       </el-form-item>
       <el-form-item label="类型">
@@ -21,8 +18,7 @@
           <el-radio :label="2">按钮</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="菜单图标">
-        <!-- <el-input v-model="form.icon" style="width: 100%;" /> -->
+      <el-form-item label="菜单图标" v-if="form.isMenu!=2">
         <icon-select :value="form.icon" @change="iconChange"></icon-select>
       </el-form-item>
       <el-row :gutter="16">
@@ -30,19 +26,19 @@
           <el-form-item label="菜单名称" prop="moduleDesc">
             <el-input v-model="form.moduleDesc" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="是否外链">
+          <el-form-item label="是否外链" v-if="form.isMenu!=2">
             <el-radio-group v-model="form.isFrame">
               <el-radio label="1">是</el-radio>
               <el-radio label="0">否</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="组件路径" prop="component">
+          <el-form-item label="组件路径" v-if="form.isMenu==1">
             <el-input v-model="form.component" style="width: 100%;" />
           </el-form-item>
           <el-form-item label="菜单状态">
             <el-radio-group v-model="form.enable">
-              <el-radio label="1">是</el-radio>
-              <el-radio label="0">否</el-radio>
+              <el-radio label="1">启用</el-radio>
+              <el-radio label="0">禁用</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -50,10 +46,10 @@
           <el-form-item label="菜单排序" prop="orderNum">
             <el-input-number v-model="form.orderNum" />
           </el-form-item>
-          <el-form-item label="路由地址" prop="modulePath">
+          <el-form-item label="路由地址" prop="modulePath" v-if="form.isMenu!=2">
             <el-input v-model="form.modulePath" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="菜单权限">
+          <el-form-item label="权限标识" v-if="form.isMenu!=0">
             <el-input v-model="form.moduleCode" style="width: 100%;" />
           </el-form-item>
         </el-col>

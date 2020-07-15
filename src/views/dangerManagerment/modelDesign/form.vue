@@ -8,16 +8,42 @@
     custom-class="big_dialog"
   >
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="公式说明">
-            <el-input type="textarea" :rows="10" readonly :value="designDesc" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="公式" prop="bb">
-            <el-input type="textarea" :rows="4" v-model="form.bb" style="width: 100%;" />
+      <el-row :gutter="16">
+        <el-col :span="12">
+          <el-form-item label="编号">
+            <el-input v-model="form.formulaNo" placeholder></el-input>
           </el-form-item>
         </el-col>
-         
+        <el-col :span="12">
+          <el-form-item label="名称">
+            <el-input v-model="form.name" placeholder></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="备注">
+            <el-input v-model="form.remark" placeholder></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="公式说明">
+            <el-input type="textarea" :rows="6" readonly :value="designDesc" style="width: 100%;" />
+          </el-form-item>
+          <el-form-item label="公式" prop="formula">
+            <el-input
+              type="textarea"
+              :rows="4"
+              v-model="form.formula"
+              style="width: 100%;"
+              placeholder="z=(m+n)*(m-n)/s"
+            />
+          </el-form-item>
+          <el-form-item label="是否启用">
+            <el-radio-group v-model="form.enable">
+              <el-radio label="1">是</el-radio>
+              <el-radio label="0">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -28,7 +54,7 @@
 </template>
 
 <script>
-import { add, modify } from "@/api/emplotee.js";
+import { addModel, modifyModel } from "@/api/risk";
 
 export default {
   data() {
@@ -36,26 +62,23 @@ export default {
       loading: false,
       dialog: false,
       form: {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: "",
+        formulaNo: "",
+        name: "",
+        remark: "",
+        formula: "",
+        enable: ""
       },
       roleSelect: [],
       formRules: {
-        bb: [{ required: true, message: "请填写公式", trigger: "blur" }]
+        formula: [{ required: true, message: "请填写公式", trigger: "blur" }]
       },
       entArr: [],
-      designDesc:`1.风险发生的可能性（y）=危险源关联的次数（a）×条件概率（x）;
-2.条件概率（x）=危险源关联事件次数/危险源关联安全信息次数;
-3.举例：计算“未按工作步骤逐项工作” 的可能性:
-  ①	安全信息关联了“未按工作步骤逐项工作”危险源 10 次，a=10
-  ②	选择时间段 2015-2018，根据历史数据，“危险源关联事件次数”6 次，“危险源关联安全信息次数”150 次，x=6/150=0.04
-  ③	风险发生的可能性 y=a×x=10×0.04=0.4 次/月
-  ④	风险发生的可能性对应可能性等级为 3，分值为 6
-4.风险发生的严重性采用赋值法，风险清单中的每个风险对应一个严重性等级和一个严重性量化分值;
-5.风险值=严重性 X 可能性.`
+      designDesc: `各公式含义:
+m:危险源关联事件次数(根据时间统计);
+n:危险源关联安全信息次数(根据时间统计);
+a:危险源关联的次数;
+s:严重性量化分值(查询);
+z:风险值(最终计算值)`
     };
   },
   props: {
@@ -72,33 +95,15 @@ export default {
     doSubmit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          // this.loading = true;
-          // if (this.isAdd) {
-          //   this.doAdd()
-          // } else this.doModify()
-
-          this.dialog = false;
-          this.$message({
-            message: "添加成功",
-            type: "success"
-          });
-          this.resetForm();
+          this.loading = true;
+          if (this.isAdd) {
+            this.doAdd();
+          } else this.doModify();
         }
       });
     },
     doAdd() {
-      // this.delwithRoleList()
-      const data = this.roleSelect;
-      let arr = [];
-      for (let i = 0; i < data.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = data[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
-      add(this.form)
+      addModel(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -117,7 +122,7 @@ export default {
         });
     },
     doModify() {
-      modify(this.form)
+      modifyModel(this.form)
         .then(res => {
           if (res.code === "200") {
             this.$message({
@@ -139,48 +144,13 @@ export default {
       this.dialog = false;
       this.$refs["form"].resetFields();
       this.form = {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: "",
+        formulaNo: "",
+        name: "",
+        remark: "",
+        formula: "",
+        enable: ""
       };
-      this.roleSelect = [];
-    },
-    roleChange(e) {
-      if (e.length <= 1) {
-        this.form.roleList = e[0];
-      }
-      let arr = [];
-      for (let i = 0; i < e.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = e[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
-    },
-    roleRemove(e) {}
-    // delwithRoleList() {
-    //   const roleList = this.roleList
-    //   const checkList = this.form.roleList
-    //   let newList = []
-    //   let obj = {}
-    //   for (let i = 0; i < checkList.length; i++) {
-    //     for (let j = 0; j < roleList.length; j++) {
-    //       if (checkList[i] === roleList[j].id) {
-    //         obj.id = Number(checkList[i])
-    //         obj.code = roleList[j].code
-    //         obj.roleDesc = roleList[j].roleDesc
-    //         // obj.sn = roleList[j].sn
-    //         newList.push(obj)
-    //         obj = {}
-    //       }
-    //     }
-    //   }
-    //   this.form.roleList = newList
-    // }
+    }
   }
 };
 </script>
