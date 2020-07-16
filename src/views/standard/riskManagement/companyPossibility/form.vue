@@ -19,6 +19,12 @@
       <el-form-item label="量化分值">
         <el-input-number v-model="form.score" />
       </el-form-item>
+      <el-form-item label="最小年频次">
+        <el-input-number v-model="form.minFrequenceEveryYear" />
+      </el-form-item>
+      <el-form-item label="最大年频次">
+        <el-input-number v-model="form.maxFrequenceEveryYear" />
+      </el-form-item>
       <el-form-item label="是否启用">
         <el-radio-group v-model="form.enable">
           <el-radio label="1">是</el-radio>
@@ -51,7 +57,9 @@ export default {
         riskLevel: 0,
         score: 0,
         enable: "",
-        type: "1"
+        type: "1",
+        minFrequenceEveryYear: 0,
+        maxFrequenceEveryYear: 0
       },
       roleSelect: [],
       formRules: {
@@ -130,7 +138,9 @@ export default {
         riskLevel: 0,
         score: 0,
         enable: "",
-        type: "1"
+        type: "1",
+        minFrequenceEveryYear: 0,
+        maxFrequenceEveryYear: 0
       };
     },
     deptChange(val) {
