@@ -29,7 +29,7 @@
       style="width: 100%;"
       @selection-change="selectionChange"
     >
-      <el-table-column type="index" width="50" />
+      <el-table-column type="index" width="50" :index="getIndex" />
       <el-table-column prop="standard" label="界定标准" />
       <el-table-column prop="deptNameCn" label="部门" />
       <el-table-column label="风险等级">
@@ -152,21 +152,15 @@ export default {
         .catch(() => {});
     },
     enableChange(val, id) {
-      detailRiskLevel(id).then(res => {
+      let editForm = {
+        id,
+        enable: val
+      };
+      modifyRiskLevel(editForm).then(res => {
         if (res.code != "200") {
           this.$message.error(res.msg);
-        } else {
-          let editForm = {
-            id: res.obj.id,
-            enable: val
-          };
-          modifyRiskLevel(editForm).then(res => {
-            if (res.code != "200") {
-              this.$message.error(res.msg);
-            } else this.$message.success("设置成功");
-            this.init();
-          });
-        }
+        } else this.$message.success("设置成功");
+        this.init();
       });
     }
   }

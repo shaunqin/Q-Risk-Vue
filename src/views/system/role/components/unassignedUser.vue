@@ -92,6 +92,8 @@ export default {
           this.$message({ type: "success", message: "分配用户成功" });
           this.dialog = false;
           this.$parent.$parent.init();
+        } else {
+          this.$message.error(res.msg);
         }
       });
     },

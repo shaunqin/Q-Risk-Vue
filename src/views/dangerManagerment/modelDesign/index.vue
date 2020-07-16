@@ -29,7 +29,7 @@
       style="width: 100%;"
       @selection-change="selectionChange"
     >
-      <el-table-column type="index" width="50" />
+      <el-table-column type="index" width="50" :index="getIndex" />
       <el-table-column prop="formulaNo" label="编号" />
       <el-table-column prop="name" label="名称" />
       <el-table-column prop="remark" label="备注" />
@@ -120,7 +120,7 @@ export default {
       this.$confirm("确定删除嘛？")
         .then(() => {
           delModel(id).then(res => {
-            if (res.ok) {
+            if (res.code == "200") {
               this.$message.success("删除成功");
               this.init();
             } else {
@@ -136,7 +136,7 @@ export default {
         enable: val
       };
       modifyModel(editForm).then(res => {
-        if (res.ok) {
+        if (res.code == "200") {
           this.$message.success("设置成功");
         } else {
           this.$message.error(res.msg);

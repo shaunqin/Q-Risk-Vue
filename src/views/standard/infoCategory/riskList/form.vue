@@ -148,9 +148,9 @@ export default {
         riskNo: "",
         riskName: "",
         riskDesc: "",
-        levels: "",
-        levelDesc: "",
-        enable: ""
+        levels: 0,
+        enable: 0,
+        isKey: 0
       };
       this.roleSelect = [];
     },

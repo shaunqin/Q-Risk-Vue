@@ -187,10 +187,8 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .roleSelect {
   width: 370px;
 }

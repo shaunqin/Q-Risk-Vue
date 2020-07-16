@@ -141,7 +141,7 @@ export default {
       this.$confirm("确定删除嘛？")
         .then(() => {
           delHazard(id).then(res => {
-            if (res.ok) {
+            if (res.code == "200") {
               this.$message({
                 type: "success",
                 message: "删除成功!"
@@ -160,7 +160,7 @@ export default {
         enable: val
       };
       modifyHazard(editForm).then(res => {
-        if (res.ok) {
+        if (res.code == "200") {
           this.$message.success("设置成功");
         } else {
           this.$message.error(res.msg);

@@ -90,21 +90,10 @@ export default {
       this.init();
     });
   },
-  watch: {
-    data(val) {
-      this.parentIdList = [];
-      val.map(item => {
-        this.parentIdList.push({
-          key: item.key,
-          name: item.name
-        });
-      });
-    }
-  },
   methods: {
     toQuery(name) {
       if (!name) this.params = {};
-      else this.params = { moduleDesc:name };
+      else this.params = { moduleDesc: name };
       this.init();
     },
     beforeInit() {
@@ -150,12 +139,12 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
+              this.delLoading = false;
+              this.parentIdList = [];
+              this.init();
             } else {
               this.$message.error(res.msg);
             }
-            this.delLoading = false;
-            this.parentIdList = [];
-            this.init();
           })
           .catch(err => {
             console.log(err);

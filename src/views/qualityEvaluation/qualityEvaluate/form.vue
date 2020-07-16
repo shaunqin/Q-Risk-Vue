@@ -34,12 +34,12 @@
             <el-table :data="data" size="mini">
               <el-table-column label="名称">
                 <template slot-scope="scope">
-                  <el-input v-model="scope.row.aa" placeholder=""></el-input>
+                  <el-input v-model="scope.row.aa" placeholder></el-input>
                 </template>
               </el-table-column>
               <el-table-column label="备注">
-                 <template slot-scope="scope">
-                  <el-input v-model="scope.row.bb" placeholder=""></el-input>
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.bb" placeholder></el-input>
                 </template>
               </el-table-column>
             </el-table>
@@ -84,7 +84,7 @@ export default {
         { label: "附件产品", value: "3" },
         { label: "航线产品", value: "4" }
       ],
-      qList: [],
+      pList: [],
       totalList: [
         { label: "出厂检发现问题万时率", value: "1", pid: "1" },
         { label: "定检出厂首班机械原因不正常万时率", value: "2", pid: "1" },
@@ -123,7 +123,7 @@ export default {
     "form.bb": {
       handler(val) {
         let label = this.pList.find(r => r.value == val).label;
-          this.data=[];
+        this.data = [];
         for (let i = 0; i < 3; i++) {
           this.data.push({
             aa: label + " - 字段" + i,

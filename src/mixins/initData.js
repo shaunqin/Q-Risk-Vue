@@ -24,7 +24,7 @@ export default {
       }
       return new Promise((resolve, reject) => {
         this.loading = true
-        initData(this.url,this.params).then(res => {
+        initData(this.url, this.params).then(res => {
           if (res.code === '200') {
             this.data = res.obj
             this.nodeData = res.obj
@@ -69,6 +69,9 @@ export default {
       if (this.data.length === size && this.page !== 0) {
         this.page = this.page - 1
       }
+    },
+    getIndex(index) {
+      return (this.page - 1) * this.size + index + 1;
     }
   }
 }

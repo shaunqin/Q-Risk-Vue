@@ -8,7 +8,13 @@
   >
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="100px">
       <el-form-item label="危险源">
-        <el-select v-model="form.diskId" placeholder="请选择危险源" filterable popper-class="disk-select" style="width:100%">
+        <el-select
+          v-model="form.diskId"
+          placeholder="请选择危险源"
+          filterable
+          popper-class="disk-select"
+          style="width:100%"
+        >
           <el-option
             v-for="item in diskList"
             :key="item.diskId"
@@ -68,7 +74,7 @@ export default {
   },
   created() {
     queryHazardList().then(res => {
-      if (res.ok) {
+      if (res.code == "200") {
         res.obj.map(item => {
           this.diskList.push({
             diskId: item.diskId,
@@ -100,12 +106,12 @@ export default {
               message: "添加成功",
               type: "success"
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
         .catch(err => {
           this.loading = false;
@@ -119,12 +125,12 @@ export default {
               message: "修改成功",
               type: "success"
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
         .catch(err => {
           this.loading = false;
@@ -152,7 +158,7 @@ export default {
 .el-select-dropdown {
   z-index: 99999999999999 !important;
 }
-.disk-select{
+.disk-select {
   width: 400px;
 }
 </style>

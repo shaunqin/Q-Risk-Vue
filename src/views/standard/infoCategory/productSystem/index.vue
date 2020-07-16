@@ -112,48 +112,61 @@ export default {
       this.isAdd = false;
       let _this = this.$refs.form;
       queryProdDetail(row.diskSystemId).then(res => {
-        _this.form = res.obj;
-        _this.dialog = true;
+        if (res.code == "200") {
+          _this.form = res.obj;
+          _this.dialog = true;
+        } else {
+          this.$message.error(res.msg);
+        }
       });
     },
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
           delProd(id).then(res => {
-            this.$message({
-              type: "success",
-              message: "删除成功!"
-            });
-            this.init();
+            if (res.code == "200") {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+              this.init();
+            } else {
+              this.$message.error(res.msg);
+            }
           });
         })
         .catch(() => {});
     },
     getProductList() {
       queryDictByName("product").then(res => {
-        res.obj[0].children.map(item => {
-          this.options.push({
-            label: item.name,
-            value: item.value
+        if (res.code != "200") {
+          this.$message.error(res.msg);
+        } else {
+          res.obj[0].children.map(item => {
+            this.options.push({
+              label: item.name,
+              value: item.value
+            });
           });
-        });
+        }
       });
     },
     enableChange(val, row) {
-      let modelForm = {};
-      queryProdDetail(row.diskSystemId).then(res => {
-        modelForm = res.obj;
-        modelForm.enable = val;
-        modifyProd(modelForm).then(res2 => {
+      let modelForm = {
+        diskSystemId: row.diskSystemId,
+        enable: val
+      };
+      modifyProd(modelForm).then(res => {
+        if (res.code != "200") {
+          this.$message.error(res.msg);
+        } else {
           this.$message({
             message: "更新成功",
             type: "success"
           });
-        });
+        }
+        this.init();
       });
-    },
-    getIndex(index) {
-      return (this.page - 1) * this.size + index + 1;
     }
   }
 };

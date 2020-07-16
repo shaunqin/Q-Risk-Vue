@@ -25,14 +25,6 @@
           >新增</el-button>
         </el-col>
       </el-row>
-
-      <!-- <el-input
-        v-model="query"
-        clearable
-        placeholder="请输入你要搜索的内容"
-        style="width: 200px;"
-        class="filter-item"
-      />-->
     </div>
     <!--表格渲染-->
     <el-table
@@ -44,12 +36,12 @@
       style="width: 100%;"
       @selection-change="selectionChange"
     >
-      <el-table-column type="index" width="50" />
+      <el-table-column type="index" width="50" :index="getIndex" />
       <el-table-column prop="realname" label="员工名称" />
       <el-table-column prop="sqlUserId" label="用户名" />
       <el-table-column prop="mobile" label="手机" />
       <el-table-column prop="mail" label="邮箱" />
-      <el-table-column prop="isSysUser" label="系统用户" >
+      <el-table-column prop="isSysUser" label="系统用户">
         <template slot-scope="{row}">
           <span v-if="row.isSysUser=='1'">是</span>
           <span v-else>否</span>
@@ -98,13 +90,10 @@
 </template>
 
 <script>
-import jwtDecode from "jwt-decode";
 import initData from "@/mixins/initData";
 import { format } from "@/utils/datetime";
-import { getToken } from "@/utils/auth";
 import eform from "./form";
 import { del, detail, findEmployByUserName } from "@/api/emplotee";
-import { getRoleList } from "@/api/role";
 import search from "./search";
 export default {
   name: "Emplotee",
@@ -134,23 +123,6 @@ export default {
     this.$nextTick(() => {
       this.init();
     });
-    // this.getRole();
-
-    // const userToken = getToken("Token");
-    // const token = jwtDecode(userToken);
-    // console.log(token);
-    // findEmployByUserName(token.sub).then(res => {
-    //   console.log(res);
-    //   if (res.code === "200") {
-    //     this.userInfo = res.obj;
-    //     const data = res.obj.roleList;
-    //     for (let i = 0; i < data.length; i++) {
-    //       if (data[i].code === "ROLE_super_admin") {
-    //         this.isSuperAdmin = true;
-    //       }
-    //     }
-    //   }
-    // });
   },
   beforeRouteLeave: function(to, from, next) {
     if (to.path === this.toPath) {
@@ -186,12 +158,12 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
+              this.delLoading = false;
+              this.dleChangePage();
+              this.init();
             } else {
               this.$message.error(res.msg);
             }
-            this.delLoading = false;
-            this.dleChangePage();
-            this.init();
           })
           .catch(err => {
             console.log(err);
@@ -240,14 +212,6 @@ export default {
       this.queryForm = _this.queryForm;
       this.page = 1;
       this.init();
-    },
-    // 获取角色列表
-    getRole() {
-      getRoleList().then(res => {
-        if (res.code === "200") {
-          this.roleOptions = res.obj;
-        }
-      });
     }
   }
 };

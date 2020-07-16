@@ -59,8 +59,8 @@
       @current-change="pageChange"
     />
     <div slot="footer" class="dialog-footer">
-      <el-button type="text" @click="cancel">取消</el-button>
-      <el-button :loading="loading" type="primary" @click="doSubmit">确认</el-button>
+      <el-button type="primary" @click="cancel">关闭</el-button>
+      <!-- <el-button :loading="loading" type="primary" @click="doSubmit">确认</el-button> -->
     </div>
     <!-- 分配用户 -->
     <unassigned-user ref="unassignedUser"></unassigned-user>
@@ -122,6 +122,8 @@ export default {
               this.$message({ type: "success", message: "取消授权成功" });
               this.dleChangePage();
               this.init();
+            } else {
+              this.$message.error(res.msg);
             }
           });
         }

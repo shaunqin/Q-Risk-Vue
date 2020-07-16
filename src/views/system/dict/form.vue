@@ -78,13 +78,12 @@ export default {
               message: "添加成功",
               type: "success"
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
-          this.$parent.getParentId();
         })
         .catch(err => {
           console.log(err);
@@ -99,13 +98,12 @@ export default {
               message: "修改成功",
               type: "success"
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
-          this.$parent.getParentId();
         })
         .catch(err => {
           console.log(err);

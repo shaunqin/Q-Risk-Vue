@@ -99,7 +99,7 @@ export default {
       this.isAdd = false;
       let _this = this.$refs.form;
       detailRiskLevelStandard(row.id).then(res => {
-        if (res.ok) {
+        if (res.code == "200") {
           let { obj } = res;
           _this.form = {
             id: obj.id,
@@ -119,7 +119,7 @@ export default {
       this.$confirm("确定删除嘛？")
         .then(() => {
           delRiskLevelStandard(id).then(res => {
-            if (res.ok) {
+            if (res.code == "200") {
               this.$message({
                 type: "success",
                 message: "删除成功!"

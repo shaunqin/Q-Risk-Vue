@@ -44,48 +44,50 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { validUsername } from "@/utils/validate";
 
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error("Please enter the correct user name"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error("密码不能少于6位"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginForm: {
-        userName: 'admin',
-        password: 'Qwer1234'
+        userName: "admin",
+        password: "Qwer1234"
       },
       loginRules: {
-        userName: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        userName: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        password: [
+          { required: true, trigger: "blur", validator: validatePassword }
+        ]
       },
       dialogVisible: false,
       isChecked: true,
       loading: false,
       redirect: undefined,
       otherQuery: {}
-    }
+    };
   },
   watch: {
     $route: {
       handler: function(route) {
-        const query = route.query
+        const query = route.query;
         if (query) {
-          this.redirect = query.redirect
-          this.otherQuery = this.getOtherQuery(query)
+          this.redirect = query.redirect;
+          this.otherQuery = this.getOtherQuery(query);
         }
       },
       immediate: true
@@ -95,10 +97,10 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    if (this.loginForm.userName === '') {
-      this.$refs.userName.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
+    if (this.loginForm.userName === "") {
+      this.$refs.userName.focus();
+    } else if (this.loginForm.password === "") {
+      this.$refs.password.focus();
     }
   },
   destroyed() {
@@ -108,34 +110,38 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then((res) => {
+          this.loading = true;
+          this.$store
+            .dispatch("user/login", this.loginForm)
+            .then(res => {
               if (res) {
-                this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-                this.loading = false
+                this.$router.push({
+                  path: this.redirect || "/",
+                  query: this.otherQuery
+                });
+                this.loading = false;
               } else {
-                this.$message.error('用户名或密码输入错误！！！')
-                this.loading = false
+                this.$message.error("用户名或密码输入错误！！！");
+                this.loading = false;
               }
             })
-            .catch((err) => {
-              console.log(err)
-              this.loading = false
-            })
+            .catch(err => {
+              console.log(err);
+              this.loading = false;
+            });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
+        if (cur !== "redirect") {
+          acc[cur] = query[cur];
         }
-        return acc
-      }, {})
+        return acc;
+      }, {});
     }
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
@@ -156,12 +162,12 @@ export default {
     //   }
     // }
   }
-}
+};
 </script>
 
 <style scoped lang='scss'>
 .container {
-  background: url('../../assets/login_images/bg1.jpg') no-repeat center / cover;
+  background: url("../../assets/login_images/bg1.jpg") no-repeat center / cover;
   width: 100%;
   height: 100%;
   position: absolute;
@@ -228,7 +234,8 @@ export default {
   margin-right: 20px;
 }
 .pwd {
-  background: url('../../assets/login_images/icon/password.png') no-repeat center;
+  background: url("../../assets/login_images/icon/password.png") no-repeat
+    center;
 }
 .el-icon-user-solid:before {
   font-size: 26px;

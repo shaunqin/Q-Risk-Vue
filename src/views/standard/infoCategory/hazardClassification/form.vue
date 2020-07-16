@@ -128,12 +128,12 @@ export default {
               message: "添加成功",
               type: "success"
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
         .catch(err => {
           this.loading = false;
@@ -147,12 +147,12 @@ export default {
               message: "修改成功",
               type: "success"
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
         .catch(err => {
           this.loading = false;
@@ -172,25 +172,29 @@ export default {
     },
     queryIncentives() {
       queryHazardList().then(res => {
-        if (res.ok) {
+        if (res.code == "200") {
           res.obj.map(item => {
             this.incentivesList.push({
               value: item.diskId,
               label: item.diskName
             });
           });
+        } else {
+          this.$message.error(res.msg);
         }
       });
     },
     queryRisks() {
       queryRiskLisk().then(res => {
-        if (res.ok) {
+        if (res.code == "200") {
           res.obj.map(item => {
             this.risksList.push({
               value: item.riskListId,
               label: item.riskName
             });
           });
+        } else {
+          this.$message.error(res.msg);
         }
       });
     }

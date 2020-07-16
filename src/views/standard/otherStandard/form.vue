@@ -119,12 +119,12 @@ export default {
               message: "添加成功",
               type: "success"
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
         .catch(err => {
           this.loading = false;
@@ -138,12 +138,12 @@ export default {
               message: "修改成功",
               type: "success"
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
         .catch(err => {
           this.loading = false;
@@ -172,10 +172,8 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .roleSelect {
   width: 370px;
 }

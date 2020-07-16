@@ -132,13 +132,13 @@ export default {
       }).then(() => {
         deleteDept(id)
           .then(res => {
-            this.delLoading = false;
-            this.init();
             if (res.code === "200") {
               this.$message({
                 message: "删除成功",
                 type: "success"
               });
+              this.delLoading = false;
+              this.init();
             } else {
               this.$message.error(res.msg);
             }
@@ -163,13 +163,17 @@ export default {
       this.isAdd = false;
       const _this = this.$refs.form;
       queryParentDept(row.value).then(res => {
-        _this.form = {
-          departmentId: row.value,
-          departmentNameCn: row.name,
-          departmentNameEn: row.externMap.departmentNameEn,
-          parentCode: !!res.obj ? res.obj.departmentPath : null
-        };
-        _this.dialog = true;
+        if (res.code != "200") {
+          this.$message.error(res.msg);
+        } else {
+          _this.form = {
+            departmentId: row.value,
+            departmentNameCn: row.name,
+            departmentNameEn: row.externMap.departmentNameEn,
+            parentCode: !!res.obj ? res.obj.departmentPath : null
+          };
+          _this.dialog = true;
+        }
       });
     },
     // 选择切换

@@ -10,7 +10,14 @@
         style="width: 200px;"
         class="filter-item"
       />
-      <el-checkbox border size="mini" v-model="enable" :true-label="1" :false-label="0" class="ck">启用</el-checkbox>
+      <el-checkbox
+        border
+        size="mini"
+        v-model="enable"
+        :true-label="1"
+        :false-label="0"
+        class="ck"
+      >启用</el-checkbox>
       <el-button
         class="filter-item"
         size="mini"
@@ -30,7 +37,7 @@
       style="width: 100%;"
       @selection-change="selectionChange"
     >
-      <el-table-column type="index" width="50" />
+      <el-table-column type="index" width="50" :index="getIndex" />
       <el-table-column prop="riskNo" label="编号" />
       <el-table-column prop="riskName" label="名称" />
       <el-table-column prop="riskDesc" label="描述" min-width="200px" />
@@ -128,34 +135,57 @@ export default {
       this.isAdd = false;
       let _this = this.$refs.form;
       queryRiskDetail(id).then(res => {
-        _this.form = res.obj;
-        _this.dialog = true;
+        if (res.code != "200") {
+          this.$message.error(res.msg);
+        } else {
+          let { obj } = res;
+          _this.form = {
+            id: obj.id,
+            riskNo: obj.riskNo,
+            riskName: obj.riskName,
+            riskDesc: obj.riskDesc,
+            levels: obj.levels,
+            enable: obj.enable,
+            isKey: obj.isKey
+          };
+          _this.dialog = true;
+        }
       });
     },
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
           delRisk(id).then(res => {
-            this.$message({
-              type: "success",
-              message: "删除成功!"
-            });
-            this.init();
+            if (res.code != "200") {
+              this.$message.error(res.msg);
+            } else {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+              this.init();
+            }
           });
         })
         .catch(() => {});
     },
     enableChange(val, id) {
-      let modelForm = {};
-      queryRiskDetail(id).then(res => {
-        modelForm = res.obj;
-        modelForm.enable = val;
-        modifyRisk(modelForm).then(res => {
+      let modelForm = {
+        id,
+        enable: val
+      };
+      modifyRisk(modelForm).then(res => {
+        if (res.code != "200") {
+          this.$message.error(res.msg);
+        } else {
           this.$message({
             type: "success",
             message: "更新成功!"
           });
-        });
+        }
+        this.init();
+      }).catch(err=>{
+        this.$message.error('系统异常');
       });
     }
   }
@@ -171,7 +201,7 @@ export default {
 .head-container {
   margin-bottom: 20px;
 }
-.ck{
+.ck {
   margin: 0 15px;
   top: -2px;
 }

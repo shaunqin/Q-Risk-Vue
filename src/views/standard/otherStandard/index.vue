@@ -29,7 +29,7 @@
       style="width: 100%;"
       @selection-change="selectionChange"
     >
-      <el-table-column type="index" width="50" />
+      <el-table-column type="index" width="50" :index="getIndex" />
       <el-table-column prop="standardNo" label="编号" />
       <el-table-column prop="name" label="名称" />
       <el-table-column prop="remark" label="备注" />
@@ -120,41 +120,45 @@ export default {
       this.isAdd = false;
       let _this = this.$refs.form;
       detailOtherStand(row.id).then(res => {
-        let { id, standardNo, name, remark, enable, files } = res.obj;
-        _this.form = {
-          id,
-          standardNo,
-          name,
-          remark,
-          enable
-        };
-        _this.files = files;
-        _this.dialog = true;
+        if (res.code != "200") {
+          this.$message.error(res.msg);
+        } else {
+          let { id, standardNo, name, remark, enable, files } = res.obj;
+          _this.form = {
+            id,
+            standardNo,
+            name,
+            remark,
+            enable
+          };
+          _this.files = files;
+          _this.dialog = true;
+        }
       });
     },
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
           delOtherStand(id).then(res => {
-            this.$message({
-              type: "success",
-              message: "删除成功!"
-            });
-            this.init();
+            if (res.code != "200") {
+              this.$message.error(res.msg);
+            } else {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+              this.init();
+            }
           });
         })
         .catch(() => {});
     },
     enableChange(val, id) {
-      detailOtherStand(id).then(res => {
-        let { id, enable } = res.obj;
-        let editForm = { id, enable };
-        editForm.enable = val;
-        modifyOtherStand(editForm).then(res => {
-          if (res.code == "200") this.$message.success("设置成功!");
-          else this.$message.error(res.msg || "系统错误");
-          this.init();
-        });
+      let editForm = { id, enable: val };
+      modifyOtherStand(editForm).then(res => {
+        if (res.code == "200") this.$message.success("设置成功!");
+        else this.$message.error(res.msg || "系统错误");
+        this.init();
       });
     }
   }

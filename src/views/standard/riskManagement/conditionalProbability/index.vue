@@ -29,7 +29,7 @@
       style="width: 100%;"
       @selection-change="selectionChange"
     >
-      <el-table-column type="index" width="50" />
+      <el-table-column type="index" width="50" :index="getIndex" />
       <el-table-column prop="diskId" label="编号" />
       <el-table-column prop="diskDesc" label="危险源" min-width="200px" />
       <el-table-column prop="relatedResult" label="关联后果" />
@@ -103,7 +103,7 @@ export default {
       let _this = this.$refs.form;
       detailProbability(row.id).then(res => {
         let { obj } = res;
-        if (res.ok) {
+        if (res.code == "200") {
           _this.form = {
             id: obj.id,
             diskId: obj.diskId,
@@ -121,7 +121,7 @@ export default {
       this.$confirm("确定删除嘛？")
         .then(() => {
           delProbability(id).then(res => {
-            if (res.ok) {
+            if (res.code == "200") {
               this.$message({
                 type: "success",
                 message: "删除成功!"

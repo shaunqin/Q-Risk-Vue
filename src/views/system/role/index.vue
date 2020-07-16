@@ -22,7 +22,7 @@
       style="width: 100%;"
       @selection-change="selectionChange"
     >
-      <el-table-column type="index" width="80" />
+      <el-table-column type="index" width="80" :index="getIndex" />
       <el-table-column prop="deptNameCn" label="部门" />
       <el-table-column prop="roleDesc" label="角色名称" />
       <el-table-column prop="sn" label="排序" />
@@ -94,7 +94,7 @@ export default {
         default: true
       },
       selections: [], // 列表选中列
-      queryForm: null,
+      queryForm: null
     };
   },
   created() {
@@ -131,14 +131,14 @@ export default {
       }).then(() => {
         del(id)
           .then(res => {
-            this.delLoading = false;
-            this.dleChangePage();
-            this.init();
             if (res.code === "200") {
               this.$message({
                 message: "删除成功",
                 type: "success"
               });
+              this.delLoading = false;
+              this.dleChangePage();
+              this.init();
             } else {
               this.$message.error(res.msg);
             }
