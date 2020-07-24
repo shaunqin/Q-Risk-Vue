@@ -5,6 +5,7 @@
     :popper-append-to-body="false"
     class="icon-select"
     style="width:100%"
+    clearable
   >
     <el-option v-for="item in iconList" :key="item" :value="item">
       <el-tooltip :content="item" placement="top">

@@ -56,7 +56,7 @@ import {
   addHazard,
   modifyHazard,
   queryHazardList,
-  queryRiskLisk
+  queryRiskList
 } from "@/api/standard";
 import { re } from "../../../../utils/config-re";
 
@@ -185,7 +185,7 @@ export default {
       });
     },
     queryRisks() {
-      queryRiskLisk().then(res => {
+      queryRiskList().then(res => {
         if (res.code == "200") {
           res.obj.map(item => {
             this.risksList.push({

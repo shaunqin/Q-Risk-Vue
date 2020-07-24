@@ -28,23 +28,24 @@
       :stripe="true"
       :highlight-current-row="true"
       style="width: 100%;"
-      @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="aa" label="参考号" />
-      <el-table-column prop="bb" label="发生时间" width="100" />
-      <el-table-column prop="cc" label="责任单位一" width="120" />
-      <el-table-column prop="dd" label="责任单位二" width="120" />
-      <el-table-column prop="ee" label="责任部门" />
-      <el-table-column prop="ff" label="产品" width="120" />
-      <el-table-column prop="gg" label="系统" />
-      <el-table-column prop="hh" label="问题描述" />
-      <el-table-column prop="ii" label="危险源分类一" width="110" />
-      <el-table-column prop="jj" label="危险源分类二" width="110" />
-      <el-table-column prop="kk" label="危险源" />
-      <el-table-column prop="ll" label="风险" />
-      <el-table-column prop="mm" label="诱因" />
-      <el-table-column prop="nn" label="危险源次数" width="100" />
+      <el-table-column prop="id" label="编号" />
+      <el-table-column label="发生日期" width="120">
+        <template slot-scope="{row}">{{row.date_time.substring(0,10)}}</template>
+      </el-table-column>
+      <el-table-column prop="problem_description" label="问题描述" width="200" />
+      <el-table-column prop="cc" label="责任单位层级一" width="120" />
+      <el-table-column prop="dd" label="责任单位层级二" width="120" />
+      <el-table-column prop="responsible_unit" label="责任部门" />
+      <el-table-column prop="product" label="产品" width="120" />
+      <el-table-column prop="system" label="系统" />
+      <el-table-column prop="risk_level_1" label="危险源层级一" width="110" />
+      <el-table-column prop="risk_level_2" label="危险源层级二" width="110" />
+      <el-table-column prop="source_of_risk" label="危险源" />
+      <el-table-column prop="risk" label="风险" />
+      <el-table-column prop="incentive" label="诱因" />
+      <el-table-column prop="cc" label="危险源次数" width="100" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -79,7 +80,7 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import {infoDatabase} from '@/dataSource';
+import { detailExternalInspection } from "@/api/infodb";
 export default {
   components: { eform },
   mixins: [initData],
@@ -87,25 +88,23 @@ export default {
     return {
       isSuperAdmin: false,
       userInfo: {},
-      selections: []
+      selections: [],
     };
   },
-  mounted() {
-    this.loading = false;
-    this.data=infoDatabase;
+  created() {
+    this.init();
   },
   methods: {
+    beforeInit() {
+      this.url = `/info_mgr/infoAudit_mgr/query/pageListSa/${this.page}/${this.size}`;
+      return true;
+    },
     toQuery(name) {
       if (!name) {
         this.page = 1;
         this.init();
         return;
       }
-    },
-    // 选择切换
-    selectionChange: function(selections) {
-      this.selections = selections;
-      this.$emit("selectionChange", { selections: selections });
     },
     add() {
       this.isAdd = true;
@@ -114,25 +113,40 @@ export default {
     edit(row) {
       this.isAdd = false;
       let _this = this.$refs.form;
-      _this.form = Object.assign({}, row);
-      _this.dialog = true;
+      detailExternalInspection(row.id).then((res) => {
+        const { obj } = res;
+        _this.form = {
+          id: obj.id,
+          date_time: obj.date_time,
+          incentive: obj.incentive,
+          problem_description: obj.problem_description,
+          product: obj.product,
+          responsible_unit: obj.responsible_unit,
+          risk: obj.risk,
+          risk_level_1: obj.risk_level_1,
+          risk_level_2: obj.risk_level_2,
+          source_of_risk: obj.source_of_risk,
+          system: obj.system,
+        };
+        _this.dialog = true;
+      });
     },
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

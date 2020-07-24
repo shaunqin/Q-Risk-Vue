@@ -97,7 +97,7 @@ export default {
     format,
     beforeInit() {
       this.url = `/info_mgr/riskLevel_mgr/query/pageList/${this.page}/${this.size}`;
-      this.params = { type: 2, unitType: 1, standard: this.query };
+      this.params = { type: 1, unitType: 1, standard: this.query };
       return true;
     },
     toQuery(name) {

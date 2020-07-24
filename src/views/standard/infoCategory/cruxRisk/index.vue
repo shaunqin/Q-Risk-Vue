@@ -17,7 +17,6 @@
         icon="el-icon-search"
         @click="toQuery(query)"
       >搜索</el-button>
-     
     </div>
     <!--表格渲染-->
     <el-table
@@ -29,12 +28,34 @@
       style="width: 100%;"
       @selection-change="selectionChange"
     >
-      <el-table-column type="index" width="50" />
-      <el-table-column prop="riskName" label="关键风险" />
-      <el-table-column prop="riskNo" label="编号" />
-      <el-table-column prop="riskDesc" label="危险源" />
+      <el-table-column type="index" width="50" :index="getIndex" />
+      <el-table-column prop="riskName" label="关键风险" width="150" />
+      <el-table-column prop="riskNo" label="编号" width="120" />
+      <el-table-column label="危险源" align="left">
+        <template slot-scope="{row}">
+          <span v-for="(item,index) in row.hazards" :key="item.diskNo" class="tb-span">
+            {{item.diskNo}}
+            <span v-if="index<row.hazards.length-1">,</span>
+          </span>
+          <el-popover placement="left" :width="600" trigger="hover">
+            <span v-for="(item,index) in row.hazards" :key="item.diskNo" class="tb-span">
+              {{item.diskName}}
+              <span v-if="index<row.hazards.length-1">,</span>
+            </span>
+            <span slot="reference" class="el-icon-info"></span>
+          </el-popover>
+        </template>
+      </el-table-column>
     </el-table>
-    
+    <!--分页组件-->
+    <!-- <el-pagination
+      :total="total"
+      :current-page="page"
+      style="margin-top: 8px;text-align: right"
+      layout="total, prev, pager, next, sizes"
+      @size-change="sizeChange"
+      @current-change="pageChange"
+    />-->
   </div>
 </template>
 
@@ -49,14 +70,15 @@ export default {
     return {
       isSuperAdmin: false,
       userInfo: {},
-      selections: []
+      selections: [],
     };
   },
   mounted() {
-   this.init();
+    this.init();
   },
   methods: {
     beforeInit() {
+      // this.url = `/info_mgr/riskList_mgr/query/criticalRisk/pageList/${this.page}/${this.size}`;
       this.url = `/info_mgr/riskList_mgr/query/criticalRisk`;
       return true;
     },
@@ -67,7 +89,7 @@ export default {
       this.init();
     },
     // 选择切换
-    selectionChange: function(selections) {
+    selectionChange: function (selections) {
       this.selections = selections;
       this.$emit("selectionChange", { selections: selections });
     },
@@ -86,17 +108,17 @@ export default {
         .then(() => {
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

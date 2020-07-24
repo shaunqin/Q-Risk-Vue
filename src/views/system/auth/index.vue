@@ -82,7 +82,7 @@ export default {
   mixins: [initData],
   data() {
     return {
-      parentIdList: []
+      parentIdList: [],
     };
   },
   created() {
@@ -121,7 +121,7 @@ export default {
         orderNum: row.externMap.orderNum,
         parentId: row.externMap.parentId || "0",
         enable: row.externMap.enable,
-        moduleCode: row.externMap.moduleCode
+        moduleCode: row.externMap.moduleCode,
       };
       _this.dialog = true;
     },
@@ -130,29 +130,35 @@ export default {
       this.$confirm("此操作将永久删除该条数据, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       }).then(() => {
         del(id)
-          .then(res => {
+          .then((res) => {
             if (res.code === "200") {
               this.$message({
                 message: "删除成功",
-                type: "success"
+                type: "success",
               });
               this.delLoading = false;
               this.parentIdList = [];
               this.init();
+              //刷新menutree
+              let _this = this.$refs.form;
+              _this.menuTreeReload = false;
+              this.$nextTick(() => {
+                _this.menuTreeReload = true;
+              });
             } else {
               this.$message.error(res.msg);
             }
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
             this.delLoading = false;
           });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

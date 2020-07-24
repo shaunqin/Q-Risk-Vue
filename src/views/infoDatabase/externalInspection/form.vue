@@ -4,58 +4,79 @@
     :close-on-click-modal="false"
     :before-close="cancel"
     :visible.sync="dialog"
-    :title="isAdd ? '新增数据来源' : '编辑数据来源'"
+    :title="isAdd ? '新增' : '编辑'"
     custom-class="big_dialog"
   >
-    <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="120px">
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="参考号" prop="aa">
-            <el-input v-model="form.aa" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="发生时间" prop="bb">
-            <el-input v-model="form.bb" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="责任单位一">
+    <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
+      <el-row :gutter="16">
+        <el-form-item label="发生日期">
+          <el-date-picker v-model="form.date_time" placeholder></el-date-picker>
+        </el-form-item>
+        <el-col :span="8">
+          <el-form-item label="责任单位层级一">
             <el-input v-model="form.cc" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="责任单位二">
-            <el-input v-model="form.dd" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="责任部门">
-            <el-input v-model="form.ee" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="产品">
-            <el-input v-model="form.ff" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="系统">
-            <el-input v-model="form.gg" style="width: 100%;" />
+          <el-form-item label="危险源层级一">
+            <el-select clearable v-model="form.risk_level_1" placeholder style="width: 100%;">
+              <el-option
+                v-for="item in riskLevel1List"
+                :key="item.key"
+                :label="item.name"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
-         <el-col :span="12">
-          <el-form-item label="问题描述">
-            <el-input v-model="form.hh" style="width: 100%;" />
+        <el-col :span="8">
+          <el-form-item label="责任单位层级二">
+            <el-input v-model="form.dd" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="危险源分类一">
-            <el-input v-model="form.ii" style="width: 100%;" />
+          <el-form-item label="危险源层级二">
+            <el-select clearable v-model="form.risk_level_2" placeholder style="width: 100%;">
+              <el-option
+                v-for="item in riskLevel2List"
+                :key="item.key"
+                :label="item.name"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="危险源分类二">
-            <el-input v-model="form.jj" style="width: 100%;" />
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="责任部门">
+            <department :value="form.responsible_unit" @change="deptChange"></department>
           </el-form-item>
           <el-form-item label="危险源">
-            <el-input v-model="form.kk" style="width: 100%;" />
+            <el-select clearable filterable v-model="form.source_of_risk" placeholder style="width: 100%;">
+              <el-option
+                v-for="item in riskList"
+                :key="item.diskId"
+                :label="item.diskName"
+                :value="item.diskId"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="风险">
-            <el-input v-model="form.ll" style="width: 100%;" />
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="产品">
+            <product-select :value="form.product" @change="productChange"></product-select>
           </el-form-item>
-          <el-form-item label="诱因">
-            <el-input v-model="form.mm" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="危险源次数">
-            <el-input v-model="form.nn" style="width: 100%;" />
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="系统">
+            <system-select :value="form.system" @change="systemChange"></system-select>
           </el-form-item>
         </el-col>
       </el-row>
+      <el-form-item label="风险">
+        <risk-select :value="form.risk" @change="riskChange"></risk-select>
+      </el-form-item>
+      <el-form-item label="诱因">
+        <incentive-select :value="form.incentive" @change="incentiveChange"></incentive-select>
+      </el-form-item>
+      <el-form-item label="问题描述">
+        <el-input v-model="form.problem_description" type="textarea" rows="3" style="width: 100%;" />
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
@@ -65,74 +86,111 @@
 </template>
 
 <script>
-import { add, modify } from "@/api/emplotee.js";
+import { modifyExternalInspection } from "@/api/infodb";
+import { queryDictByName } from "@/api/dict";
+import { queryHazardList } from "@/api/standard";
+import department from "@/components/Department";
+import productSelect from "../components/productSelect";
+import systemSelect from "../components/systemSelect";
+import riskSelect from "../components/riskSelect";
+import incentiveSelect from "../components/incentiveSelect";
 
 export default {
+  components: {
+    department,
+    productSelect,
+    systemSelect,
+    riskSelect,
+    incentiveSelect,
+  },
   data() {
     return {
       loading: false,
       dialog: false,
       form: {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: "",
+        date_time: "",
+        incentive: "",
+        problem_description: "",
+        product: "",
+        responsible_unit: "",
+        risk: "",
+        risk_level_1: "",
+        risk_level_2: "",
+        source_of_risk: "",
+        system: "",
       },
       roleSelect: [],
       formRules: {
         aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        bb: [{ required: true, message: "请填写名称", trigger: "blur" }]
+        bb: [{ required: true, message: "请填写名称", trigger: "blur" }],
       },
-      entArr: []
+      entArr: [],
+      riskLevel1List: [],
+      riskLevel2List: [],
+      riskList: [],
     };
   },
   props: {
     isAdd: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
-  created() {},
+  watch: {
+    "form.risk_level_1": {
+      handler(val) {
+        if (this.riskLevel1List.length > 0) {
+          let list = this.riskLevel1List.filter((r) => r.value == val);
+          if (list && list.length > 0) {
+            this.riskLevel2List = list[0].children;
+            this.form.risk_level_2 = "";
+          }
+        }
+      },
+    },
+  },
+  created() {
+    this.loadData();
+  },
   methods: {
+    loadData() {
+      //危险源层级
+      queryDictByName("hazard_source").then((res) => {
+        if (res.code != "200") {
+          this.$message.error(res.msg);
+        } else {
+          this.riskLevel1List = res.obj[0].children;
+        }
+      });
+      //危险源
+      queryHazardList().then((res) => {
+        if (res.code != "200") {
+          this.$message.error(res.msg);
+        } else {
+          this.riskList = res.obj;
+        }
+      });
+    },
     cancel() {
       this.resetForm();
     },
     doSubmit() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
-          // this.loading = true;
-          // if (this.isAdd) {
-          //   this.doAdd()
-          // } else this.doModify()
-
-          this.dialog = false;
-          this.$message({
-            message: "添加成功",
-            type: "success"
-          });
-          this.resetForm();
+          this.loading = true;
+          if (this.isAdd) {
+            this.doAdd();
+          } else this.doModify();
         }
       });
     },
     doAdd() {
-      // this.delwithRoleList()
-      const data = this.roleSelect;
-      let arr = [];
-      for (let i = 0; i < data.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = data[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
       add(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "添加成功",
-              type: "success"
+              type: "success",
             });
           } else {
             this.$message.error(res.msg);
@@ -141,26 +199,26 @@ export default {
           this.loading = false;
           this.$parent.init();
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
     doModify() {
-      modify(this.form)
-        .then(res => {
+      modifyExternalInspection(this.form)
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "修改成功",
-              type: "success"
+              type: "success",
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
@@ -168,60 +226,39 @@ export default {
       this.dialog = false;
       this.$refs["form"].resetFields();
       this.form = {
-        aa: "",
-        bb: "",
-        cc: "",
-        dd: "",
-        ee: "",
+        date_time: "",
+        incentive: "",
+        problem_description: "",
+        product: "",
+        responsible_unit: "",
+        risk: "",
+        risk_level_1: "",
+        risk_level_2: "",
+        source_of_risk: "",
+        system: "",
       };
-      this.roleSelect = [];
     },
-    roleChange(e) {
-      if (e.length <= 1) {
-        this.form.roleList = e[0];
-      }
-      let arr = [];
-      for (let i = 0; i < e.length; i++) {
-        let obj = {
-          id: ""
-        };
-        obj.id = e[i];
-        arr.push(obj);
-      }
-      this.form.roleList = arr;
+    deptChange(val) {
+      this.form.responsible_unit = val;
     },
-    roleRemove(e) {}
-    // delwithRoleList() {
-    //   const roleList = this.roleList
-    //   const checkList = this.form.roleList
-    //   let newList = []
-    //   let obj = {}
-    //   for (let i = 0; i < checkList.length; i++) {
-    //     for (let j = 0; j < roleList.length; j++) {
-    //       if (checkList[i] === roleList[j].id) {
-    //         obj.id = Number(checkList[i])
-    //         obj.code = roleList[j].code
-    //         obj.roleDesc = roleList[j].roleDesc
-    //         // obj.sn = roleList[j].sn
-    //         newList.push(obj)
-    //         obj = {}
-    //       }
-    //     }
-    //   }
-    //   this.form.roleList = newList
-    // }
-  }
+    productChange(val) {
+      this.form.product = val;
+    },
+    systemChange(val) {
+      this.form.system = val;
+    },
+    riskChange(val) {
+      this.form.risk = val.join(",");
+    },
+    incentiveChange(val) {
+      this.form.incentive = val.join(",");
+    },
+  },
 };
 </script>
 
-<style scoped>
-</style>
-
-<style lang="scss">
-.roleSelect {
-  width: 370px;
-}
-.el-select-dropdown {
-  z-index: 99999999999999 !important;
+<style lang="scss" scoped>
+/deep/ .big_dialog {
+  width: 1000px;
 }
 </style>

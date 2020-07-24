@@ -1,5 +1,6 @@
 <template>
   <div class="dataSource">
+    <eform ref="form" :is-add="isAdd"></eform>
     <div class="head-container">
       <el-input
         size="mini"
@@ -32,11 +33,11 @@
       <el-table-column prop="diskNo" label="编号" />
       <el-table-column prop="diskName" label="危险源" />
       <el-table-column prop="diskDesc" label="描述" />
-      <!-- <el-table-column prop="cc" label="是否启用" >
+      <el-table-column label="操作" width="130">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.cc" active-value="是"></el-switch>
+          <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
         </template>
-      </el-table-column>-->
+      </el-table-column>
     </el-table>
     <!--分页组件-->
     <el-pagination
@@ -52,14 +53,15 @@
 
 <script>
 import initData from "@/mixins/initData";
-import { incentiveList } from "@/dataSource";
+import eform from "./form";
 export default {
+  components: { eform },
   mixins: [initData],
   data() {
     return {
       isSuperAdmin: false,
       userInfo: {},
-      selections: []
+      selections: [],
     };
   },
   mounted() {
@@ -77,39 +79,20 @@ export default {
       this.init();
     },
     // 选择切换
-    selectionChange: function(selections) {
+    selectionChange: function (selections) {
       this.selections = selections;
       this.$emit("selectionChange", { selections: selections });
-    },
-    add() {
-      this.isAdd = true;
-      this.$refs.form.dialog = true;
     },
     edit(row) {
       this.isAdd = false;
       let _this = this.$refs.form;
-      _this.form = Object.assign({}, row);
+      _this.form = {
+        cateValue: row.cateValue,
+        diskIncentiveId: row.id,
+      };
       _this.dialog = true;
     },
-    subDelete(id) {
-      this.$confirm("确定删除嘛？")
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    },
-    getIndex(index) {
-      return (this.page - 1) * this.size + index + 1;
-    }
-  }
+  },
 };
 </script>
 

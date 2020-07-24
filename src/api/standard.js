@@ -78,7 +78,7 @@ export const delHazard = (id) => {
 }
 
 // 风险清单 - list
-export const queryRiskLisk = (params) => {
+export const queryRiskList = (params) => {
   return request({
     url: `/info_mgr/riskList_mgr/query/list`,
     method: 'get',
@@ -238,5 +238,21 @@ export const delRiskLevelStandard = (id) => {
   return request({
     url: `/info_mgr/risk_value_standard_mgr/delete/${id}`,
     method: 'delete'
+  })
+}
+
+// 诱因 modify
+export const modifyIncentive = (data) => {
+  return request({
+    url: `/info_mgr/incentive_mgr/modify`,
+    method: 'put',
+    data
+  })
+}
+// 诱因 list
+export const queryIncentiveList = () => {
+  return request({
+    url: `/info_mgr/incentive_mgr/query/all`,
+    method: 'get'
   })
 }
