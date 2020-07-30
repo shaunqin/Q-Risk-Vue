@@ -1,11 +1,11 @@
 <template>
   <el-select filterable multiple v-model="_value" placeholder style="width: 100%;">
-    <!-- id作为key -->
+    <!-- code作为key -->
     <el-option
       v-for="item in list"
       :key="item.riskListId"
       :label="item.riskName"
-      :value="item.riskListId"
+      :value="item.riskNo"
     ></el-option>
   </el-select>
 </template>

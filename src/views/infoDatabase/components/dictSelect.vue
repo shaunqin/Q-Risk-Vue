@@ -5,7 +5,7 @@
       v-for="item in list"
       :key="item.key"
       :label="item.name"
-      :value="item.value"
+      :value="item.externMap.dicCode"
     ></el-option>
   </el-select>
 </template>
@@ -23,6 +23,10 @@ export default {
       type: String,
       default: "",
     },
+    type: {
+      type: String,
+      default: "",
+    },
   },
   computed: {
     _value: {
@@ -34,8 +38,8 @@ export default {
       },
     },
   },
-  created() {
-    queryDictByName("system").then((res) => {
+  mounted() {
+    queryDictByName(this.type).then((res) => {
       if (res.code != "200") {
         this.$message.error(res.msg);
       } else {

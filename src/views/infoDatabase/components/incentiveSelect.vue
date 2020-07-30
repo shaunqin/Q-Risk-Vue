@@ -5,7 +5,7 @@
       v-for="item in list"
       :key="item.id"
       :label="item.diskName"
-      :value="item.id"
+      :value="item.diskNo"
     ></el-option>
   </el-select>
 </template>

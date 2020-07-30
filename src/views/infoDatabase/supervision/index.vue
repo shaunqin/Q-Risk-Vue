@@ -37,12 +37,12 @@
       <el-table-column prop="problem_description" label="问题描述" width="200" />
       <el-table-column prop="cc" label="责任单位层级一" width="120" />
       <el-table-column prop="dd" label="责任单位层级二" width="120" />
-      <el-table-column prop="responsible_unit" label="责任部门" />
+      <el-table-column prop="responsible_unit" label="责任部门" width="120" show-overflow-tooltip />
       <el-table-column prop="product" label="产品" width="120" />
       <el-table-column prop="system" label="系统" />
       <el-table-column prop="risk_level_1" label="危险源层级一" width="110" />
       <el-table-column prop="risk_level_2" label="危险源层级二" width="110" />
-      <el-table-column prop="source_of_risk" label="危险源" />
+      <el-table-column prop="source_of_risk_name" label="危险源" width="200"  />
       <el-table-column prop="risk" label="风险" />
       <el-table-column prop="incentive" label="诱因" />
       <el-table-column prop="cc" label="危险源次数" width="100" />

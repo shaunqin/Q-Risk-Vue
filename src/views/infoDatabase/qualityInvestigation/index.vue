@@ -28,23 +28,25 @@
       :stripe="true"
       :highlight-current-row="true"
       style="width: 100%;"
-      @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="aa" label="信息来源" width="100" />
-      <el-table-column prop="bb" label="发生日期" width="100" />
-      <el-table-column prop="dd" label="机型" />
-      <el-table-column prop="ee" label="事件概述" />
-      <el-table-column prop="ff" label="原因分析" width="120" />
-      <el-table-column prop="gg" label="责任单位" />
-      <el-table-column prop="hh" label="产品" />
-      <el-table-column prop="ii" label="系统" width="110" />
-      <el-table-column prop="jj" label="危险源层级一" width="110" />
-      <el-table-column prop="kk" label="危险源层级二" width="110" />
-      <el-table-column prop="ll" label="危险源" />
-      <el-table-column prop="mm" label="风险" />
-      <el-table-column prop="nn" label="诱因" />
-      <el-table-column prop="oo" label="附件报告" />
+      <el-table-column prop="infoSourceText" label="信息来源" />
+      <el-table-column label="发生日期" width="100">
+        <template slot-scope="{row}">
+          <span>{{row.happenDate.substring(0,10)}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="aircraftTypeText" label="机型" />
+      <el-table-column prop="eventOverview" label="事件概述" />
+      <el-table-column prop="causeAnalysis" label="原因分析" width="120" />
+      <el-table-column prop="departmentNameCn" label="责任单位" width="120" show-overflow-tooltip />
+      <el-table-column prop="productText" label="产品" width="120" />
+      <el-table-column prop="systemText" label="系统" width="110" />
+      <el-table-column prop="riskLevelText1" label="危险源层级一" width="110" />
+      <el-table-column prop="riskLevelText2" label="危险源层级二" width="110" />
+      <el-table-column prop="sourceOfRiskText" label="危险源" width="120" show-overflow-tooltip />
+      <el-table-column prop="risk" label="风险" width="120" />
+      <el-table-column prop="incentive" label="诱因" width="120" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -79,7 +81,8 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import { infoDatabase } from "@/dataSource";
+import { format } from "@/utils/datetime";
+import { detailInfobase, delInfobase } from "@/api/infodb";
 export default {
   components: { eform },
   mixins: [initData],
@@ -87,60 +90,25 @@ export default {
     return {
       isSuperAdmin: false,
       userInfo: {},
-      selections: []
+      selections: [],
     };
   },
-  mounted() {
-    this.loading = false;
-    this.data = [
-      {
-        aa: "使用困难报告",
-        bb: "2019/06/09",
-        cc: "上海浦东",
-        dd: "B737",
-        ee: "",
-        ff: "具体原因描述",
-        gg: "运管部",
-        hh: "动机/APU",
-        ii: "外部检查",
-        jj: "管理文件",
-        kk: "工作程序",
-        ll: "程序编写存在缺陷",
-        mm: "程序编写存在缺陷",
-        nn: "未构成差错不安全事件",
-        oo: ""
-      },
-      {
-        aa: "可靠性报警",
-        bb: "2019/06/09",
-        cc: "上海浦东",
-        dd: "A320",
-        ee: "",
-        ff: "具体原因描述",
-        gg: "运管部",
-        hh: "动机/APU",
-        ii: "外部检查",
-        jj: "管理文件",
-        kk: "工作程序",
-        ll: "程序编写存在缺陷",
-        mm: "程序编写存在缺陷",
-        nn: "未构成差错不安全事件",
-        oo: ""
-      }
-    ];
+  created() {
+    this.init();
   },
   methods: {
-    toQuery(name) {
-      if (!name) {
-        this.page = 1;
-        this.init();
-        return;
-      }
+    format,
+    beforeInit() {
+      this.url = `/infoDatabase_mgr/infoDatabase_mgr/query/pageList/${this.page}/${this.size}`;
+      this.params = { type: 2 };
+      return true;
     },
-    // 选择切换
-    selectionChange: function(selections) {
-      this.selections = selections;
-      this.$emit("selectionChange", { selections: selections });
+    toQuery(name) {
+      // if (!name) {
+      //   this.page = 1;
+      //   this.init();
+      //   return;
+      // }
     },
     add() {
       this.isAdd = true;
@@ -149,25 +117,48 @@ export default {
     edit(row) {
       this.isAdd = false;
       let _this = this.$refs.form;
-      _this.form = Object.assign({}, row);
-      _this.dialog = true;
+      detailInfobase(row.id).then((res) => {
+        if (res.code != "200") {
+          this.$message.error(res.msg);
+        } else {
+          const { obj } = res;
+          _this.form = {
+            id: obj.id,
+            infoSource: obj.infoSource,
+            happenDate: obj.happenDate,
+            riskLevel1: obj.riskLevel1,
+            riskLevel2: obj.riskLevel2,
+            sourceOfRisk: obj.sourceOfRisk,
+            aircraftType: obj.aircraftType,
+            responsibleUnit: obj.responsibleUnit,
+            product: obj.product,
+            systemCode: obj.systemCode,
+            eventOverview: obj.eventOverview,
+            causeAnalysis: obj.causeAnalysis,
+            risk: obj.risk,
+            incentive: obj.incentive,
+            type: obj.type,
+          };
+          _this.files = obj.filesList;
+          _this.dialog = true;
+        }
+      });
     },
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!"
+          delInfobase(id).then((res) => {
+            if (res.code != "200") {
+              this.$message.error(res.msg);
+            } else {
+              this.$message.success("删除成功");
+              this.init();
+            }
           });
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    }
-  }
+        .catch(() => {});
+    },
+  },
 };
 </script>
 

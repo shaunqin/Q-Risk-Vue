@@ -50,21 +50,25 @@
             <el-select clearable filterable v-model="form.source_of_risk" placeholder style="width: 100%;">
               <el-option
                 v-for="item in riskList"
-                :key="item.diskId"
+                :key="item.diskNo"
                 :label="item.diskName"
-                :value="item.diskId"
+                :value="item.diskNo"
               ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="产品">
-            <product-select :value="form.product" @change="productChange"></product-select>
+            <dict-select
+              :value="form.product"
+              type="product"
+              @change="dictChange($event,'product')"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="系统">
-            <system-select :value="form.system" @change="systemChange"></system-select>
+            <dict-select :value="form.system" type="system" @change="dictChange($event,'system')" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -90,18 +94,16 @@ import { modifyQualityAduit } from "@/api/infodb";
 import { queryDictByName } from "@/api/dict";
 import { queryHazardList } from "@/api/standard";
 import department from "@/components/Department";
-import productSelect from "../components/productSelect";
-import systemSelect from "../components/systemSelect";
 import riskSelect from "../components/riskSelect";
 import incentiveSelect from "../components/incentiveSelect";
+import dictSelect from "../components/dictSelect";
 
 export default {
   components: {
     department,
-    productSelect,
-    systemSelect,
     riskSelect,
     incentiveSelect,
+    dictSelect
   },
   data() {
     return {
@@ -238,14 +240,11 @@ export default {
         system: "",
       };
     },
+    dictChange(val, key) {
+      this.form[key] = val;
+    },
     deptChange(val) {
       this.form.responsible_unit = val;
-    },
-    productChange(val) {
-      this.form.product = val;
-    },
-    systemChange(val) {
-      this.form.system = val;
     },
     riskChange(val) {
       this.form.risk = val.join(",");

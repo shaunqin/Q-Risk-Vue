@@ -31,21 +31,21 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     port: port,
-    open: true,
+    open: false,
     overlay: {
       warnings: false,
       errors: false
     },
-    proxy: {
-      [process.env.VUE_APP_BASE_API]: {
-        // target: `http://192.168.1.175:8999`,
-        target: `http://101.37.162.245:8900`,
-        changeOrigin: true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
-        }
-      }
-    }
+    // proxy: {
+    //   [process.env.VUE_APP_BASE_API]: {
+    //     // target: `http://192.168.1.175:8999`,
+    //     target: `http://101.37.162.245:8900`,
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       ['^' + process.env.VUE_APP_BASE_API]: ''
+    //     }
+    //   }
+    // }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
