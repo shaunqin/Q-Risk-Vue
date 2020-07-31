@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+// 监督自查 add
+export const addSupervise = (data) => {
+    return request({
+        url: `/info_mgr/supervise_mgr/add`,
+        method: 'post',
+        data
+    })
+}
+
 // 监督自查 detail
 export const detailSupervise = (id) => {
     return request({
@@ -17,6 +26,14 @@ export const modifySupervise = (data) => {
     })
 }
 
+// 安全自查 add
+export const addSuperviseSa = (data) => {
+    return request({
+        url: `/info_mgr/supervise_mgr/addSa`,
+        method: 'post',
+        data
+    })
+}
 // 安全自查 detail
 export const detailSuperviseSa = (id) => {
     return request({
@@ -33,6 +50,14 @@ export const modifySuperviseSa = (data) => {
     })
 }
 
+// 质量审核 add
+export const addQualityAduit = (data) => {
+    return request({
+        url: `/info_mgr/infoAudit_mgr/add`,
+        method: 'post',
+        data
+    })
+}
 // 质量审核 detail
 export const detailQualityAduit = (id) => {
     return request({
@@ -49,6 +74,15 @@ export const modifyQualityAduit = (data) => {
     })
 }
 
+
+// 外部检查 add
+export const addExternalInspection = (data) => {
+    return request({
+        url: `/info_mgr/infoAudit_mgr/addSa`,
+        method: 'post',
+        data
+    })
+}
 // 外部检查 detail
 export const detailExternalInspection = (id) => {
     return request({

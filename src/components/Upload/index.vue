@@ -5,7 +5,7 @@
       :multiple="false"
       :show-file-list="false"
       class="image-uploader"
-      action="/accessory/upload"
+      :action="apiurl"
       :headers="headers"
       :on-success="success"
       :on-error="error"
@@ -24,9 +24,14 @@ export default {
     return {
       dataObj: { moduleId: "", moduleName: "" },
       headers: {
-        Authorization: `xytoken_${getToken("Token")}`
-      }
+        Authorization: `xytoken_${getToken("Token")}`,
+      },
     };
+  },
+  computed: {
+    apiurl() {
+      return process.env.VUE_APP_BASE_API + "/accessory/upload";
+    },
   },
   methods: {
     success(response, file, fileList) {
@@ -40,8 +45,8 @@ export default {
         this.$message.error("文件大小超过限制");
         return false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

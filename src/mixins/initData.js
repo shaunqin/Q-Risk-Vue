@@ -14,7 +14,8 @@ export default {
       params: {},
       query: '',
       time: 50,
-      isAdd: false
+      isAdd: false,
+      queryForm: {}
     }
   },
   methods: {

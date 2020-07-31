@@ -359,3 +359,8 @@
 .el-popover .el-scrollbar .el-scrollbar__wrap {
   overflow-x: hidden;
 }
+
+//tooltop
+.el-tooltip__popper{
+  max-width: 600px;
+}

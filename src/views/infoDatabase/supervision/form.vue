@@ -8,49 +8,52 @@
     custom-class="big_dialog"
   >
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
+      <el-form-item label="发生日期" prop="dateTime">
+        <el-date-picker v-model="form.dateTime" placeholder></el-date-picker>
+      </el-form-item>
       <el-row :gutter="16">
-        <el-form-item label="发生日期">
-          <el-date-picker v-model="form.date_time" placeholder></el-date-picker>
-        </el-form-item>
-        <el-col :span="8">
-          <el-form-item label="责任单位层级一">
-            <el-input v-model="form.cc" style="width: 100%;" />
+        <el-col :span="24">
+          <el-form-item label="责任部门" prop="responsibleUnit">
+            <department :value="form.responsibleUnit" @change="deptChange"></department>
           </el-form-item>
-          <el-form-item label="危险源层级一">
-            <el-select clearable v-model="form.risk_level_1" placeholder style="width: 100%;">
+        </el-col>
+
+        <el-col :span="8">
+          <el-form-item label="危险源层级一" prop="riskLevel1">
+            <el-select
+              clearable
+              v-model="form.riskLevel1"
+              placeholder
+              style="width: 100%;"
+              @change="form.riskLevel2 = ''"
+            >
               <el-option
                 v-for="item in riskLevel1List"
                 :key="item.key"
                 :label="item.name"
-                :value="item.value"
+                :value="item.externMap.dicCode"
               ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="责任单位层级二">
-            <el-input v-model="form.dd" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="危险源层级二">
-            <el-select clearable v-model="form.risk_level_2" placeholder style="width: 100%;">
+          <el-form-item label="危险源层级二" prop="riskLevel2">
+            <el-select clearable v-model="form.riskLevel2" placeholder style="width: 100%;">
               <el-option
                 v-for="item in riskLevel2List"
                 :key="item.key"
                 :label="item.name"
-                :value="item.value"
+                :value="item.externMap.dicCode"
               ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="责任部门">
-            <department :value="form.responsible_unit" @change="deptChange"></department>
-          </el-form-item>
-          <el-form-item label="危险源">
+          <el-form-item label="危险源" prop="sourceOfRisk">
             <el-select
               clearable
               filterable
-              v-model="form.source_of_risk"
+              v-model="form.sourceOfRisk"
               placeholder
               style="width: 100%;"
             >
@@ -64,7 +67,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="产品">
+          <el-form-item label="产品" prop="product">
             <dict-select
               :value="form.product"
               type="product"
@@ -73,19 +76,19 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="系统">
+          <el-form-item label="系统" prop="system">
             <dict-select :value="form.system" type="system" @change="dictChange($event,'system')" />
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="风险">
+      <el-form-item label="风险" prop="risk">
         <risk-select :value="form.risk" @change="riskChange"></risk-select>
       </el-form-item>
-      <el-form-item label="诱因">
+      <el-form-item label="诱因" prop="incentive">
         <incentive-select :value="form.incentive" @change="incentiveChange"></incentive-select>
       </el-form-item>
-      <el-form-item label="问题描述">
-        <el-input v-model="form.problem_description" type="textarea" rows="3" style="width: 100%;" />
+      <el-form-item label="问题描述" prop="problemDescription">
+        <el-input v-model="form.problemDescription" type="textarea" rows="3" style="width: 100%;" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -96,7 +99,7 @@
 </template>
 
 <script>
-import { modifySupervise } from "@/api/infodb";
+import { addSupervise, modifySupervise } from "@/api/infodb";
 import { queryDictByName } from "@/api/dict";
 import { queryHazardList } from "@/api/standard";
 import department from "@/components/Department";
@@ -116,21 +119,43 @@ export default {
       loading: false,
       dialog: false,
       form: {
-        date_time: "",
+        dateTime: "",
         incentive: "",
-        problem_description: "",
+        problemDescription: "",
         product: "",
-        responsible_unit: "",
+        responsibleUnit: null,
         risk: "",
-        risk_level_1: "",
-        risk_level_2: "",
-        source_of_risk: "",
+        riskLevel1: "",
+        riskLevel2: "",
+        sourceOfRisk: "",
         system: "",
       },
       roleSelect: [],
       formRules: {
-        aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        bb: [{ required: true, message: "请填写名称", trigger: "blur" }],
+        dateTime: [
+          { required: true, message: "发生日期不能为空", trigger: "blur" },
+        ],
+        responsibleUnit: [
+          { required: true, message: "责任部门不能为空", trigger: "change" },
+        ],
+        riskLevel1: [
+          { required: true, message: "危险源层级一不能为空", trigger: "blur" },
+        ],
+        riskLevel2: [
+          { required: true, message: "危险源层级二不能为空", trigger: "blur" },
+        ],
+        sourceOfRisk: [
+          { required: true, message: "危险源不能为空", trigger: "blur" },
+        ],
+        product: [{ required: true, message: "产品不能为空", trigger: "blur" }],
+        system: [{ required: true, message: "系统不能为空", trigger: "blur" }],
+        risk: [{ required: true, message: "风险不能为空", trigger: "blur" }],
+        incentive: [
+          { required: true, message: "诱因不能为空", trigger: "blur" },
+        ],
+        problemDescription: [
+          { required: true, message: "问题描述不能为空", trigger: "blur" },
+        ],
       },
       entArr: [],
       riskLevel1List: [],
@@ -145,16 +170,27 @@ export default {
     },
   },
   watch: {
-    "form.risk_level_1": {
+    "form.riskLevel1": {
       handler(val) {
         if (this.riskLevel1List.length > 0) {
-          let list = this.riskLevel1List.filter((r) => r.value == val);
+          let list = this.riskLevel1List.filter(
+            (r) => r.externMap.dicCode == val
+          );
           if (list && list.length > 0) {
             this.riskLevel2List = list[0].children;
-            this.form.risk_level_2 = "";
           }
         }
       },
+    },
+    form: {
+      handler(val) {
+        for (let x in val) {
+          if (!!val[x]) {
+            this.$refs.form.clearValidate(x);
+          }
+        }
+      },
+      deep: true,
     },
   },
   created() {
@@ -193,19 +229,20 @@ export default {
       });
     },
     doAdd() {
-      add(this.form)
+      addSupervise(this.form)
         .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "添加成功",
               type: "success",
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
         .catch((err) => {
           this.loading = false;
@@ -224,6 +261,7 @@ export default {
             this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
         })
         .catch((err) => {
@@ -234,15 +272,15 @@ export default {
       this.dialog = false;
       this.$refs["form"].resetFields();
       this.form = {
-        date_time: "",
+        dateTime: "",
         incentive: "",
-        problem_description: "",
+        problemDescription: "",
         product: "",
-        responsible_unit: "",
+        responsibleUnit: null,
         risk: "",
-        risk_level_1: "",
-        risk_level_2: "",
-        source_of_risk: "",
+        riskLevel1: "",
+        riskLevel2: "",
+        sourceOfRisk: "",
         system: "",
       };
     },
@@ -250,7 +288,7 @@ export default {
       this.form[key] = val;
     },
     deptChange(val) {
-      this.form.responsible_unit = val;
+      this.form.responsibleUnit = val;
     },
     riskChange(val) {
       this.form.risk = val.join(",");

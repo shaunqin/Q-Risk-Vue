@@ -2,22 +2,8 @@
   <div class="app-container">
     <eform ref="form" :is-add="isAdd"></eform>
     <div class="head-container">
-      <el-input
-        size="mini"
-        v-model="query"
-        clearable
-        placeholder="请输入你要搜索的内容"
-        style="width: 200px;"
-        class="filter-item"
-      />
-      <el-button
-        class="filter-item"
-        size="mini"
-        type="success"
-        icon="el-icon-search"
-        @click="toQuery(query)"
-      >搜索</el-button>
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
+      <esearch />
+      <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @click="add">新增</el-button>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-download">导出</el-button>
     </div>
     <!--表格渲染-->
@@ -32,17 +18,17 @@
       <el-table-column type="index" width="50" />
       <el-table-column prop="id" label="编号" />
       <el-table-column label="发生日期" width="120">
-        <template slot-scope="{row}">{{row.date_time.substring(0,10)}}</template>
+        <template slot-scope="{row}">{{row.dateTime.substring(0,10)}}</template>
       </el-table-column>
-      <el-table-column prop="problem_description" label="问题描述" width="200" />
+      <el-table-column prop="problemDescription" label="问题描述" width="200" show-overflow-tooltip />
       <el-table-column prop="cc" label="责任单位层级一" width="120" />
       <el-table-column prop="dd" label="责任单位层级二" width="120" />
-      <el-table-column prop="responsible_unit" label="责任部门" />
-      <el-table-column prop="product" label="产品" width="120" />
-      <el-table-column prop="system" label="系统" />
-      <el-table-column prop="risk_level_1" label="危险源层级一" width="110" />
-      <el-table-column prop="risk_level_2" label="危险源层级二" width="110" />
-      <el-table-column prop="source_of_risk" label="危险源" />
+      <el-table-column prop="departmentNameCn" label="责任部门" width="120" show-overflow-tooltip />
+      <el-table-column prop="productName" label="产品" width="120" />
+      <el-table-column prop="systemName" label="系统" />
+      <el-table-column prop="riskLevelName1" label="危险源层级一" width="110" />
+      <el-table-column prop="riskLevelName2" label="危险源层级二" width="110" />
+      <el-table-column prop="sourceOfRiskName" label="危险源" width="200" show-overflow-tooltip />
       <el-table-column prop="risk" label="风险" />
       <el-table-column prop="incentive" label="诱因" />
       <el-table-column prop="cc" label="危险源次数" width="100" />
@@ -80,9 +66,10 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
+import esearch from "./search";
 import { detailExternalInspection } from "@/api/infodb";
 export default {
-  components: { eform },
+  components: { eform, esearch },
   mixins: [initData],
   data() {
     return {
@@ -99,13 +86,6 @@ export default {
       this.url = `/info_mgr/infoAudit_mgr/query/pageListSa/${this.page}/${this.size}`;
       return true;
     },
-    toQuery(name) {
-      if (!name) {
-        this.page = 1;
-        this.init();
-        return;
-      }
-    },
     add() {
       this.isAdd = true;
       this.$refs.form.dialog = true;
@@ -117,15 +97,15 @@ export default {
         const { obj } = res;
         _this.form = {
           id: obj.id,
-          date_time: obj.date_time,
+          dateTime: obj.dateTime,
           incentive: obj.incentive,
-          problem_description: obj.problem_description,
+          problemDescription: obj.problemDescription,
           product: obj.product,
-          responsible_unit: obj.responsible_unit,
+          responsibleUnit: obj.responsibleUnit,
           risk: obj.risk,
-          risk_level_1: obj.risk_level_1,
-          risk_level_2: obj.risk_level_2,
-          source_of_risk: obj.source_of_risk,
+          riskLevel1: obj.riskLevel1,
+          riskLevel2: obj.riskLevel2,
+          sourceOfRisk: obj.sourceOfRisk,
           system: obj.system,
         };
         _this.dialog = true;
@@ -158,5 +138,8 @@ export default {
 }
 .head-container {
   margin-bottom: 20px;
+}
+/deep/ .el-tooltip__popper{
+  width: 600px;
 }
 </style>

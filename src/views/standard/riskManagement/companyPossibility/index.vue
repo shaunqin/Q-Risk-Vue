@@ -36,8 +36,8 @@
         <template slot-scope="{row}">{{row.riskLevel}}级</template>
       </el-table-column>
       <el-table-column prop="score" label="量化分值" />
-      <el-table-column prop="minFrequenceEveryYear" label="最小年频次" />
-      <el-table-column prop="maxFrequenceEveryYear" label="最大年频次" />
+      <!-- <el-table-column prop="minFrequenceEveryYear" label="最小年频次" />
+      <el-table-column prop="maxFrequenceEveryYear" label="最大年频次" /> -->
       <el-table-column prop="creater" label="创建人" />
       <el-table-column label="创建时间" width="140">
         <template slot-scope="{row}">{{format(row.createTime)}}</template>

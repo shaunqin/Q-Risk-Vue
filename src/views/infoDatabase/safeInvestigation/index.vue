@@ -33,7 +33,7 @@
       <el-table-column prop="infoSourceText" label="信息来源" />
       <el-table-column label="发生日期" width="100">
         <template slot-scope="{row}">
-          <span>{{row.happenDate.substring(0,10)}}</span>
+          <span v-if="row.happenDate!=null">{{row.happenDate.substring(0,10)}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="place" label="地点" />
