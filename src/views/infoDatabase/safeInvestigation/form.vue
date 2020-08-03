@@ -10,14 +10,14 @@
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
       <el-row :gutter="16">
         <el-col :span="8">
-          <el-form-item label="信息来源">
+          <el-form-item label="信息来源" prop="infoSource">
             <dict-select
               :value="form.infoSource"
               type="info_source"
               @change="dictChange($event,'infoSource')"
             />
           </el-form-item>
-          <el-form-item label="危险源层级一">
+          <el-form-item label="危险源层级一" prop="riskLevel1">
             <el-select
               clearable
               v-model="form.riskLevel1"
@@ -35,10 +35,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="发生日期">
+          <el-form-item label="发生日期" prop="happenDate">
             <el-date-picker v-model="form.happenDate" placeholder style="width: 100%;"></el-date-picker>
           </el-form-item>
-          <el-form-item label="危险源层级二">
+          <el-form-item label="危险源层级二" prop="riskLevel2">
             <el-select clearable v-model="form.riskLevel2" placeholder style="width: 100%;">
               <el-option
                 v-for="item in riskLevel2List"
@@ -50,10 +50,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="地点">
+          <el-form-item label="地点" prop="place">
             <el-input v-model="form.place" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="危险源">
+          <el-form-item label="危险源" prop="sourceOfRisk">
             <el-select
               clearable
               filterable
@@ -71,14 +71,14 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="机型">
+          <el-form-item label="机型" prop="aircraftType">
             <dict-select
               :value="form.aircraftType"
               type="aircraft"
               @change="dictChange($event,'aircraftType')"
             />
           </el-form-item>
-          <el-form-item label="产品">
+          <el-form-item label="产品" prop="product">
             <dict-select
               :value="form.product"
               type="product"
@@ -87,10 +87,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="责任单位">
+          <el-form-item label="责任单位" prop="responsibleUnit">
             <department :value="form.responsibleUnit" @change="deptChange"></department>
           </el-form-item>
-          <el-form-item label="系统">
+          <el-form-item label="系统" prop="systemCode">
             <dict-select
               :value="form.systemCode"
               type="system"
@@ -99,16 +99,16 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="事件概述">
+          <el-form-item label="事件概述" prop="eventOverview">
             <el-input v-model="form.eventOverview" type="textarea" rows="3" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="原因分析">
+          <el-form-item label="原因分析" prop="causeAnalysis">
             <el-input v-model="form.causeAnalysis" type="textarea" rows="3" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="风险">
+          <el-form-item label="风险" prop="risk">
             <risk-select :value="form.risk" @change="riskChange"></risk-select>
           </el-form-item>
-          <el-form-item label="诱因">
+          <el-form-item label="诱因" prop="incentive">
             <incentive-select :value="form.incentive" @change="incentiveChange"></incentive-select>
           </el-form-item>
           <el-form-item label="附件上传">
@@ -184,8 +184,41 @@ export default {
       },
       roleSelect: [],
       formRules: {
-        aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        bb: [{ required: true, message: "请填写名称", trigger: "blur" }],
+        infoSource: [
+          { required: true, message: "信息来源不能为空", trigger: "blur" },
+        ],
+        happenDate: [
+          { required: true, message: "发生日期不能为空", trigger: "blur" },
+        ],
+        riskLevel1: [
+          { required: true, message: "危险源层级一不能为空", trigger: "blur" },
+        ],
+        riskLevel2: [
+          { required: true, message: "危险源层级二不能为空", trigger: "blur" },
+        ],
+        sourceOfRisk: [
+          { required: true, message: "危险源不能为空", trigger: "blur" },
+        ],
+        aircraftType: [
+          { required: true, message: "机型不能为空", trigger: "blur" },
+        ],
+        responsibleUnit: [
+          { required: true, message: "责任单位不能为空", trigger: "blur" },
+        ],
+        product: [{ required: true, message: "产品不能为空", trigger: "blur" }],
+        systemCode: [
+          { required: true, message: "系统不能为空", trigger: "blur" },
+        ],
+        eventOverview: [
+          { required: true, message: "事件概述不能为空", trigger: "blur" },
+        ],
+        causeAnalysis: [
+          { required: true, message: "原因分析不能为空", trigger: "blur" },
+        ],
+        risk: [{ required: true, message: "风险不能为空", trigger: "blur" }],
+        incentive: [
+          { required: true, message: "诱因不能为空", trigger: "blur" },
+        ],
       },
       entArr: [],
       infobaseList: [],
@@ -222,6 +255,16 @@ export default {
     files(val) {
       if (val && val.length > 0) this.form.filesId = val.map((r) => r.id);
       else this.form.filesId = [];
+    },
+    form: {
+      handler(val) {
+        for (let x in val) {
+          if (!!val[x]) {
+            this.$refs.form.clearValidate(x);
+          }
+        }
+      },
+      deep: true,
     },
   },
   methods: {

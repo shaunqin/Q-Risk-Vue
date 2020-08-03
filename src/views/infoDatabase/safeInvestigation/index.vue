@@ -2,22 +2,8 @@
   <div class="app-container">
     <eform ref="form" :is-add="isAdd"></eform>
     <div class="head-container">
-      <el-input
-        size="mini"
-        v-model="query"
-        clearable
-        placeholder="请输入你要搜索的内容"
-        style="width: 200px;"
-        class="filter-item"
-      />
-      <el-button
-        class="filter-item"
-        size="mini"
-        type="success"
-        icon="el-icon-search"
-        @click="toQuery(query)"
-      >搜索</el-button>
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
+      <esearch />
+      <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @click="add">新增</el-button>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-download">导出</el-button>
     </div>
     <!--表格渲染-->
@@ -82,10 +68,11 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
+import esearch from "./search";
 import { format } from "@/utils/datetime";
 import { detailInfobase, delInfobase } from "@/api/infodb";
 export default {
-  components: { eform },
+  components: { eform, esearch },
   mixins: [initData],
   data() {
     return {
@@ -101,15 +88,8 @@ export default {
     format,
     beforeInit() {
       this.url = `/infoDatabase_mgr/infoDatabase_mgr/query/pageList/${this.page}/${this.size}`;
-      this.params = { type: 1 };
+      this.params = { type: 1, ...this.params };
       return true;
-    },
-    toQuery(name) {
-      // if (!name) {
-      //   this.page = 1;
-      //   this.init();
-      //   return;
-      // }
     },
     add() {
       this.isAdd = true;
