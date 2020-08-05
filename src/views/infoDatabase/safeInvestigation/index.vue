@@ -1,9 +1,17 @@
 <template>
   <div class="app-container">
     <eform ref="form" :is-add="isAdd"></eform>
+    <upload-excel ref="uploadExcel" type="1"></upload-excel>
     <div class="head-container">
       <esearch />
       <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @click="add">新增</el-button>
+      <el-button
+        class="filter-item"
+        size="mini"
+        type="warning"
+        icon="el-icon-upload"
+        @click="upload"
+      >导入</el-button>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-download">导出</el-button>
     </div>
     <!--表格渲染-->
@@ -15,8 +23,8 @@
       :highlight-current-row="true"
       style="width: 100%;"
     >
-      <el-table-column type="index" width="50" />
-      <el-table-column prop="infoSourceText" label="信息来源" />
+      <el-table-column type="index" width="50" :index="getIndex" />
+      <el-table-column prop="infoSourceText" label="信息来源" width="100" />
       <el-table-column label="发生日期" width="100">
         <template slot-scope="{row}">
           <span v-if="row.happenDate!=null">{{row.happenDate.substring(0,10)}}</span>
@@ -71,8 +79,9 @@ import eform from "./form";
 import esearch from "./search";
 import { format } from "@/utils/datetime";
 import { detailInfobase, delInfobase } from "@/api/infodb";
+import uploadExcel from "../components/uploadExcel";
 export default {
-  components: { eform, esearch },
+  components: { eform, esearch, uploadExcel },
   mixins: [initData],
   data() {
     return {
@@ -139,6 +148,9 @@ export default {
           });
         })
         .catch(() => {});
+    },
+    upload() {
+      this.$refs.uploadExcel.dialog = true;
     },
   },
 };

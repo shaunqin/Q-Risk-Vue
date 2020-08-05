@@ -1,8 +1,8 @@
 <template>
   <el-form size="mini" :model="queryForm" label-width="75px" label-position="left" inline>
-    <el-form-item label="信息来源">
-      <el-input v-model="queryForm.infoSourceText" placeholder="请输入信息来源"></el-input>
-    </el-form-item>
+    <!-- <el-form-item label="信息来源">
+      <el-input v-model="queryForm.infoSource" placeholder="请输入信息来源"></el-input>
+    </el-form-item> -->
     <el-form-item label="事件概述">
       <el-input v-model="queryForm.eventOverview" placeholder="请输入事件概述"></el-input>
     </el-form-item>

@@ -15,7 +15,7 @@
       :highlight-current-row="true"
       style="width: 100%;"
     >
-      <el-table-column type="index" width="50" />
+      <el-table-column type="index" width="50" :index="getIndex" />
       <el-table-column prop="id" label="编号" />
       <el-table-column label="发生日期" width="120">
         <template slot-scope="{row}">{{row.dateTime.substring(0,10)}}</template>

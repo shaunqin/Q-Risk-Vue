@@ -131,3 +131,11 @@ export const delInfobase = (id) => {
         method: 'delete'
     })
 }
+// 安全调查|质量调查|客户投诉 导入
+export const addByExcel = (data) => {
+    return request({
+        url: `/infoDatabase_mgr/infoDatabase_mgr/addByExcel`,
+        method: 'post',
+        data
+    })
+}
