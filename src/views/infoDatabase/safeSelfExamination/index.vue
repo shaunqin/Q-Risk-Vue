@@ -18,7 +18,9 @@
       <el-table-column type="index" width="50" :index="getIndex" />
       <el-table-column prop="id" label="编号" />
       <el-table-column label="发生日期" width="120">
-        <template slot-scope="{row}">{{row.dateTime.substring(0,10)}}</template>
+        <template slot-scope="{row}">
+          <span v-if="row.dateTime!=null">{{format(row.dateTime).substring(0,10)}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="problemDescription" label="问题描述" width="200" show-overflow-tooltip />
       <el-table-column prop="cc" label="责任单位层级一" width="120" />
@@ -68,6 +70,7 @@ import initData from "@/mixins/initData";
 import eform from "./form";
 import esearch from "./search";
 import { detailSuperviseSa } from "@/api/infodb";
+import { format } from "@/utils/datetime";
 export default {
   components: { eform, esearch },
   mixins: [initData],
@@ -82,6 +85,7 @@ export default {
     this.init();
   },
   methods: {
+    format,
     beforeInit() {
       this.url = `/info_mgr/supervise_mgr/query/pageListSa/${this.page}/${this.size}`;
       return true;

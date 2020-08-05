@@ -2,7 +2,7 @@
   <div class="app-container">
     <eform ref="form" :is-add="isAdd"></eform>
     <div class="head-container">
-     <esearch />
+      <esearch />
       <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @click="add">新增</el-button>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-download">导出</el-button>
     </div>
@@ -18,7 +18,9 @@
       <el-table-column type="index" width="50" :index="getIndex" />
       <el-table-column prop="id" label="编号" />
       <el-table-column label="发生日期" width="120">
-        <template slot-scope="{row}">{{row.dateTime.substring(0,10)}}</template>
+        <template slot-scope="{row}">
+          <span v-if="row.dateTime!=null">{{format(row.dateTime).substring(0,10)}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="problemDescription" label="问题描述" width="200" show-overflow-tooltip />
       <el-table-column prop="cc" label="责任单位层级一" width="120" />
@@ -68,8 +70,9 @@ import initData from "@/mixins/initData";
 import eform from "./form";
 import esearch from "./search";
 import { detailQualityAduit } from "@/api/infodb";
+import { format } from "@/utils/datetime";
 export default {
-  components: { eform ,esearch},
+  components: { eform, esearch },
   mixins: [initData],
   data() {
     return {
@@ -82,6 +85,7 @@ export default {
     this.init();
   },
   methods: {
+    format,
     beforeInit() {
       this.url = `/info_mgr/infoAudit_mgr/query/pageList/${this.page}/${this.size}`;
       return true;

@@ -21,12 +21,16 @@ export function formatWithSeperator(datetime, dateSeprator, timeSeprator) {
   if (datetime != null) {
     const dateMat = new Date(datetime)
     const year = dateMat.getFullYear()
-    const month = dateMat.getMonth() + 1
-    const day = dateMat.getDate()
-    const hh = dateMat.getHours()
-    const mm = dateMat.getMinutes()
-    const ss = dateMat.getSeconds()
+    const month = getZero(dateMat.getMonth() + 1)
+    const day = getZero(dateMat.getDate())
+    const hh = getZero(dateMat.getHours())
+    const mm = getZero(dateMat.getMinutes())
+    const ss = getZero(dateMat.getSeconds())
     const timeFormat = year + dateSeprator + month + dateSeprator + day + ' ' + hh + timeSeprator + mm + timeSeprator + ss
     return timeFormat
   }
+}
+
+function getZero(v) {
+  return v < 10 ? "0" + v : v;
 }
