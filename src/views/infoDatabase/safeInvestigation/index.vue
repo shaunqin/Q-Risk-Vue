@@ -3,7 +3,7 @@
     <eform ref="form" :is-add="isAdd"></eform>
     <upload-excel ref="uploadExcel" type="1"></upload-excel>
     <div class="head-container">
-      <esearch />
+      <esearch ref="search" />
       <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @click="add">新增</el-button>
       <el-button
         class="filter-item"
@@ -12,7 +12,14 @@
         icon="el-icon-upload"
         @click="upload"
       >导入</el-button>
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-download">导出</el-button>
+      <el-button
+        class="filter-item"
+        size="mini"
+        type="success"
+        icon="el-icon-download"
+        :loading="downloadLoading"
+        @click="download"
+      >导出</el-button>
     </div>
     <!--表格渲染-->
     <el-table
@@ -33,7 +40,7 @@
       <el-table-column prop="place" label="地点" />
       <el-table-column prop="aircraftTypeText" label="机型" />
       <el-table-column prop="eventOverview" label="事件概述" />
-      <el-table-column prop="causeAnalysis" label="原因分析" width="120" />
+      <el-table-column prop="causeAnalysis" label="原因分析" width="120" show-overflow-tooltip />
       <el-table-column prop="departmentNameCn" label="责任单位" width="120" show-overflow-tooltip />
       <el-table-column prop="productText" label="产品" width="120" />
       <el-table-column prop="systemText" label="系统" width="110" />
@@ -44,13 +51,7 @@
       <el-table-column prop="incentive" label="诱因" width="120" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button
-            :disabled="scope.row.userName !== userInfo.userName"
-            size="mini"
-            type="primary"
-            icon="el-icon-edit"
-            @click="edit(scope.row)"
-          />
+          <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
           <el-button
             slot="reference"
             type="danger"
@@ -78,16 +79,15 @@ import initData from "@/mixins/initData";
 import eform from "./form";
 import esearch from "./search";
 import { format } from "@/utils/datetime";
-import { detailInfobase, delInfobase } from "@/api/infodb";
+import { detailInfobase, delInfobase, downloadToExcel } from "@/api/infodb";
 import uploadExcel from "../components/uploadExcel";
+import { saveAs } from "file-saver";
 export default {
   components: { eform, esearch, uploadExcel },
   mixins: [initData],
   data() {
     return {
-      isSuperAdmin: false,
-      userInfo: {},
-      selections: [],
+      downloadLoading: false,
     };
   },
   created() {
@@ -151,6 +151,26 @@ export default {
     },
     upload() {
       this.$refs.uploadExcel.dialog = true;
+    },
+    download() {
+      this.downloadLoading = true;
+      let data = { type: "1", ...this.$refs.search.queryForm };
+      console.log(data);
+      downloadToExcel(data)
+        .then((res) => {
+          // blob对象
+          let blob = new Blob([res], {
+            type:
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
+
+          saveAs(blob, `${format(new Date())}.xlsx`);
+          this.downloadLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+          this.$message.error("导出错误!");
+        });
     },
   },
 };

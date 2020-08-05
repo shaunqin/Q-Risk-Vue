@@ -139,3 +139,12 @@ export const addByExcel = (data) => {
         data
     })
 }
+// 安全调查|质量调查|客户投诉 导出
+export const downloadToExcel = (params) => {
+    return request({
+        url: `/infoDatabase_mgr/infoDatabase_mgr/downloadToExcel`,
+        method: 'post',
+        params,
+        responseType: "blob"
+    })
+}
