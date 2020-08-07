@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 监督自查 add
+// 质量审核|外部检查|监督自查|安全自查 add
 export const addSupervise = (data) => {
     return request({
         url: `/info_mgr/supervise_mgr/add`,
@@ -9,7 +9,7 @@ export const addSupervise = (data) => {
     })
 }
 
-// 监督自查 detail
+// 质量审核|外部检查|监督自查|安全自查 detail
 export const detailSupervise = (id) => {
     return request({
         url: `/info_mgr/supervise_mgr/query/detail/${id}`,
@@ -17,7 +17,7 @@ export const detailSupervise = (id) => {
     })
 }
 
-// 监督自查 modify
+// 质量审核|外部检查|监督自查|安全自查 modify
 export const modifySupervise = (data) => {
     return request({
         url: `/info_mgr/supervise_mgr/modify`,
@@ -25,79 +25,15 @@ export const modifySupervise = (data) => {
         data
     })
 }
-
-// 安全自查 add
-export const addSuperviseSa = (data) => {
+// 质量审核|外部检查|监督自查|安全自查 del
+export const delSupervise = (id) => {
     return request({
-        url: `/info_mgr/supervise_mgr/addSa`,
-        method: 'post',
-        data
-    })
-}
-// 安全自查 detail
-export const detailSuperviseSa = (id) => {
-    return request({
-        url: `/info_mgr/supervise_mgr/query/detailSa/${id}`,
-        method: 'get'
-    })
-}
-// 安全自查 modify
-export const modifySuperviseSa = (data) => {
-    return request({
-        url: `/info_mgr/supervise_mgr/modifySa`,
-        method: 'put',
-        data
-    })
-}
-
-// 质量审核 add
-export const addQualityAduit = (data) => {
-    return request({
-        url: `/info_mgr/infoAudit_mgr/add`,
-        method: 'post',
-        data
-    })
-}
-// 质量审核 detail
-export const detailQualityAduit = (id) => {
-    return request({
-        url: `/info_mgr/infoAudit_mgr/query/detail/${id}`,
-        method: 'get'
-    })
-}
-// 质量审核 modify
-export const modifyQualityAduit = (data) => {
-    return request({
-        url: `/info_mgr/infoAudit_mgr/modify`,
-        method: 'put',
-        data
+        url: `/info_mgr/supervise_mgr/delete/${id}`,
+        method: 'post'
     })
 }
 
 
-// 外部检查 add
-export const addExternalInspection = (data) => {
-    return request({
-        url: `/info_mgr/infoAudit_mgr/addSa`,
-        method: 'post',
-        data
-    })
-}
-// 外部检查 detail
-export const detailExternalInspection = (id) => {
-    return request({
-        url: `/info_mgr/infoAudit_mgr/query/detailSa/${id}`,
-        method: 'get'
-    })
-}
-// 外部检查 modify
-export const modifyExternalInspection = (data) => {
-    return request({
-        url: `/info_mgr/infoAudit_mgr/modifySa`,
-        method: 'put',
-        data
-    })
-}
 
 // 安全调查|质量调查|客户投诉 add
 export const addInfobase = (data) => {

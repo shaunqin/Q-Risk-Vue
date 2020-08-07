@@ -129,6 +129,7 @@ export default {
         riskLevel2: "",
         sourceOfRisk: "",
         system: "",
+        dataType: "3",
       },
       roleSelect: [],
       formRules: {
@@ -184,9 +185,11 @@ export default {
     },
     form: {
       handler(val) {
-        for (let x in val) {
-          if (!!val[x]) {
-            this.$refs.form.clearValidate(x);
+        if (this.$refs.form != null) {
+          for (let x in val) {
+            if (!!val[x]) {
+              this.$refs.form.clearValidate(x);
+            }
           }
         }
       },
@@ -282,6 +285,7 @@ export default {
         riskLevel2: "",
         sourceOfRisk: "",
         system: "",
+        dataType: "3",
       };
     },
     dictChange(val, key) {

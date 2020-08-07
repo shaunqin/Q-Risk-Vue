@@ -23,16 +23,16 @@
         </template>
       </el-table-column>
       <el-table-column prop="problemDescription" label="问题描述" width="200" show-overflow-tooltip />
-      <el-table-column prop="cc" label="责任单位层级一" width="120" />
-      <el-table-column prop="dd" label="责任单位层级二" width="120" />
+      <el-table-column prop="deptName1" label="责任单位层级一" width="120" />
+      <el-table-column prop="deptName2" label="责任单位层级二" width="120" />
       <el-table-column prop="departmentNameCn" label="责任部门" width="120" show-overflow-tooltip />
       <el-table-column prop="productName" label="产品" width="120" />
       <el-table-column prop="systemName" label="系统" />
       <el-table-column prop="riskLevelName1" label="危险源层级一" width="110" />
       <el-table-column prop="riskLevelName2" label="危险源层级二" width="110" />
       <el-table-column prop="sourceOfRiskName" label="危险源" width="200" />
-      <el-table-column prop="risk" label="风险" />
-      <el-table-column prop="incentive" label="诱因" />
+      <el-table-column prop="risk" label="风险" width="120" show-overflow-tooltip />
+      <el-table-column prop="incentive" label="诱因" width="120" show-overflow-tooltip />
       <el-table-column prop="cc" label="危险源次数" width="100" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
@@ -69,7 +69,7 @@
 import initData from "@/mixins/initData";
 import eform from "./form";
 import esearch from "./search";
-import { detailSuperviseSa } from "@/api/infodb";
+import { detailSupervise, delSupervise } from "@/api/infodb";
 import { format } from "@/utils/datetime";
 export default {
   components: { eform, esearch },
@@ -87,7 +87,8 @@ export default {
   methods: {
     format,
     beforeInit() {
-      this.url = `/info_mgr/supervise_mgr/query/pageListSa/${this.page}/${this.size}`;
+      this.url = `/info_mgr/supervise_mgr/query/pageList/${this.page}/${this.size}`;
+      this.params.dataType = "4";
       return true;
     },
     add() {
@@ -97,7 +98,7 @@ export default {
     edit(row) {
       this.isAdd = false;
       let _this = this.$refs.form;
-      detailSuperviseSa(row.id).then((res) => {
+      detailSupervise(row.id).then((res) => {
         const { obj } = res;
         _this.form = {
           id: obj.id,
@@ -111,6 +112,7 @@ export default {
           riskLevel2: obj.riskLevel2,
           sourceOfRisk: obj.sourceOfRisk,
           system: obj.system,
+          dataType: obj.dataType,
         };
         _this.dialog = true;
       });
@@ -118,17 +120,16 @@ export default {
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!",
+          delSupervise(id).then((res) => {
+            if (res.code != "200") {
+              this.$message.error(res.msg);
+            } else {
+              this.$message.success("删除成功!");
+              this.init();
+            }
           });
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
+        .catch(() => {});
     },
   },
 };
