@@ -41,11 +41,6 @@
           <span v-else>{{row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="字典编码">
-        <template slot-scope="{row}">
-          <span>{{row.externMap.dicCode}}</span>
-        </template>
-      </el-table-column>
       <el-table-column prop="value" label="值" />
 
       <el-table-column label="操作" width="130px" align="center" fixed="right">

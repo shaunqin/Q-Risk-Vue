@@ -7,17 +7,14 @@
     :title="isAdd ? '新增数据' : '编辑数据'"
     custom-class="common_dialog"
   >
-    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="70px">
+    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="auto">
       <el-form-item v-if="form.parentId || isAdd" label="父级">
         <dict-select :value="form.parentId" @change="parentIdChange"></dict-select>
       </el-form-item>
-      <el-form-item label="字典描述" prop="name">
+      <el-form-item label="字典描述" prop="dicDesc">
         <el-input v-model="form.dicDesc" style="width: 100%;" />
       </el-form-item>
-      <el-form-item label="字典编码">
-        <el-input v-model="form.dicCode" style="width: 100%;" />
-      </el-form-item>
-      <el-form-item label="值">
+      <el-form-item label="值" prop="dicValue">
         <el-input v-model="form.dicValue" style="width: 100%;" />
       </el-form-item>
     </el-form>
@@ -36,23 +33,23 @@ export default {
   props: {
     isAdd: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       loading: false,
       dialog: false,
       form: {
-        dicCode: "",
         dicDesc: "",
         dicValue: "",
-        parentId: null
+        parentId: null,
       },
       rules: {
-        funcDesc: [{ required: true, message: "请输入名称", trigger: "blur" }]
+        dicDesc: [{ required: true, message: "描述不能为空", trigger: "blur" }],
+        dicValue: [{ required: true, message: "值不能为空", trigger: "blur" }],
       },
-      entArr: []
+      entArr: [],
     };
   },
   created() {},
@@ -61,7 +58,7 @@ export default {
       this.resetForm();
     },
     doSubmit() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           this.loading = true;
           if (this.isAdd) {
@@ -72,11 +69,11 @@ export default {
     },
     doAdd() {
       add(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "添加成功",
-              type: "success"
+              type: "success",
             });
             this.resetForm();
             this.loading = false;
@@ -85,18 +82,18 @@ export default {
             this.$message.error(res.msg);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
     },
     doModify() {
       modify(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "修改成功",
-              type: "success"
+              type: "success",
             });
             this.resetForm();
             this.loading = false;
@@ -105,7 +102,7 @@ export default {
             this.$message.error(res.msg);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -117,13 +114,13 @@ export default {
         dicCode: "",
         dicDesc: "",
         dicValue: "",
-        parentId: null
+        parentId: null,
       };
     },
     parentIdChange(val) {
       this.form.parentId = val;
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -79,8 +79,8 @@ export const addByExcel = (data) => {
 export const downloadToExcel = (params) => {
     return request({
         url: `/infoDatabase_mgr/infoDatabase_mgr/downloadToExcel`,
-        method: 'post',
+        method: 'get',
         params,
-        responseType: "blob"
+        // responseType: "blob"
     })
 }

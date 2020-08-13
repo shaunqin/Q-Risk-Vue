@@ -29,7 +29,7 @@
                 v-for="item in riskLevel1List"
                 :key="item.key"
                 :label="item.name"
-                :value="item.externMap.dicCode"
+                :value="item.value"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -44,7 +44,7 @@
                 v-for="item in riskLevel2List"
                 :key="item.key"
                 :label="item.name"
-                :value="item.externMap.dicCode"
+                :value="item.value"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -243,7 +243,7 @@ export default {
       handler(val) {
         if (this.riskLevel1List.length > 0) {
           let list = this.riskLevel1List.filter(
-            (r) => r.externMap.dicCode == val
+            (r) => r.value == val
           );
           if (list && list.length > 0) {
             this.riskLevel2List = list[0].children;

@@ -5,7 +5,7 @@
       v-for="item in list"
       :key="item.key"
       :label="item.name"
-      :value="item.externMap.dicCode"
+      :value="item.value"
     ></el-option>
   </el-select>
 </template>
