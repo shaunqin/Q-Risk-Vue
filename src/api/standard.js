@@ -256,3 +256,12 @@ export const queryIncentiveList = () => {
     method: 'get'
   })
 }
+
+// 条件概率 生成
+export const createProbability = (data) => {
+  return request({
+    url: `/info_mgr/probability_mgr/hazard/gen_prob`,
+    method: 'post',
+    data
+  })
+}

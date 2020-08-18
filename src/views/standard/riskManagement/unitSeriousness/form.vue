@@ -39,7 +39,7 @@ import department from "@/components/Department";
 
 export default {
   components: {
-    department
+    department,
   },
   data() {
     return {
@@ -51,22 +51,22 @@ export default {
         riskLevel: 0,
         score: 0,
         enable: "",
-        type: "2"
+        type: "2",
       },
       roleSelect: [],
       formRules: {
         standard: [
-          { required: true, message: "请填写界定标准", trigger: "blur" }
-        ]
+          { required: true, message: "请填写界定标准", trigger: "blur" },
+        ],
       },
-      entArr: []
+      entArr: [],
     };
   },
   props: {
     isAdd: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   created() {},
   methods: {
@@ -74,7 +74,7 @@ export default {
       this.resetForm();
     },
     doSubmit() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           this.loading = true;
           if (this.isAdd) {
@@ -85,39 +85,41 @@ export default {
     },
     doAdd() {
       addRiskLevel(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "添加成功",
-              type: "success"
+              type: "success",
             });
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
     doModify() {
       modifyRiskLevel(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "修改成功",
-              type: "success"
+              type: "success",
             });
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
@@ -130,13 +132,13 @@ export default {
         riskLevel: 0,
         score: 0,
         enable: "",
-        type: "2"
+        type: "2",
       };
     },
     deptChange(val) {
       this.form.deptPath = val;
-    }
-  }
+    },
+  },
 };
 </script>
 

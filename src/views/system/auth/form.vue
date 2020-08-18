@@ -137,6 +137,7 @@ export default {
             });
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
         })
         .catch((err) => {
@@ -162,6 +163,7 @@ export default {
             });
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
         })
         .catch((err) => {

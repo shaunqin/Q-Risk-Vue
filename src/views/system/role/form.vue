@@ -36,8 +36,8 @@ export default {
   props: {
     isAdd: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -47,12 +47,12 @@ export default {
         deptPath: null,
         roleDesc: "",
         code: "ROLE_",
-        sn: 0
+        sn: 0,
       },
       rules: {
-        funcDesc: [{ required: true, message: "请输入名称", trigger: "blur" }]
+        funcDesc: [{ required: true, message: "请输入名称", trigger: "blur" }],
       },
-      entArr: []
+      entArr: [],
     };
   },
   created() {},
@@ -61,7 +61,7 @@ export default {
       this.resetForm();
     },
     doSubmit() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           this.loading = true;
           if (this.isAdd) {
@@ -72,40 +72,42 @@ export default {
     },
     doAdd() {
       add(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "添加成功",
-              type: "success"
+              type: "success",
             });
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
     },
     doModify() {
       modify(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "修改成功",
-              type: "success"
+              type: "success",
             });
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -117,13 +119,13 @@ export default {
         deptPath: null,
         roleDesc: "",
         code: "ROLE_",
-        sn: 0
+        sn: 0,
       };
     },
     change(val) {
       this.form.deptPath = val;
-    }
-  }
+    },
+  },
 };
 </script>
 

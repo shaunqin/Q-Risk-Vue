@@ -47,7 +47,13 @@
       <el-button type="primary" size="mini" @click="addTable" style="margin-bottom:10px">新增一行</el-button>
       <el-button type="warning" size="mini" style="margin-bottom:10px">上传附件</el-button>
       <!--表格渲染-->
-      <el-table v-loading="loading" :data="data" size="small" style="width: 100%;" max-height="400px">
+      <el-table
+        v-loading="loading"
+        :data="data"
+        size="small"
+        style="width: 100%;"
+        max-height="400px"
+      >
         <el-table-column type="index" width="50" />
         <el-table-column prop="aa" label="危险源" width="200">
           <template slot-scope="scope">
@@ -133,14 +139,14 @@ export default {
         bb: "",
         cc: "",
         dd: "",
-        ee: ""
+        ee: "",
       },
       roleSelect: [],
       formRules: {
         aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        bb: [{ required: true, message: "请填写名称", trigger: "blur" }]
+        bb: [{ required: true, message: "请填写名称", trigger: "blur" }],
       },
-      entArr: []
+      entArr: [],
     };
   },
   props: {},
@@ -153,7 +159,7 @@ export default {
       this.dialog = false;
       this.$message({
         message: "填报成功",
-        type: "success"
+        type: "success",
       });
       this.resetForm();
     },
@@ -163,46 +169,48 @@ export default {
       let arr = [];
       for (let i = 0; i < data.length; i++) {
         let obj = {
-          id: ""
+          id: "",
         };
         obj.id = data[i];
         arr.push(obj);
       }
       this.form.roleList = arr;
       add(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "添加成功",
-              type: "success"
+              type: "success",
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
     doModify() {
       modify(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "修改成功",
-              type: "success"
+              type: "success",
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
@@ -217,7 +225,7 @@ export default {
       let arr = [];
       for (let i = 0; i < e.length; i++) {
         let obj = {
-          id: ""
+          id: "",
         };
         obj.id = e[i];
         arr.push(obj);
@@ -237,10 +245,10 @@ export default {
         ii: "",
         jj: "",
         kk: "",
-        ll: ""
+        ll: "",
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

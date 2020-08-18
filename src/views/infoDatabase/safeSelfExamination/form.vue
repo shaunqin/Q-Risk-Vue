@@ -246,9 +246,6 @@ export default {
             this.$message.error(res.msg);
             this.loading = false;
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
         .catch((err) => {
           this.loading = false;

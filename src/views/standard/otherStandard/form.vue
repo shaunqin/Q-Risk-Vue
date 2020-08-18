@@ -61,7 +61,7 @@ import { addOtherStand, modifyOtherStand } from "@/api/standard";
 import eupload from "@/components/Upload/index";
 export default {
   components: {
-    eupload
+    eupload,
   },
   data() {
     return {
@@ -72,37 +72,37 @@ export default {
         name: "",
         remark: "",
         enable: "",
-        filesId: []
+        filesId: [],
       },
       formRules: {
         standardNo: [
-          { required: true, message: "请填写编号", trigger: "blur" }
+          { required: true, message: "请填写编号", trigger: "blur" },
         ],
-        name: [{ required: true, message: "请填写名称", trigger: "blur" }]
+        name: [{ required: true, message: "请填写名称", trigger: "blur" }],
       },
       entArr: [],
-      files: []
+      files: [],
     };
   },
   props: {
     isAdd: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   created() {},
   watch: {
     files(val) {
-      if (val && val.length > 0) this.form.filesId = val.map(r => r.id);
+      if (val && val.length > 0) this.form.filesId = val.map((r) => r.id);
       else this.form.filesId = [];
-    }
+    },
   },
   methods: {
     cancel() {
       this.resetForm();
     },
     doSubmit() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           this.loading = true;
           if (this.isAdd) {
@@ -113,39 +113,41 @@ export default {
     },
     doAdd() {
       addOtherStand(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "添加成功",
-              type: "success"
+              type: "success",
             });
             this.resetForm();
             this.loading = false;
             this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
     doModify() {
       modifyOtherStand(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "修改成功",
-              type: "success"
+              type: "success",
             });
             this.resetForm();
             this.loading = false;
             this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
@@ -157,7 +159,7 @@ export default {
         name: "",
         remark: "",
         enable: "",
-        filesId: []
+        filesId: [],
       };
       this.files = [];
     },
@@ -167,8 +169,8 @@ export default {
     },
     delFile(index) {
       this.files.splice(index, 1);
-    }
-  }
+    },
+  },
 };
 </script>
 

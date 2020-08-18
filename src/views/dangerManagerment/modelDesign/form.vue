@@ -66,11 +66,11 @@ export default {
         name: "",
         remark: "",
         formula: "",
-        enable: ""
+        enable: "",
       },
       roleSelect: [],
       formRules: {
-        formula: [{ required: true, message: "请填写公式", trigger: "blur" }]
+        formula: [{ required: true, message: "请填写公式", trigger: "blur" }],
       },
       entArr: [],
       designDesc: `各公式含义:
@@ -78,14 +78,14 @@ m:危险源关联事件次数(根据时间统计);
 n:危险源关联安全信息次数(根据时间统计);
 a:危险源关联的次数;
 s:严重性量化分值(查询);
-z:风险值(最终计算值)`
+z:风险值(最终计算值)`,
     };
   },
   props: {
     isAdd: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   created() {},
   methods: {
@@ -93,7 +93,7 @@ z:风险值(最终计算值)`
       this.resetForm();
     },
     doSubmit() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           this.loading = true;
           if (this.isAdd) {
@@ -104,39 +104,41 @@ z:风险值(最终计算值)`
     },
     doAdd() {
       addModel(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "添加成功",
-              type: "success"
+              type: "success",
             });
             this.resetForm();
             this.loading = false;
             this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
     doModify() {
       modifyModel(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "修改成功",
-              type: "success"
+              type: "success",
             });
             this.resetForm();
             this.loading = false;
             this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
@@ -148,10 +150,10 @@ z:风险值(最终计算值)`
         name: "",
         remark: "",
         formula: "",
-        enable: ""
+        enable: "",
       };
-    }
-  }
+    },
+  },
 };
 </script>
 

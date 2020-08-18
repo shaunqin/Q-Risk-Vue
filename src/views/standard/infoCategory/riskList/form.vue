@@ -69,22 +69,22 @@ export default {
         riskDesc: "",
         levels: 0,
         enable: 0,
-        isKey: 0
+        isKey: 0,
       },
       roleSelect: [],
       formRules: {
         aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        bb: [{ required: true, message: "请填写名称", trigger: "blur" }]
+        bb: [{ required: true, message: "请填写名称", trigger: "blur" }],
       },
       entArr: [],
-      levelList: []
+      levelList: [],
     };
   },
   props: {
     isAdd: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   created() {
     this.getLevelList();
@@ -94,7 +94,7 @@ export default {
       this.resetForm();
     },
     doSubmit() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           this.loading = true;
           if (this.isAdd) {
@@ -105,39 +105,41 @@ export default {
     },
     doAdd() {
       addRisk(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "添加成功",
-              type: "success"
+              type: "success",
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
     doModify() {
       modifyRisk(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "修改成功",
-              type: "success"
+              type: "success",
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
@@ -150,21 +152,21 @@ export default {
         riskDesc: "",
         levels: 0,
         enable: 0,
-        isKey: 0
+        isKey: 0,
       };
       this.roleSelect = [];
     },
     getLevelList() {
-      queryDictByName("severity_level").then(res => {
-        res.obj[0].children.map(item => {
+      queryDictByName("severity_level").then((res) => {
+        res.obj[0].children.map((item) => {
           this.levelList.push({
             label: item.name,
-            value: Number(item.value)
+            value: Number(item.value),
           });
         });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

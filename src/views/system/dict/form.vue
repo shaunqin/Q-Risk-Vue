@@ -80,6 +80,7 @@ export default {
             this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
         })
         .catch((err) => {
@@ -100,6 +101,7 @@ export default {
             this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
         })
         .catch((err) => {

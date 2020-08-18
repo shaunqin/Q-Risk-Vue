@@ -45,21 +45,21 @@ export default {
         standardLevel: "",
         color: "",
         minRiskValue: "",
-        maxRiskValue: ""
+        maxRiskValue: "",
       },
       roleSelect: [],
       formRules: {
         aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        bb: [{ required: true, message: "请填写名称", trigger: "blur" }]
+        bb: [{ required: true, message: "请填写名称", trigger: "blur" }],
       },
-      entArr: []
+      entArr: [],
     };
   },
   props: {
     isAdd: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   created() {},
   methods: {
@@ -67,7 +67,7 @@ export default {
       this.resetForm();
     },
     doSubmit() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           this.loading = true;
           if (this.isAdd) {
@@ -78,39 +78,41 @@ export default {
     },
     doAdd() {
       addRiskLevelStandard(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "添加成功",
-              type: "success"
+              type: "success",
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
     doModify() {
       modifyRiskLevelStandard(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "修改成功",
-              type: "success"
+              type: "success",
             });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
           } else {
             this.$message.error(res.msg);
+            this.loading = false;
           }
-          this.resetForm();
-          this.loading = false;
-          this.$parent.init();
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },
@@ -122,13 +124,13 @@ export default {
         standardLevel: "",
         color: "",
         minRiskValue: "",
-        maxRiskValue: ""
+        maxRiskValue: "",
       };
     },
     deptChange(val) {
       this.form.deptPath = val;
-    }
-  }
+    },
+  },
 };
 </script>
 

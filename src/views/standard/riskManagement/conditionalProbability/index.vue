@@ -18,6 +18,21 @@
         @click="toQuery(query)"
       >搜索</el-button>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
+      <el-date-picker
+        unlink-panels
+        v-model="date"
+        size="mini"
+        type="daterange"
+        value-format="yyyy-MM-dd"
+        style="width:260px"
+      ></el-date-picker>
+      <el-button
+        class="filter-item"
+        size="mini"
+        type="primary"
+        icon="el-icon-finished"
+        @click="create"
+      >生成</el-button>
     </div>
     <!--表格渲染-->
     <el-table
@@ -65,7 +80,11 @@
 import initData from "@/mixins/initData";
 import eform from "./form";
 import { conditionalProbability } from "@/dataSource";
-import { detailProbability, delProbability } from "@/api/standard";
+import {
+  detailProbability,
+  delProbability,
+  createProbability,
+} from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
@@ -73,8 +92,17 @@ export default {
     return {
       isSuperAdmin: false,
       userInfo: {},
-      selections: []
+      selections: [],
+      date: "",
     };
+  },
+  computed: {
+    startDate() {
+      return this.date ? this.date[0] : "";
+    },
+    endDate() {
+      return this.date ? this.date[1] : "";
+    },
   },
   mounted() {
     this.init();
@@ -90,7 +118,7 @@ export default {
       this.init();
     },
     // 选择切换
-    selectionChange: function(selections) {
+    selectionChange: function (selections) {
       this.selections = selections;
       this.$emit("selectionChange", { selections: selections });
     },
@@ -101,7 +129,7 @@ export default {
     edit(row) {
       this.isAdd = false;
       let _this = this.$refs.form;
-      detailProbability(row.id).then(res => {
+      detailProbability(row.id).then((res) => {
         let { obj } = res;
         if (res.code == "200") {
           _this.form = {
@@ -109,7 +137,7 @@ export default {
             diskId: obj.diskId,
             relatedResult: obj.relatedResult,
             relatedInformation: obj.relatedInformation,
-            conditionalProbability: obj.conditionalProbability
+            conditionalProbability: obj.conditionalProbability,
           };
           _this.dialog = true;
         } else {
@@ -120,11 +148,11 @@ export default {
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
-          delProbability(id).then(res => {
+          delProbability(id).then((res) => {
             if (res.code == "200") {
               this.$message({
                 type: "success",
-                message: "删除成功!"
+                message: "删除成功!",
               });
               this.init();
             } else {
@@ -133,8 +161,14 @@ export default {
           });
         })
         .catch(() => {});
-    }
-  }
+    },
+    create() {
+      let data = { startDate: this.startDate, endDate: this.endDate };
+      createProbability(data).then((res) => {
+        this.$message(res.msg);
+      });
+    },
+  },
 };
 </script>
 
