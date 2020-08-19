@@ -30,10 +30,12 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="diskNo" label="编号" />
-      <el-table-column prop="diskName" label="危险源" />
-      <el-table-column prop="diskDesc" label="描述" />
-      <el-table-column label="诱因">
+      <el-table-column prop="cateValue" label="编号" width="60" />
+      <el-table-column prop="category2" label="危险源层级" />
+      <el-table-column prop="diskNo" label="编号" width="60" />
+      <el-table-column prop="diskName" label="危险源" min-width="140" show-overflow-tooltip />
+      <el-table-column prop="diskDesc" label="描述" min-width="260" show-overflow-tooltip />
+      <!-- <el-table-column label="诱因">
         <template slot-scope="{row}">
           <div v-if="row.incentives&&row.incentives.length>0">
             <span
@@ -43,7 +45,7 @@
             >{{item.diskNo}}</span>
           </div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="风险">
         <template slot-scope="{row}">
           <div v-if="row.diskRiskVos&&row.diskRiskVos.length>0">
@@ -55,7 +57,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="是否启用" width="120px">
+      <el-table-column label="是否启用" width="80px">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.enable"
@@ -69,7 +71,6 @@
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
           <el-button
-            slot="reference"
             type="danger"
             icon="el-icon-delete"
             size="mini"
@@ -79,21 +80,21 @@
       </el-table-column>
     </el-table>
     <!--分页组件-->
-    <!-- <el-pagination
+    <el-pagination
       :total="total"
       :current-page="page"
       style="margin-top: 8px;text-align: right"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
       @current-change="pageChange"
-    />-->
+    />
   </div>
 </template>
 
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import { delHazard, modifyHazard } from "@/api/standard";
+import { delHazard, modifyHazard, detailHazard } from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
@@ -101,7 +102,7 @@ export default {
     return {
       isSuperAdmin: false,
       userInfo: {},
-      selections: []
+      selections: [],
     };
   },
   created() {
@@ -109,7 +110,7 @@ export default {
   },
   methods: {
     beforeInit() {
-      this.url = `/info_mgr/hazard_mgr/query/list`;
+      this.url = `/info_mgr/hazard_mgr/query/pageList/${this.page}/${this.size}`;
       return true;
     },
     toQuery(name) {
@@ -117,7 +118,7 @@ export default {
       this.init();
     },
     // 选择切换
-    selectionChange: function(selections) {
+    selectionChange: function (selections) {
       this.selections = selections;
       this.$emit("selectionChange", { selections: selections });
     },
@@ -126,25 +127,31 @@ export default {
       this.$refs.form.dialog = true;
     },
     edit(row) {
-      this.isAdd = false;
-      let _this = this.$refs.form;
-      _this.form = Object.assign({}, row);
-      if (row.incentives && row.incentives.length > 0) {
-        _this.selectIncentives = row.incentives.map(r => r.diskId);
-      }
-      if (row.diskRiskVos && row.diskRiskVos.length > 0) {
-        _this.selectRisks = row.diskRiskVos.map(r => r.riskId);
-      }
-      _this.dialog = true;
+      detailHazard(row.diskId).then((res) => {
+        if (res.code != "200") {
+          this.$message.error(res.msg);
+        } else {
+          this.isAdd = false;
+          let _this = this.$refs.form;
+          _this.form = res.obj;
+          if (res.obj.incentives && res.obj.incentives.length > 0) {
+            _this.selectIncentives = res.obj.incentives.map((r) => r.diskId);
+          }
+          if (res.obj.diskRiskVos && res.obj.diskRiskVos.length > 0) {
+            _this.selectRisks = res.obj.diskRiskVos.map((r) => r.riskId);
+          }
+          _this.dialog = true;
+        }
+      });
     },
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
-          delHazard(id).then(res => {
+          delHazard(id).then((res) => {
             if (res.code == "200") {
               this.$message({
                 type: "success",
-                message: "删除成功!"
+                message: "删除成功!",
               });
               this.init();
             } else {
@@ -157,9 +164,9 @@ export default {
     enableChange(val, row) {
       let editForm = {
         diskId: row.diskId,
-        enable: val
+        enable: val,
       };
-      modifyHazard(editForm).then(res => {
+      modifyHazard(editForm).then((res) => {
         if (res.code == "200") {
           this.$message.success("设置成功");
         } else {
@@ -167,8 +174,8 @@ export default {
         }
         this.init();
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

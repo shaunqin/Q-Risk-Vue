@@ -69,6 +69,13 @@ export const modifyHazard = (data, params) => {
     params
   })
 }
+//危险源 detail
+export const detailHazard = (id) => {
+  return request({
+    url: `/info_mgr/hazard_mgr/query/detail/${id}`,
+    method: 'get'
+  })
+}
 //危险源 del
 export const delHazard = (id) => {
   return request({
@@ -241,12 +248,34 @@ export const delRiskLevelStandard = (id) => {
   })
 }
 
+// 诱因 add
+export const addIncentive = (data) => {
+  return request({
+    url: `/info_mgr/incentive_mgr/add`,
+    method: 'post',
+    data
+  })
+}
+/** 诱因 detail*/
+export const detailIncentive = (id) => {
+  return request({
+    url: `/info_mgr/incentive_mgr/query/detail/${id}`,
+    method: 'get',
+  })
+}
 // 诱因 modify
 export const modifyIncentive = (data) => {
   return request({
     url: `/info_mgr/incentive_mgr/modify`,
     method: 'put',
     data
+  })
+}
+// 诱因 del
+export const delIncentive = (id) => {
+  return request({
+    url: `/info_mgr/incentive_mgr/delete/${id}`,
+    method: 'delete',
   })
 }
 // 诱因 list

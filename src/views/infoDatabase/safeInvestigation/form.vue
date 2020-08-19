@@ -149,7 +149,7 @@ import { queryHazardList } from "@/api/standard";
 import department from "@/components/Department";
 import riskSelect from "../components/riskSelect";
 import incentiveSelect from "../components/incentiveSelect";
-import dictSelect from "../components/dictSelect";
+import dictSelect from "@/components/common/dictSelect";
 import eupload from "@/components/Upload/index";
 
 export default {

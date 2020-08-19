@@ -25,6 +25,8 @@
         type="daterange"
         value-format="yyyy-MM-dd"
         style="width:260px"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
       ></el-date-picker>
       <el-button
         class="filter-item"
@@ -44,13 +46,13 @@
       style="width: 100%;"
       @selection-change="selectionChange"
     >
-      <el-table-column type="index" width="50" :index="getIndex" />
-      <el-table-column prop="diskId" label="编号" />
-      <el-table-column prop="diskDesc" label="危险源" min-width="200px" />
-      <el-table-column prop="relatedResult" label="关联后果" />
-      <el-table-column prop="relatedInformation" label="关联信息" />
-      <el-table-column prop="count" label="信息总数" />
-      <el-table-column prop="conditionalProbability" label="条件概率" />
+      <!-- <el-table-column type="index" width="50" :index="getIndex" /> -->
+      <el-table-column prop="diskId" label="编号" width="80" />
+      <el-table-column prop="diskDesc" label="危险源" />
+      <el-table-column prop="relatedResult" label="关联后果" width="100" />
+      <el-table-column prop="relatedInformation" label="关联信息" width="100" />
+      <el-table-column prop="count" label="信息总数" width="100" />
+      <el-table-column prop="conditionalProbability" label="条件概率" width="100" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
@@ -163,9 +165,14 @@ export default {
         .catch(() => {});
     },
     create() {
+      if (!this.date) {
+        this.$message.error("请选择起止时间");
+        return;
+      }
       let data = { startDate: this.startDate, endDate: this.endDate };
       createProbability(data).then((res) => {
         this.$message(res.msg);
+        this.init();
       });
     },
   },

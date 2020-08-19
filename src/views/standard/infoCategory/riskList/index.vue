@@ -140,7 +140,7 @@ export default {
         } else {
           let { obj } = res;
           _this.form = {
-            id: obj.id,
+            riskListId: obj.id,
             riskNo: obj.riskNo,
             riskName: obj.riskName,
             riskDesc: obj.riskDesc,

@@ -17,6 +17,7 @@
         icon="el-icon-search"
         @click="toQuery(query)"
       >搜索</el-button>
+      <el-button size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
     </div>
     <!--表格渲染-->
     <el-table
@@ -29,13 +30,19 @@
       @selection-change="selectionChange"
     >
       <el-table-column type="index" width="50" :index="getIndex" />
-      <el-table-column prop="cate" label="类别" />
-      <el-table-column prop="diskNo" label="编号" />
-      <el-table-column prop="diskName" label="危险源" />
-      <el-table-column prop="diskDesc" label="描述" />
+      <el-table-column prop="cateName" label="分类" />
+      <el-table-column prop="no" label="编号" />
+      <el-table-column prop="name" label="名称" />
       <el-table-column label="操作" width="130">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
+          <el-button
+            slot="reference"
+            type="danger"
+            icon="el-icon-delete"
+            size="mini"
+            @click="subDelete(scope.row.id)"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -54,6 +61,7 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
+import { detailIncentive, delIncentive } from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
@@ -75,7 +83,7 @@ export default {
     toQuery(name) {
       this.page = 1;
       if (!name) this.params = {};
-      else this.params = { diskName: name };
+      else this.params = { name: name };
       this.init();
     },
     // 选择切换
@@ -83,14 +91,39 @@ export default {
       this.selections = selections;
       this.$emit("selectionChange", { selections: selections });
     },
-    edit(row) {
-      this.isAdd = false;
+    add(row) {
+      this.isAdd = true;
       let _this = this.$refs.form;
-      _this.form = {
-        cateValue: row.cateValue,
-        diskIncentiveId: row.id,
-      };
       _this.dialog = true;
+    },
+    edit(row) {
+      detailIncentive(row.id).then((res) => {
+        if (res.code != "200") {
+          this.$message.error(res.msg);
+        } else {
+          this.isAdd = false;
+          let _this = this.$refs.form;
+          _this.form = res.obj;
+          _this.dialog = true;
+        }
+      });
+    },
+    subDelete(id) {
+      this.$confirm("确定删除嘛？")
+        .then(() => {
+          delIncentive(id).then((res) => {
+            if (res.code != "200") {
+              this.$message.error(res.msg);
+            } else {
+              this.$message({
+                type: "success",
+                message: "删除成功!",
+              });
+              this.init();
+            }
+          });
+        })
+        .catch(() => {});
     },
   },
 };
