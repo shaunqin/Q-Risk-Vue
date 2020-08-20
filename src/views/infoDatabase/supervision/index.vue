@@ -88,7 +88,7 @@ export default {
     format,
     beforeInit() {
       this.url = `/info_mgr/supervise_mgr/query/pageList/${this.page}/${this.size}`;
-      this.params.dataType = "3";
+      this.params.dataType = "6";
       return true;
     },
     add() {

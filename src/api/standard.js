@@ -285,6 +285,13 @@ export const queryIncentiveList = () => {
     method: 'get'
   })
 }
+// 诱因 treelist
+export const queryIncentiveTree = () => {
+  return request({
+    url: `/info_mgr/incentive_mgr/query/cateAll`,
+    method: 'get'
+  })
+}
 
 // 条件概率 生成
 export const createProbability = (data) => {

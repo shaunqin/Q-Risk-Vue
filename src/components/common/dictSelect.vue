@@ -1,5 +1,5 @@
 <template>
-  <el-select clearable v-model="_value" placeholder style="width: 100%;">
+  <el-select clearable v-model="_value" :placeholder="placeholder" style="width: 100%;">
     <!-- id作为key -->
     <el-option
       v-for="item in list"
@@ -24,6 +24,10 @@ export default {
       default: "",
     },
     type: {
+      type: String,
+      default: "",
+    },
+    placeholder: {
       type: String,
       default: "",
     },

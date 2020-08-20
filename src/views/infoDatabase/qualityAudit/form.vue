@@ -25,7 +25,7 @@
               v-model="form.riskLevel1"
               placeholder
               style="width: 100%;"
-              @change="form.riskLevel2 = ''"
+              @change="form.riskLevel2 = form.sourceOfRisk= ''"
             >
               <el-option
                 v-for="item in riskLevel1List"
@@ -38,7 +38,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="危险源层级二" prop="riskLevel2">
-            <el-select clearable v-model="form.riskLevel2" placeholder style="width: 100%;">
+            <el-select clearable v-model="form.riskLevel2" placeholder style="width: 100%;" @change="form.sourceOfRisk = ''">
               <el-option
                 v-for="item in riskLevel2List"
                 :key="item.key"
@@ -58,7 +58,7 @@
               style="width: 100%;"
             >
               <el-option
-                v-for="item in riskList"
+                v-for="item in riskList.filter(r=>r.cateValue==form.riskLevel2)"
                 :key="item.diskNo"
                 :label="item.diskName"
                 :value="item.diskNo"
@@ -85,7 +85,7 @@
         <risk-select :value="form.risk" @change="riskChange"></risk-select>
       </el-form-item>
       <el-form-item label="诱因" prop="incentive">
-        <incentive-select :value="form.incentive" @change="incentiveChange"></incentive-select>
+        <incentive-select ref="incentive" :value="form.incentive" @change="incentiveChange"></incentive-select>
       </el-form-item>
       <el-form-item label="问题描述" prop="incentive">
         <el-input v-model="form.problemDescription" type="textarea" rows="3" style="width: 100%;" />
@@ -129,7 +129,7 @@ export default {
         riskLevel2: "",
         sourceOfRisk: "",
         system: "",
-        dataType: "1",
+        dataType: "7",
       },
       roleSelect: [],
       formRules: {
@@ -287,6 +287,7 @@ export default {
         system: "",
         dataType: "1",
       };
+      this.$refs.incentive.value1 = "";
     },
     dictChange(val, key) {
       this.form[key] = val;

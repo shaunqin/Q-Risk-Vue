@@ -59,14 +59,22 @@
             :value="item.value"
           ></el-option>
         </el-select>
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item label="风险">
-        <el-select v-model="selectRisks" multiple filterable style="width: 100%;">
+        <el-select
+          v-model="selectRisks"
+          multiple
+          filterable
+          style="width: 100%;"
+          @change="riskChange"
+          clearable
+        >
+          <el-option label="全选" value="-1"></el-option>
           <el-option
             v-for="item in risksList"
             :key="item.value"
-            :label="item.label"
             :value="item.value"
+            :label="item.no+' - '+item.label"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -111,7 +119,9 @@ export default {
         diskName: [
           { required: true, message: "危险源不能为空", trigger: "blur" },
         ],
-        diskDesc: [{ required: true, message: "描述不能为空", trigger: "blur" }],
+        diskDesc: [
+          { required: true, message: "描述不能为空", trigger: "blur" },
+        ],
       },
       entArr: [],
       incentivesList: [],
@@ -254,12 +264,18 @@ export default {
             this.risksList.push({
               value: item.riskListId,
               label: item.riskName,
+              no: item.riskNo,
             });
           });
         } else {
           this.$message.error(res.msg);
         }
       });
+    },
+    riskChange(val) {
+      if (val.includes("-1")) {
+        this.selectRisks = ["-1"];
+      }
     },
   },
 };

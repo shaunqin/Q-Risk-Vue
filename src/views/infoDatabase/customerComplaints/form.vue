@@ -23,7 +23,7 @@
               v-model="form.riskLevel1"
               placeholder
               style="width: 100%;"
-              @change="form.riskLevel2=''"
+              @change="form.riskLevel2 = form.sourceOfRisk=''"
             >
               <el-option
                 v-for="item in riskLevel1List"
@@ -39,7 +39,7 @@
             <el-date-picker v-model="form.happenDate" placeholder style="width: 100%;"></el-date-picker>
           </el-form-item>
           <el-form-item label="危险源层级二" prop="riskLevel2">
-            <el-select clearable v-model="form.riskLevel2" placeholder style="width: 100%;">
+            <el-select clearable v-model="form.riskLevel2" placeholder style="width: 100%;" @change="form.sourceOfRisk = ''">
               <el-option
                 v-for="item in riskLevel2List"
                 :key="item.key"
@@ -50,6 +50,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
+           <el-form-item label="占位" style="visibility: hidden;">
+            <el-input placeholder=""></el-input>
+          </el-form-item>
           <el-form-item label="危险源" prop="sourceOfRisk">
             <el-select
               clearable
@@ -59,7 +62,7 @@
               style="width: 100%;"
             >
               <el-option
-                v-for="item in riskList"
+                v-for="item in riskList.filter(r=>r.cateValue==form.riskLevel2)"
                 :key="item.diskNo"
                 :label="item.diskName"
                 :value="item.diskNo"
@@ -105,7 +108,7 @@
             <risk-select :value="form.risk" @change="riskChange"></risk-select>
           </el-form-item>
           <el-form-item label="诱因" prop="incentive">
-            <incentive-select :value="form.incentive" @change="incentiveChange"></incentive-select>
+            <incentive-select ref="incentive" :value="form.incentive" @change="incentiveChange"></incentive-select>
           </el-form-item>
           <el-form-item label="附件上传">
             <eupload @success="uploadSuccess"></eupload>
@@ -350,6 +353,7 @@ export default {
         type: "3",
       };
       this.files = [];
+      this.$refs.incentive.value1 = "";
     },
     dictChange(val, key) {
       this.form[key] = val;
