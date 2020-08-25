@@ -81,7 +81,7 @@
 import initData from "@/mixins/initData";
 import eform from "./form";
 import { format } from "@/utils/datetime";
-import { detailRiskLevel, modifyRiskLevel, delRiskLevel } from "@/api/standard";
+import { detailRiskLevel, enableRiskLevel, delRiskLevel } from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
@@ -160,7 +160,7 @@ export default {
         id,
         enable: val
       };
-      modifyRiskLevel(editForm).then(res => {
+      enableRiskLevel(editForm).then(res => {
         if (res.code != "200") {
           this.$message.error(res.msg);
         } else this.$message.success("设置成功");

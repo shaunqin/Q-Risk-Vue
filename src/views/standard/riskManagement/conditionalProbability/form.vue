@@ -14,6 +14,7 @@
           filterable
           popper-class="disk-select"
           style="width:100%"
+          :disabled="!isAdd"
         >
           <el-option
             v-for="item in diskList"

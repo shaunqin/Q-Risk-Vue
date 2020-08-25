@@ -94,7 +94,7 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import { delHazard, modifyHazard, detailHazard } from "@/api/standard";
+import { delHazard, enableHazard, detailHazard } from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
@@ -163,10 +163,10 @@ export default {
     },
     enableChange(val, row) {
       let editForm = {
-        diskId: row.diskId,
+        id: row.diskId,
         enable: val,
       };
-      modifyHazard(editForm).then((res) => {
+      enableHazard(editForm).then((res) => {
         if (res.code == "200") {
           this.$message.success("设置成功");
         } else {

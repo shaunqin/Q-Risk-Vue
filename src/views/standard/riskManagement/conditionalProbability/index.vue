@@ -17,7 +17,7 @@
         icon="el-icon-search"
         @click="toQuery(query)"
       >搜索</el-button>
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
+      <!-- <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button> -->
       <el-date-picker
         unlink-panels
         v-model="date"
@@ -49,6 +49,12 @@
       <!-- <el-table-column type="index" width="50" :index="getIndex" /> -->
       <el-table-column prop="diskId" label="编号" width="80" />
       <el-table-column prop="diskDesc" label="危险源" />
+      <el-table-column label="开始日期" width="100">
+        <template slot-scope="{row}">{{formatShortString(row.startDate)}}</template>
+      </el-table-column>
+      <el-table-column label="结束日期" width="100">
+        <template slot-scope="{row}">{{formatShortString(row.endDate)}}</template>
+      </el-table-column>
       <el-table-column prop="relatedResult" label="关联后果" width="100" />
       <el-table-column prop="relatedInformation" label="关联信息" width="100" />
       <el-table-column prop="count" label="信息总数" width="100" />
@@ -56,13 +62,13 @@
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
-          <el-button
+          <!-- <el-button
             slot="reference"
             type="danger"
             icon="el-icon-delete"
             size="mini"
             @click="subDelete(scope.row.id)"
-          />
+          />-->
         </template>
       </el-table-column>
     </el-table>
@@ -87,6 +93,7 @@ import {
   delProbability,
   createProbability,
 } from "@/api/standard";
+import { formatShortString } from "@/utils/datetime";
 export default {
   components: { eform },
   mixins: [initData],
@@ -110,6 +117,7 @@ export default {
     this.init();
   },
   methods: {
+    formatShortString,
     beforeInit() {
       this.url = `/info_mgr/probability_mgr/query/pageList/${this.page}/${this.size}`;
       return true;

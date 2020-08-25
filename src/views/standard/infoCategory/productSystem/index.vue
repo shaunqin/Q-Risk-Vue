@@ -72,7 +72,7 @@
 import initData from "@/mixins/initData";
 import eform from "./form";
 import { queryDictByName } from "@/api/dict";
-import { queryProdDetail, delProd, modifyProd } from "@/api/standard";
+import { queryProdDetail, delProd, enableProd } from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
@@ -153,10 +153,10 @@ export default {
     },
     enableChange(val, row) {
       let modelForm = {
-        diskSystemId: row.diskSystemId,
+        id: row.diskSystemId,
         enable: val
       };
-      modifyProd(modelForm).then(res => {
+      enableProd(modelForm).then(res => {
         if (res.code != "200") {
           this.$message.error(res.msg);
         } else {

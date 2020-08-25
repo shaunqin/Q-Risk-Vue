@@ -85,7 +85,7 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import { queryRiskDetail, delRisk, modifyRisk } from "@/api/standard";
+import { queryRiskDetail, delRisk, enableRisk } from "@/api/standard";
 export default {
   components: { eform },
   mixins: [initData],
@@ -174,7 +174,7 @@ export default {
         id,
         enable: val
       };
-      modifyRisk(modelForm).then(res => {
+      enableRisk(modelForm).then(res => {
         if (res.code != "200") {
           this.$message.error(res.msg);
         } else {

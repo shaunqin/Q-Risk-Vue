@@ -34,3 +34,15 @@ export function formatWithSeperator(datetime, dateSeprator, timeSeprator) {
 function getZero(v) {
   return v < 10 ? "0" + v : v;
 }
+
+export function formatShortString(datetime) {
+  let dateSeprator = "-";
+  if (datetime != null) {
+    const dateMat = new Date(datetime)
+    const year = dateMat.getFullYear()
+    const month = getZero(dateMat.getMonth() + 1)
+    const day = getZero(dateMat.getDate())
+    const timeFormat = year + dateSeprator + month + dateSeprator + day
+    return timeFormat
+  }
+}

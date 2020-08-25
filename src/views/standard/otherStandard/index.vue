@@ -78,7 +78,7 @@ import eform from "./form";
 import { format } from "@/utils/datetime";
 import {
   detailOtherStand,
-  modifyOtherStand,
+  enableOtherStand,
   delOtherStand
 } from "@/api/standard";
 export default {
@@ -155,7 +155,7 @@ export default {
     },
     enableChange(val, id) {
       let editForm = { id, enable: val };
-      modifyOtherStand(editForm).then(res => {
+      enableOtherStand(editForm).then(res => {
         if (res.code == "200") this.$message.success("设置成功!");
         else this.$message.error(res.msg || "系统错误");
         this.init();

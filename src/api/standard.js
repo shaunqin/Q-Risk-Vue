@@ -42,6 +42,14 @@ export const delProd = (id) => {
     method: 'delete'
   })
 }
+// 产品 enable
+export const enableProd = (data) => {
+  return request({
+    url: `/info_mgr/prod_mgr/enable`,
+    method: 'put',
+    data
+  })
+}
 
 //危险源列表
 export const queryHazardList = (params) => {
@@ -81,6 +89,14 @@ export const delHazard = (id) => {
   return request({
     url: `/info_mgr/hazard_mgr/delete/${id}`,
     method: 'post'
+  })
+}
+//危险源 enable
+export const enableHazard = (data) => {
+  return request({
+    url: `/info_mgr/hazard_mgr/enable`,
+    method: 'put',
+    data
   })
 }
 
@@ -123,6 +139,14 @@ export const queryRiskDetail = (id) => {
     method: 'get'
   })
 }
+//风险清单 enable
+export const enableRisk = (data) => {
+  return request({
+    url: `/info_mgr/riskList_mgr/enable`,
+    method: 'put',
+    data
+  })
+}
 
 // 其他标准 add
 export const addOtherStand = (data) => {
@@ -154,6 +178,14 @@ export const delOtherStand = (id) => {
     method: 'delete'
   })
 }
+// 其他标准 enable
+export const enableOtherStand = (data) => {
+  return request({
+    url: `/info_mgr/other_standard_mgr/enable`,
+    method: 'put',
+    data
+  })
+}
 
 //风险等级 add
 export const addRiskLevel = (data) => {
@@ -183,6 +215,14 @@ export const delRiskLevel = (id) => {
   return request({
     url: `/info_mgr/riskLevel_mgr/delete/${id}`,
     method: 'delete'
+  })
+}
+//风险等级 enable
+export const enableRiskLevel = (data) => {
+  return request({
+    url: `/info_mgr/riskLevel_mgr/enable`,
+    method: 'put',
+    data
   })
 }
 
@@ -301,3 +341,4 @@ export const createProbability = (data) => {
     data
   })
 }
+
