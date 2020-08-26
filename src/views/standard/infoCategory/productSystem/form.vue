@@ -78,9 +78,9 @@ export default {
       },
       formRules: {
         systemId: [
-          { required: true, message: "请填写系统名称", trigger: "blur" }
+          { required: true, message: "系统名称不能为空", trigger: "blur" }
         ],
-        productId: [{ required: true, message: "请选择产品", trigger: "blur" }]
+        productId: [{ required: true, message: "产品不能为空", trigger: "blur" }]
       },
       entArr: [],
       systemList: []

@@ -5,6 +5,7 @@
     :normalizer="normalizer"
     :default-expand-level="1"
     :disabled="disabled"
+    placeholder="请选择..."
   />
 </template>
 

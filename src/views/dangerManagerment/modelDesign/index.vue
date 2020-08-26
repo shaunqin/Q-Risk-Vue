@@ -77,7 +77,7 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import { modifyModel, delModel } from "@/api/risk";
+import { enableModel, delModel } from "@/api/risk";
 export default {
   components: { eform },
   mixins: [initData],
@@ -135,7 +135,7 @@ export default {
         id: row.id,
         enable: val
       };
-      modifyModel(editForm).then(res => {
+      enableModel(editForm).then(res => {
         if (res.code == "200") {
           this.$message.success("设置成功");
         } else {

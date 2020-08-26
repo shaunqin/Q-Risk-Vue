@@ -25,10 +25,24 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="公式说明">
+          <!-- <el-form-item label="公式说明">
             <el-input type="textarea" :rows="6" readonly :value="designDesc" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="公式" prop="formula">
+          </el-form-item> -->
+          <el-form-item prop="formula">
+            <template slot="label">
+              公式
+              <el-popover placement="bottom" :content="designDesc" trigger="hover" width="360">
+                <div>
+                  <p>各公式含义:</p>
+                  <p>m: 危险源关联事件次数(根据时间统计);</p>
+                  <p>n: 危险源关联安全信息次数(根据时间统计);</p>
+                  <p>a: 危险源关联的次数;</p>
+                  <p>s: 严重性量化分值(查询);</p>
+                  <p>z: 风险值(最终计算值)</p>
+                </div>
+                <i class="el-icon-question" slot="reference"></i>
+              </el-popover>
+            </template>
             <el-input
               type="textarea"
               :rows="4"

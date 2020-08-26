@@ -185,12 +185,6 @@ export const asyncRoutes = [
             meta: { title: 'companySeriousness' }
           },
           {
-            path: 'companyRisk',
-            component: () => import('@/views/standard/riskManagement/companyRisk/index'),
-            name: 'companyRisk',
-            meta: { title: 'companyRisk' }
-          },
-          {
             path: 'unitPossibility',
             component: () => import('@/views/standard/riskManagement/unitPossibility/index'),
             name: 'unitPossibility',
@@ -201,12 +195,6 @@ export const asyncRoutes = [
             component: () => import('@/views/standard/riskManagement/unitSeriousness/index'),
             name: 'unitSeriousness',
             meta: { title: 'unitSeriousness' }
-          },
-          {
-            path: 'unitRisk',
-            component: () => import('@/views/standard/riskManagement/unitRisk/index'),
-            name: 'unitRisk',
-            meta: { title: 'unitRisk' }
           },
           {
             path: 'conditionalProbability',

@@ -2,30 +2,40 @@
   <div class="dataSource">
     <eform ref="form" :is-add="isAdd"></eform>
     <div class="head-container">
-      <el-input
-        size="mini"
-        v-model="query"
-        clearable
-        placeholder="请输入你要搜索的内容"
-        style="width: 200px;"
-        class="filter-item"
-      />
-      <el-checkbox
-        border
-        size="mini"
-        v-model="enable"
-        :true-label="1"
-        :false-label="0"
-        class="ck"
-      >启用</el-checkbox>
-      <el-button
-        class="filter-item"
-        size="mini"
-        type="success"
-        icon="el-icon-search"
-        @click="toQuery(query)"
-      >搜索</el-button>
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
+      <el-form :model="form" inline size="mini">
+        <el-form-item label="名称">
+          <el-input
+            v-model="form.riskName"
+            clearable
+            placeholder="请输入你要搜索的内容"
+            style="width: 200px;"
+            class="filter-item"
+          />
+        </el-form-item>
+        <el-form-item label="是否启用">
+          <el-select v-model="form.enable" placeholder="请选择启用状态" style="width: 100px;">
+            <el-option label="全部" value></el-option>
+            <el-option label="启用" value="1"></el-option>
+            <el-option label="未启用" value="0"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label>
+          <el-button
+            class="filter-item"
+            size="mini"
+            type="success"
+            icon="el-icon-search"
+            @click="toQuery(query)"
+          >搜索</el-button>
+          <el-button
+            class="filter-item"
+            size="mini"
+            type="success"
+            icon="el-icon-plus"
+            @click="add"
+          >新增</el-button>
+        </el-form-item>
+      </el-form>
     </div>
     <!--表格渲染-->
     <el-table
@@ -94,18 +104,13 @@ export default {
       isSuperAdmin: false,
       userInfo: {},
       selections: [],
-      enable: 0
+      enable: 0,
+      form: {
+        riskName: "",
+        enable: "",
+      },
     };
   },
-  // watch: {
-  //   enable(val){
-  //     if(val){
-  //       this.params.enable=val;
-  //     }else{
-  //       this.params.enable=val;
-  //     }
-  //   }
-  // },
   mounted() {
     this.init();
   },
@@ -116,14 +121,11 @@ export default {
     },
     toQuery(name) {
       this.page = 1;
-      if (!name) this.params = {};
-      else this.params = { riskName: name };
-      if (this.enable) this.params.enable = this.enable;
-      else delete this.params.enable;
+      this.params = { ...this.form };
       this.init();
     },
     // 选择切换
-    selectionChange: function(selections) {
+    selectionChange: function (selections) {
       this.selections = selections;
       this.$emit("selectionChange", { selections: selections });
     },
@@ -134,7 +136,7 @@ export default {
     edit(id) {
       this.isAdd = false;
       let _this = this.$refs.form;
-      queryRiskDetail(id).then(res => {
+      queryRiskDetail(id).then((res) => {
         if (res.code != "200") {
           this.$message.error(res.msg);
         } else {
@@ -146,7 +148,7 @@ export default {
             riskDesc: obj.riskDesc,
             levels: obj.levels,
             enable: obj.enable,
-            isKey: obj.isKey
+            isKey: obj.isKey,
           };
           _this.dialog = true;
         }
@@ -155,13 +157,13 @@ export default {
     subDelete(id) {
       this.$confirm("确定删除嘛？")
         .then(() => {
-          delRisk(id).then(res => {
+          delRisk(id).then((res) => {
             if (res.code != "200") {
               this.$message.error(res.msg);
             } else {
               this.$message({
                 type: "success",
-                message: "删除成功!"
+                message: "删除成功!",
               });
               this.init();
             }
@@ -172,23 +174,25 @@ export default {
     enableChange(val, id) {
       let modelForm = {
         id,
-        enable: val
+        enable: val,
       };
-      enableRisk(modelForm).then(res => {
-        if (res.code != "200") {
-          this.$message.error(res.msg);
-        } else {
-          this.$message({
-            type: "success",
-            message: "更新成功!"
-          });
-        }
-        this.init();
-      }).catch(err=>{
-        this.$message.error('系统异常');
-      });
-    }
-  }
+      enableRisk(modelForm)
+        .then((res) => {
+          if (res.code != "200") {
+            this.$message.error(res.msg);
+          } else {
+            this.$message({
+              type: "success",
+              message: "更新成功!",
+            });
+          }
+          this.init();
+        })
+        .catch((err) => {
+          this.$message.error("系统异常");
+        });
+    },
+  },
 };
 </script>
 
@@ -198,11 +202,7 @@ export default {
     height: 32px !important;
   }
 }
-.head-container {
-  margin-bottom: 20px;
-}
-.ck {
-  margin: 0 15px;
-  top: -2px;
-}
+// .head-container {
+//   margin-bottom: 20px;
+// }
 </style>

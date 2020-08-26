@@ -23,3 +23,11 @@ export const delModel = (id) => {
         method: 'post'
     })
 }
+//模型设计 enable
+export const enableModel = (data) => {
+    return request({
+        url: `/risk_mgr/model_mgr/enable`,
+        method: 'put',
+        data
+    })
+}

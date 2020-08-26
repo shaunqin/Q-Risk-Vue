@@ -8,12 +8,12 @@
     custom-class="big_dialog"
   >
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
-      <el-form-item label="编号">
+      <el-form-item label="编号" prop="diskNo">
         <el-input v-model="form.diskNo" style="width: 100%;" />
       </el-form-item>
       <el-row :gutter="16">
         <el-col :span="12">
-          <el-form-item label="危险源层级一">
+          <el-form-item label="危险源层级一" prop="cateValue1">
             <el-select
               clearable
               v-model="form.cateValue1"
@@ -31,7 +31,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="危险源层级二">
+          <el-form-item label="危险源层级二" prop="cateValue">
             <el-select clearable v-model="form.cateValue" placeholder style="width: 100%;">
               <el-option
                 v-for="item in riskLevel2List"
@@ -121,6 +121,15 @@ export default {
         ],
         diskDesc: [
           { required: true, message: "描述不能为空", trigger: "blur" },
+        ],
+        diskNo: [
+          { required: true, message: "编号不能为空", trigger: "blur" },
+        ],
+         cateValue1: [
+          { required: true, message: "危险源层级一不能为空", trigger: "blur" },
+        ],
+         cateValue: [
+          { required: true, message: "危险源层级二不能为空", trigger: "blur" },
         ],
       },
       entArr: [],
