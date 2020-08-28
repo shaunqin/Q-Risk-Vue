@@ -7,7 +7,7 @@
     :title="isAdd ? '新增' : '编辑'"
   >
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
-      <el-form-item label="部门">
+      <el-form-item label="部门" prop="deptPath">
         <department :value="form.deptPath" @change="deptChange" />
       </el-form-item>
       <el-form-item label="界定标准" prop="standard">
@@ -48,15 +48,18 @@ export default {
       form: {
         deptPath: null,
         standard: "",
-        riskLevel: 0,
+        riskLevel: 1,
         score: 0,
         enable: "",
-        type: "2",
+        type: "1",
       },
       roleSelect: [],
       formRules: {
         standard: [
-          { required: true, message: "请填写界定标准", trigger: "blur" },
+          { required: true, message: "界定标准不能为空", trigger: "blur" },
+        ],
+        deptPath: [
+          { required: true, message: "部门不能为空", trigger: "blur" },
         ],
       },
       entArr: [],
@@ -76,6 +79,10 @@ export default {
     doSubmit() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          if (this.form.deptPath == process.env.VUE_APP_DEPT_PATH) {
+            this.$message.error("部门不能选择公司");
+            return;
+          }
           this.loading = true;
           if (this.isAdd) {
             this.doAdd();
@@ -129,10 +136,10 @@ export default {
       this.form = {
         deptPath: null,
         standard: "",
-        riskLevel: 0,
+        riskLevel: 1,
         score: 0,
         enable: "",
-        type: "2",
+        type: "1",
       };
     },
     deptChange(val) {

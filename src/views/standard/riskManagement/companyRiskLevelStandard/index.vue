@@ -6,7 +6,7 @@
         size="mini"
         v-model="query"
         clearable
-        placeholder="请输入你要搜索的内容"
+        placeholder="请输入你要搜索的等级"
         style="width: 200px;"
         class="filter-item"
       />
@@ -29,7 +29,7 @@
       style="width: 100%;"
     >
       <el-table-column prop="standardLevel" label="等级" />
-      <el-table-column prop="deptNameCn" label="部门" />
+      <!-- <el-table-column prop="deptNameCn" label="部门" /> -->
       <el-table-column prop="color" label="颜色">
         <template slot-scope="{row}">
           <span class="color-item" :style="'background-color:'+row.color"></span>

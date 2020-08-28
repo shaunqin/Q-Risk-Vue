@@ -3,7 +3,7 @@
     <eform ref="form" :is-add="isAdd"></eform>
     <div class="head-container">
       <el-form :model="form" inline size="mini">
-        <el-form-item label="名称">
+        <el-form-item label="风险名称">
           <el-input
             v-model="form.riskName"
             clearable
@@ -49,7 +49,7 @@
     >
       <el-table-column type="index" width="50" :index="getIndex" />
       <el-table-column prop="riskNo" label="编号" />
-      <el-table-column prop="riskName" label="名称" />
+      <el-table-column prop="riskName" label="风险名称" />
       <el-table-column prop="riskDesc" label="描述" min-width="200px" />
       <el-table-column prop="levelDesc" label="等级描述" />
       <el-table-column label="是否启用" width="120px">

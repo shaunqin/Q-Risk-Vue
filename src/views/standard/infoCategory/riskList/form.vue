@@ -13,7 +13,7 @@
           <el-form-item label="编号" prop="riskNo">
             <el-input v-model="form.riskNo" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="名称" prop="riskName">
+          <el-form-item label="风险名称" prop="riskName">
             <el-input v-model="form.riskName" style="width: 100%;" />
           </el-form-item>
           <el-form-item label="描述">
@@ -73,8 +73,7 @@ export default {
       },
       roleSelect: [],
       formRules: {
-        aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        bb: [{ required: true, message: "请填写名称", trigger: "blur" }],
+        riskName: [{ required: true, message: "风险名称不能为空", trigger: "blur" }],
       },
       entArr: [],
       levelList: [],

@@ -6,7 +6,7 @@
         size="mini"
         v-model="query"
         clearable
-        placeholder="请输入你要搜索的内容"
+        placeholder="请输入你要搜索的危险源"
         style="width: 200px;"
         class="filter-item"
       />

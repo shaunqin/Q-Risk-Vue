@@ -6,7 +6,7 @@
         size="mini"
         v-model="query"
         clearable
-        placeholder="请输入你要搜索的内容"
+        placeholder="请输入你要搜索的界定标准"
         style="width: 200px;"
         class="filter-item"
       />
@@ -31,7 +31,7 @@
     >
       <el-table-column type="index" width="50" :index="getIndex" />
       <el-table-column prop="standard" label="界定标准" />
-      <el-table-column prop="deptNameCn" label="部门" />
+      <!-- <el-table-column prop="deptNameCn" label="部门" /> -->
       <el-table-column label="风险等级">
         <template slot-scope="{row}">{{row.riskLevel}}级</template>
       </el-table-column>

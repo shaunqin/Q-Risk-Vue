@@ -7,13 +7,13 @@
     :title="isAdd ? '新增' : '编辑'"
   >
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
-      <el-form-item label="部门">
+      <!-- <el-form-item label="部门" prop="deptPath">
         <department :value="form.deptPath" @change="deptChange"></department>
-      </el-form-item>
-      <el-form-item label="等级">
+      </el-form-item> -->
+      <el-form-item label="标准等级" prop="standardLevel">
         <el-input v-model="form.standardLevel" placeholder></el-input>
       </el-form-item>
-      <el-form-item label="颜色">
+      <el-form-item label="颜色" prop="color">
         <el-color-picker v-model="form.color"></el-color-picker>
       </el-form-item>
       <el-form-item label="最小风险值">
@@ -41,7 +41,7 @@ export default {
       loading: false,
       dialog: false,
       form: {
-        deptPath: null,
+        deptPath: process.env.VUE_APP_DEPT_PATH,
         standardLevel: "",
         color: "",
         minRiskValue: "",
@@ -49,8 +49,9 @@ export default {
       },
       roleSelect: [],
       formRules: {
-        aa: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        bb: [{ required: true, message: "请填写名称", trigger: "blur" }],
+        deptPath: [{ required: true, message: "部门不能为空", trigger: "blur" }],
+        standardLevel: [{ required: true, message: "标准等级不能为空", trigger: "blur" }],
+        color: [{ required: true, message: "颜色不能为空", trigger: "blur" }],
       },
       entArr: [],
     };
@@ -120,7 +121,7 @@ export default {
       this.dialog = false;
       this.$refs["form"].resetFields();
       this.form = {
-        deptPath: null,
+        deptPath: process.env.VUE_APP_DEPT_PATH,
         standardLevel: "",
         color: "",
         minRiskValue: "",
