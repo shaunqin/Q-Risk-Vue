@@ -177,7 +177,7 @@ export default {
         risk: "",
         incentive: "",
         filesId: [],
-        type: "3",
+        type: "8",
       },
       roleSelect: [],
       formRules: {
@@ -350,7 +350,7 @@ export default {
         risk: "",
         incentive: "",
         filesId: [],
-        type: "3",
+        type: "8",
       };
       this.files = [];
       this.$refs.incentive.value1 = "";

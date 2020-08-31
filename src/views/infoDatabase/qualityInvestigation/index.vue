@@ -38,8 +38,8 @@
         </template>
       </el-table-column>
       <el-table-column prop="aircraftTypeText" label="机型" />
-      <el-table-column prop="eventOverview" label="事件概述" />
-      <el-table-column prop="causeAnalysis" label="原因分析" width="120" />
+      <el-table-column prop="eventOverview" label="事件概述"  width="120" show-overflow-tooltip/>
+      <el-table-column prop="causeAnalysis" label="原因分析"  width="120" show-overflow-tooltip />
       <el-table-column prop="departmentNameCn" label="责任单位" width="120" show-overflow-tooltip />
       <el-table-column prop="productText" label="产品" width="120" />
       <el-table-column prop="systemText" label="系统" width="110" />
@@ -76,7 +76,7 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import esearch from "./search";
+import esearch from "../components/search2";
 import { format } from "@/utils/datetime";
 import { detailInfobase, delInfobase, downloadToExcel } from "@/api/infodb";
 import uploadExcel from "../components/uploadExcel";

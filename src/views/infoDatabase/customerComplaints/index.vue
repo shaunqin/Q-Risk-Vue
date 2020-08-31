@@ -37,8 +37,8 @@
           <span v-if="row.happenDate!=null">{{format(row.happenDate).substring(0,10)}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="eventOverview" label="事件概述" />
-      <el-table-column prop="causeAnalysis" label="原因分析" width="120" />
+      <el-table-column prop="eventOverview" label="事件概述" width="120" show-overflow-tooltip />
+      <el-table-column prop="causeAnalysis" label="原因分析" width="120" show-overflow-tooltip />
       <el-table-column prop="departmentNameCn" label="责任单位" width="120" show-overflow-tooltip />
       <el-table-column prop="productText" label="产品" width="120" />
       <el-table-column prop="systemText" label="系统" width="110" />
@@ -49,12 +49,7 @@
       <el-table-column prop="incentive" label="诱因" width="120" />
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="primary"
-            icon="el-icon-edit"
-            @click="edit(scope.row)"
-          />
+          <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)" />
           <el-button
             slot="reference"
             type="danger"
@@ -80,9 +75,9 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
-import esearch from "./search";
+import esearch from "../components/search2";
 import { format } from "@/utils/datetime";
-import { detailInfobase, delInfobase ,downloadToExcel} from "@/api/infodb";
+import { detailInfobase, delInfobase, downloadToExcel } from "@/api/infodb";
 import uploadExcel from "../components/uploadExcel";
 import { saveAs } from "file-saver";
 export default {
@@ -100,7 +95,7 @@ export default {
     format,
     beforeInit() {
       this.url = `/infoDatabase_mgr/infoDatabase_mgr/query/pageList/${this.page}/${this.size}`;
-      this.params = { type: 8 };
+      this.params = { type: 8, ...this.params };
       return true;
     },
     add() {

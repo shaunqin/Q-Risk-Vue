@@ -1,8 +1,16 @@
 <template>
   <el-form size="mini" :model="queryForm" label-width="75px" label-position="left" inline>
-    <!-- <el-form-item label="信息来源">
-      <el-input v-model="queryForm.infoSource" placeholder="请输入信息来源"></el-input>
-    </el-form-item> -->
+    <el-form-item label="发生日期" label-width="75px">
+      <el-date-picker
+        v-model="date"
+        type="daterange"
+        value-format="yyyy-MM-dd"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
+        style="width:240px"
+        unlink-panels
+      ></el-date-picker>
+    </el-form-item>
     <el-form-item label="事件概述">
       <el-input v-model="queryForm.eventOverview" placeholder="请输入事件概述"></el-input>
     </el-form-item>
@@ -33,7 +41,19 @@ export default {
   data() {
     return {
       queryForm: {},
+      date: "",
     };
+  },
+  watch: {
+    date(val) {
+      if (val) {
+        this.queryForm.startHappenDate = val[0];
+        this.queryForm.endHappenDate = val[1];
+      } else {
+        this.queryForm.startHappenDate = "";
+        this.queryForm.endHappenDate = "";
+      }
+    },
   },
   methods: {
     toQuery(params) {

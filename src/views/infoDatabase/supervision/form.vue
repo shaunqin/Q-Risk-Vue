@@ -289,7 +289,7 @@ export default {
         riskLevel2: "",
         sourceOfRisk: "",
         system: "",
-        dataType: "3",
+        dataType: "6",
       };
       this.$refs.incentive.value1 = "";
     },
