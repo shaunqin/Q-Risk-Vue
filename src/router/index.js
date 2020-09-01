@@ -259,12 +259,6 @@ export const asyncRoutes = [
         component: () => import('@/views/infoDatabase/customerComplaints/index'),
         name: 'customerComplaints',
         meta: { title: 'customerComplaints' }
-      },
-      {
-        path: 'riskAssessment',
-        component: () => import('@/views/infoDatabase/riskAssessment/index'),
-        name: 'riskAssessment',
-        meta: { title: 'riskAssessment' }
       }
     ]
   },
