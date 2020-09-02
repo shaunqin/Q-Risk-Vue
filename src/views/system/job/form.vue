@@ -16,8 +16,8 @@
         <el-col :span="12">
           <el-form-item label="任务分组">
             <el-select v-model="form.jobGroup" placeholder="请选择">
-              <el-option label="默认" value="默认"></el-option>
-              <el-option label="系统" value="系统"></el-option>
+              <el-option label="默认" value="DEFAULT"></el-option>
+              <el-option label="系统" value="SYSTEM"></el-option>
             </el-select>
           </el-form-item>
         </el-col>

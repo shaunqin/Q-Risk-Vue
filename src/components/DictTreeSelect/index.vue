@@ -4,6 +4,7 @@
     :options="options"
     :normalizer="normalizer"
     :disabled="disabled"
+    placeholder="请选择..."
   />
 </template>
 

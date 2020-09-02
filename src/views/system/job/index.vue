@@ -51,8 +51,8 @@
         <template slot-scope="{row}">
           <el-switch
             v-model="row.status"
-            active-value="0"
-            inactive-value="1"
+            active-value="1"
+            inactive-value="0"
             @change="changeStatus($event,row.jobId)"
           ></el-switch>
         </template>

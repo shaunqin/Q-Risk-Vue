@@ -136,7 +136,7 @@ export default {
     format,
     beforeInit() {
       this.url =
-        "/sys_mgr/staff_mgr/query/pageList/" + this.page + " / " + this.size;
+        "/sys_mgr/staff_mgr/query/pageList/" + this.page + "/" + this.size;
       const sort = "id,desc";
       this.params = { page: this.page, size: this.size, sort: sort };
       if (this.queryForm != null) {

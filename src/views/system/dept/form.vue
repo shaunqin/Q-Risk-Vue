@@ -8,13 +8,13 @@
     custom-class="common_dialog"
   >
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="auto">
-      <el-form-item label="父级">
+      <el-form-item label="父级" prop="parentCode">
         <department :value="form.parentCode" @change="deptChange" :disabled="disabled" />
       </el-form-item>
       <el-form-item label="名称(中文)" prop="departmentNameCn">
         <el-input v-model="form.departmentNameCn" style="width: 100%;" />
       </el-form-item>
-      <el-form-item label="名称(英文)">
+      <el-form-item label="名称(英文)" prop="departmentNameEn">
         <el-input v-model="form.departmentNameEn" style="width: 100%;" />
       </el-form-item>
     </el-form>
@@ -47,7 +47,13 @@ export default {
       },
       rules: {
         departmentNameCn: [
-          { required: true, message: "请输入名称", trigger: "blur" },
+          { required: true, message: "名称不能为空", trigger: "blur" },
+        ],
+        departmentNameEn: [
+          { required: true, message: "英文名称不能为空", trigger: "blur" },
+        ],
+        parentCode: [
+          { required: true, message: "父级不能为空", trigger: "blur" },
         ],
       },
       entArr: [],

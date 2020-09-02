@@ -5,8 +5,9 @@
     </el-form-item>
     <el-form-item label="任务组名">
       <el-select v-model="queryForm.jobGroup" placeholder="请选择任务组名" style="width:130px">
-        <el-option label="默认" value="默认"></el-option>
-        <el-option label="系统" value="系统"></el-option>
+        <el-option label="全部" value=""></el-option>
+        <el-option label="默认" value="DEFAULT"></el-option>
+        <el-option label="系统" value="SYSTEM"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="任务状态">
