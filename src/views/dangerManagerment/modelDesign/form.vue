@@ -10,12 +10,12 @@
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
       <el-row :gutter="16">
         <el-col :span="12">
-          <el-form-item label="编号">
+          <el-form-item label="编号" prop="formulaNo">
             <el-input v-model="form.formulaNo" placeholder></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="名称">
+          <el-form-item label="名称" prop="name">
             <el-input v-model="form.name" placeholder></el-input>
           </el-form-item>
         </el-col>
@@ -84,7 +84,9 @@ export default {
       },
       roleSelect: [],
       formRules: {
-        formula: [{ required: true, message: "请填写公式", trigger: "blur" }],
+        formula: [{ required: true, message: "公式不能为空", trigger: "blur" }],
+        formulaNo: [{ required: true, message: "编号不能为空", trigger: "blur" }],
+        name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
       },
       entArr: [],
       designDesc: `各公式含义:

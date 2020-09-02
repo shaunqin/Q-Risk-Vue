@@ -8,10 +8,10 @@
     custom-class="common_dialog"
   >
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="auto">
-      <el-form-item label="父级">
+      <el-form-item label="父级" prop="parentId">
         <menu-tree-select :value="form.parentId" @change="parentChange" v-if="menuTreeReload"></menu-tree-select>
       </el-form-item>
-      <el-form-item label="类型">
+      <el-form-item label="类型" prop="isMenu">
         <el-radio-group v-model="form.isMenu">
           <el-radio :label="0">目录</el-radio>
           <el-radio :label="1">菜单</el-radio>
@@ -96,8 +96,14 @@ export default {
         moduleCode: "",
       },
       rules: {
-        departmentNameCn: [
-          { required: true, message: "请输入名称", trigger: "blur" },
+        parentId: [
+          { required: true, message: "父级不能为空", trigger: "blur" },
+        ],
+        isMenu: [
+          { required: true, message: "类型不能为空", trigger: "blur" },
+        ],
+        moduleDesc: [
+          { required: true, message: "菜单名称不能为空", trigger: "blur" },
         ],
       },
       entArr: [],

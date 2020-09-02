@@ -64,6 +64,7 @@ export default {
     },
     refresh() {
       this.queryForm = {};
+      this.date = "";
       this.toQuery(this.queryForm);
     },
   },

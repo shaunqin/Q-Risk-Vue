@@ -1,5 +1,5 @@
 <template>
-  <treeselect v-model="treeValue" :options="options" />
+  <treeselect v-model="treeValue" :options="options" placeholder="请选择..." />
 </template>
 
 <script>
@@ -10,7 +10,7 @@ export default {
   components: { Treeselect },
   data() {
     return {
-      options: []
+      options: [],
     };
   },
   computed: {
@@ -20,14 +20,14 @@ export default {
       },
       set(val) {
         this.$emit("change", val);
-      }
-    }
+      },
+    },
   },
   props: {
     value: {
       type: String,
-      default: ""
-    }
+      default: null,
+    },
   },
   mounted() {
     this.loadData();
@@ -36,7 +36,7 @@ export default {
     getTree(tree) {
       let arr = [];
       if (tree.length !== 0) {
-        tree.forEach(item => {
+        tree.forEach((item) => {
           let obj = {};
           obj.label = item.name;
           obj.id = item.key;
@@ -50,24 +50,24 @@ export default {
     },
     loadData() {
       getMenuTree()
-        .then(res => {
+        .then((res) => {
           let result = [];
           result.push({
             id: "0",
             label: "顶级",
-            children: this.getTree(res.obj)
+            children: this.getTree(res.obj),
           });
           this.options = result;
         })
-        .catch(error => {
+        .catch((error) => {
           this.$message.error({
             type: "error",
-            message: "获取菜单树异常"
+            message: "获取菜单树异常",
           });
           console.log(error);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
