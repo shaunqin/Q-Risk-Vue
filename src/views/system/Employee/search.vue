@@ -1,8 +1,8 @@
 <template>
-  <el-form :model="queryForm" size="mini" inline>
-    <el-form-item label="生日" label-width="50px">
+  <el-form class="query" :model="queryForm" size="mini" inline>
+    <!-- <el-form-item label="生日" label-width="50px">
       <el-date-picker v-model="queryForm.birthday" value-format="yyyy-MM-dd" placeholder="出生年月" style="width:130px"></el-date-picker>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="工号">
       <el-input v-model="queryForm.sqlUserId" placeholder="请输入工号" style="width:130px"></el-input>
     </el-form-item>
@@ -29,4 +29,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.query{
+  display: inline;
+}
 </style>

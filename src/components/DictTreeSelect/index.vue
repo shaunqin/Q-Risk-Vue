@@ -52,6 +52,9 @@ export default {
       this.selectValue = data.key;
     },
     normalizer(node) {
+      if (node.children && !node.children.length) {
+        delete node.children;
+      }
       return {
         id: node.key,
         label: node.name,

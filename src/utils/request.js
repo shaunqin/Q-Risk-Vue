@@ -2,6 +2,7 @@ import axios from 'axios'
 import store from '@/store'
 import { getToken, removeToken } from '@/utils/auth'
 import router from '../router/index'
+import { Message } from 'element-ui'
 
 // create an axios instance
 const service = axios.create({
@@ -24,6 +25,7 @@ service.interceptors.request.use(
     return config
   },
   error => {
+    debugger
     // do something with request error
     console.log(error) // for debug
     return Promise.reject(error)
@@ -64,6 +66,10 @@ service.interceptors.response.use(
       }
       return Promise.reject(error)
     } else {
+      // 超时
+      if (error.toString().indexOf("timeout") > -1) {
+        Message.error("接口请求超时！")
+      }
       return Promise.reject(error)
     }
   }

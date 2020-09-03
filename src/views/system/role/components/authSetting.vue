@@ -62,7 +62,7 @@ export default {
             type: "success",
             message: "设置成功"
           });
-          this.dialog = false;
+          this.cancel();
         } else {
           this.$message({
             type: "error",

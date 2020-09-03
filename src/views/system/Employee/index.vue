@@ -3,28 +3,22 @@
     <eform ref="form" :is-add="isAdd" :role-options="roleOptions" />
 
     <div class="head-container">
-      <el-row>
-        <el-col :span="17">
-          <search ref="search" />
-        </el-col>
-        <el-col :span="4">
-          <el-button
-            class="filter-item"
-            size="mini"
-            type="success"
-            icon="el-icon-search"
-            @click="toQuery"
-          >搜索</el-button>
-          <el-button
-            v-if="false"
-            class="filter-item"
-            size="mini"
-            type="success"
-            icon="el-icon-plus"
-            @click="add"
-          >新增</el-button>
-        </el-col>
-      </el-row>
+      <search ref="search" />
+      <el-button
+        class="filter-item"
+        size="mini"
+        type="success"
+        icon="el-icon-search"
+        @click="toQuery"
+      >搜索</el-button>
+      <el-button
+        v-if="false"
+        class="filter-item"
+        size="mini"
+        type="success"
+        icon="el-icon-plus"
+        @click="add"
+      >新增</el-button>
     </div>
     <!--表格渲染-->
     <el-table
@@ -105,18 +99,18 @@ export default {
       showBatchDelete: {
         // 是否显示操作组件
         type: Boolean,
-        default: true
+        default: true,
       },
       showOperation: {
         // 是否显示操作组件
         type: Boolean,
-        default: true
+        default: true,
       },
       selections: [], // 列表选中列
       roleOptions: [],
       isSuperAdmin: false,
       userInfo: {},
-      queryForm: null
+      queryForm: null,
     };
   },
   created() {
@@ -124,7 +118,7 @@ export default {
       this.init();
     });
   },
-  beforeRouteLeave: function(to, from, next) {
+  beforeRouteLeave: function (to, from, next) {
     if (to.path === this.toPath) {
       return;
     }
@@ -149,14 +143,14 @@ export default {
       this.$confirm("此操作将永久删除该条数据, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       }).then(() => {
         del(id)
-          .then(res => {
+          .then((res) => {
             if (res.code === "200") {
               this.$message({
                 message: "删除成功",
-                type: "success"
+                type: "success",
               });
               this.delLoading = false;
               this.dleChangePage();
@@ -165,7 +159,7 @@ export default {
               this.$message.error(res.msg);
             }
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
             this.delLoading = false;
           });
@@ -178,7 +172,7 @@ export default {
     edit(id) {
       this.isAdd = false;
       const _this = this.$refs.form;
-      detail(id).then(res => {
+      detail(id).then((res) => {
         if (res.code === "200") {
           const data = res.obj.roleList;
           const arr = [];
@@ -193,7 +187,7 @@ export default {
             email: res.obj.email,
             address: res.obj.address,
             password: res.obj.password,
-            roleList: []
+            roleList: [],
           };
           _this.roleSelect = arr;
           _this.dialog = true;
@@ -203,7 +197,7 @@ export default {
       });
     },
     // 选择切换
-    selectionChange: function(selections) {
+    selectionChange: function (selections) {
       this.selections = selections;
       this.$emit("selectionChange", { selections: selections });
     },
@@ -212,8 +206,8 @@ export default {
       this.queryForm = _this.queryForm;
       this.page = 1;
       this.init();
-    }
-  }
+    },
+  },
 };
 </script>
 

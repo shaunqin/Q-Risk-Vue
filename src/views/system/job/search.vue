@@ -12,8 +12,8 @@
     </el-form-item>
     <el-form-item label="任务状态">
       <el-select v-model="queryForm.status" placeholder="请选择任务状态名" style="width:130px">
-        <el-option label="正常" value="1"></el-option>
-        <el-option label="暂停" value="0"></el-option>
+        <el-option label="正常" value="0"></el-option>
+        <el-option label="暂停" value="1"></el-option>
       </el-select>
     </el-form-item>
   </el-form>

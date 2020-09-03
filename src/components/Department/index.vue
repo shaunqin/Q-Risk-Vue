@@ -28,33 +28,36 @@ export default {
       },
       set(val) {
         this.$emit("change", val);
-      }
-    }
+      },
+    },
   },
   props: {
     value: {
       type: String,
-      default: null
+      default: null,
     },
     disabled: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   created() {
-    queryDepartmentTree().then(res => {
+    queryDepartmentTree().then((res) => {
       this.options = res.obj;
     });
   },
   methods: {
     normalizer(node) {
+      if (node.children && !node.children.length) {
+        delete node.children;
+      }
       return {
         id: node.key,
         label: node.name,
-        children: node.children
+        children: node.children,
       };
-    }
-  }
+    },
+  },
 };
 </script>
 
