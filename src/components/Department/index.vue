@@ -6,6 +6,9 @@
     :default-expand-level="1"
     :disabled="disabled"
     placeholder="请选择..."
+    :multiple="multiple"
+    :limit="limit"
+    :flat="flat"
   />
 </template>
 
@@ -33,12 +36,24 @@ export default {
   },
   props: {
     value: {
-      type: String,
+      type: String|Array,
       default: null,
     },
     disabled: {
       type: Boolean,
       default: false,
+    },
+    multiple: {
+      type: Boolean,
+      default: false,
+    },
+    flat: {
+      type: Boolean,
+      default: false,
+    },
+    limit: {
+      type: Number,
+      default: Infinity,
     },
   },
   created() {

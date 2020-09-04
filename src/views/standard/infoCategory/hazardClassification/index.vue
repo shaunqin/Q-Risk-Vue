@@ -114,6 +114,7 @@ export default {
       return true;
     },
     toQuery(name) {
+      this.page=1;
       this.params = { diskDesc: name };
       this.init();
     },

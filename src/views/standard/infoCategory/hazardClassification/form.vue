@@ -122,13 +122,11 @@ export default {
         diskDesc: [
           { required: true, message: "描述不能为空", trigger: "blur" },
         ],
-        diskNo: [
-          { required: true, message: "编号不能为空", trigger: "blur" },
-        ],
-         cateValue1: [
+        diskNo: [{ required: true, message: "编号不能为空", trigger: "blur" }],
+        cateValue1: [
           { required: true, message: "危险源层级一不能为空", trigger: "blur" },
         ],
-         cateValue: [
+        cateValue: [
           { required: true, message: "危险源层级二不能为空", trigger: "blur" },
         ],
       },
@@ -270,11 +268,13 @@ export default {
       queryRiskList().then((res) => {
         if (res.code == "200") {
           res.obj.map((item) => {
-            this.risksList.push({
-              value: item.riskListId,
-              label: item.riskName,
-              no: item.riskNo,
-            });
+            if (item.enable == 1) {
+              this.risksList.push({
+                value: item.riskListId,
+                label: item.riskName,
+                no: item.riskNo,
+              });
+            }
           });
         } else {
           this.$message.error(res.msg);

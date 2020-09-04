@@ -21,6 +21,8 @@ import './utils/error-log' // error log
 // 全局水波纹效果
 // import waves from './directive/waves/waves'
 // Vue.directive('waves', waves)
+import elDragDialog from './directive/el-drag-dialog'
+Vue.directive('el-drag-dialog', elDragDialog)
 
 import * as filters from './filters' // global filters
 
