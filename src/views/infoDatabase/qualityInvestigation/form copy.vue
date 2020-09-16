@@ -7,13 +7,13 @@
     :title="isAdd ? '新增' : '编辑'"
     custom-class="big_dialog"
   >
-    <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="80px">
+    <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="信息来源" prop="infoSource">
             <dict-select
               :value="form.infoSource"
-              type="info_source_customer"
+              type="info_source_qauit"
               @change="dictChange($event,'infoSource',form)"
             />
           </el-form-item>
@@ -27,7 +27,7 @@
           <el-form-item label="地点" prop="place">
             <el-input v-model="form.place" style="width: 100%;" />
           </el-form-item>
-        </el-col>
+        </el-col> -->
         <el-col :span="6">
           <el-form-item label="机型" prop="aircraftType">
             <dict-select
@@ -36,24 +36,29 @@
               @change="dictChange($event,'aircraftType',form)"
             />
           </el-form-item>
-        </el-col> -->
+        </el-col>
         <el-col :span="12"></el-col>
         <el-col :span="24">
           <el-form-item label="事件概述" prop="eventOverview">
             <el-input v-model="form.eventOverview" type="textarea" rows="3" style="width: 100%;" />
           </el-form-item>
           <el-form-item label="风险" prop="risk">
-            <risk-select :value="form.risk" @change="riskChange"  style="width: 50%;"></risk-select>
+            <risk-select :value="form.risk" @change="riskChange"></risk-select>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-card v-for="(row,index) in data" :key="index" style="margin-bottom:20px">
-        <el-form-item label="原因分析">
-          <el-input v-model="row.causeAnalysis" placeholder type="textarea" rows="4"></el-input>
-        </el-form-item>
-        <el-row :gutter="16">
-          <el-col :span="8">
-            <el-form-item label="危险源层级一" label-width="100px">
+      <el-form-item>
+        <template slot="label">
+          <el-button type="primary" size="mini" icon="el-icon-plus" @click="addRow"></el-button>
+        </template>
+        <el-table :data="data" size="mini" max-height="400px">
+          <el-table-column label="原因分析" min-width="300">
+            <template slot-scope="{row}">
+              <el-input v-model="row.causeAnalysis" placeholder type="textarea" rows="3"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="危险源层级一" width="140">
+            <template slot-scope="{row}">
               <el-select
                 clearable
                 v-model="row.riskLevel1"
@@ -68,30 +73,20 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item label="责任单位">
-              <department :value="row.responsibleUnit" @change="deptChange($event,row)"></department>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="危险源层级二" label-width="100px">
+            </template>
+          </el-table-column>
+          <el-table-column label="危险源层级二" width="140">
+            <template slot-scope="{row}">
               <riskLevel2CP
                 :value="row.riskLevel2"
                 :list="riskLevel1List"
                 :riskLevel1="row.riskLevel1"
                 @change="riskLevel2Change($event,row)"
               />
-            </el-form-item>
-            <el-form-item label="产品">
-              <dict-select
-                :value="row.product"
-                type="product"
-                @change="dictChange($event,'product',row)"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="危险源">
+            </template>
+          </el-table-column>
+          <el-table-column label="危险源" width="140">
+            <template slot-scope="{row}">
               <el-select
                 clearable
                 filterable
@@ -106,36 +101,55 @@
                   :value="item.diskNo"
                 ></el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item label="系统">
+            </template>
+          </el-table-column>
+          <el-table-column label="责任单位" width="200">
+            <template slot-scope="{row}">
+              <department :value="row.responsibleUnit" @change="deptChange($event,row)"></department>
+            </template>
+          </el-table-column>
+          <el-table-column label="产品" width="140">
+            <template slot-scope="{row}">
+              <dict-select
+                :value="row.product"
+                type="product"
+                @change="dictChange($event,'product',row)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="系统" width="140">
+            <template slot-scope="{row}">
               <dict-select
                 :value="row.systemCode"
                 type="system"
                 @change="dictChange($event,'systemCode',row)"
               />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-form-item label="诱因">
-          <incentive-select :value="row.incentive" @change="incentiveChange($event,row)"></incentive-select>
-        </el-form-item>
-        <el-form-item label="附件">
-          <eupload v-if="row.filesId.length==0" @success="uploadSuccess($event,row)"></eupload>
-          <div v-else>
-            <el-link
-              type="primary"
-              :href="row.filesId[0].url"
-              target="_blank"
-            >{{row.filesId[0].originFileName}}</el-link>&nbsp;&nbsp;
-            <el-button type="text" icon="el-icon-close" @click="delFile(row)"></el-button>
-          </div>
-        </el-form-item>
-        <el-form-item label style="text-align: center;">
-          <el-button type="danger" icon="el-icon-delete" @click="delRows(index)">删除</el-button>
-        </el-form-item>
-      </el-card>
-      <el-form-item>
-        <el-button type="info" size="mini" icon="el-icon-plus" @click="addRow">新增表单</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column label="诱因" width="500">
+            <template slot-scope="{row}">
+              <incentive-select :value="row.incentive" @change="incentiveChange($event,row)"></incentive-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="附件" min-width="130">
+            <template slot-scope="{row}">
+              <eupload v-if="row.filesId.length==0" @success="uploadSuccess($event,row)"></eupload>
+              <div v-else>
+                <el-link
+                  type="primary"
+                  :href="row.filesId[0].url"
+                  target="_blank"
+                >{{row.filesId[0].originFileName}}</el-link>
+                <el-button type="text" icon="el-icon-close" @click="delFile(row)"></el-button>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label>
+            <template slot-scope="{$index}">
+              <el-button type="text" icon="el-icon-delete" @click="delRows($index)"></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -176,7 +190,7 @@ export default {
         aircraftType: "",
         eventOverview: "",
         risk: "",
-        type: "8",
+        type: "2",
       },
       roleSelect: [],
       formRules: {
@@ -345,7 +359,7 @@ export default {
         aircraftType: "",
         eventOverview: "",
         risk: "",
-        type: "8",
+        type: "2",
       };
       // this.files = [];
       // this.$refs.incentive.value1 = "";

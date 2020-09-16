@@ -12,7 +12,7 @@
       :before-upload="beforeUpload"
     >
       <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" class="el-upload__tip">文件大小不超过10M</div>
+      <div v-if="showTip" slot="tip" class="el-upload__tip">文件大小不超过10M</div>
     </el-upload>
   </div>
 </template>
@@ -27,6 +27,12 @@ export default {
         Authorization: `xytoken_${getToken("Token")}`,
       },
     };
+  },
+  props: {
+    showTip: {
+      type: Boolean,
+      default: false
+    },
   },
   computed: {
     apiurl() {

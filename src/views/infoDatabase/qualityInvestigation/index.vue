@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <eform ref="form" :is-add="isAdd"></eform>
+    <editform ref="editform" :is-add="isAdd"></editform>
     <upload-excel ref="uploadExcel" type="2"></upload-excel>
     <div class="head-container">
       <esearch ref="search" />
@@ -76,13 +77,14 @@
 <script>
 import initData from "@/mixins/initData";
 import eform from "./form";
+import editform from "./editForm";
 import esearch from "../components/search2";
 import { format } from "@/utils/datetime";
 import { detailInfobase, delInfobase, downloadToExcel } from "@/api/infodb";
 import uploadExcel from "../components/uploadExcel";
 import { saveAs } from "file-saver";
 export default {
-  components: { eform, esearch, uploadExcel },
+  components: { eform, esearch, uploadExcel ,editform},
   mixins: [initData],
   data() {
     return {
@@ -96,7 +98,7 @@ export default {
     format,
     beforeInit() {
       this.url = `/infoDatabase_mgr/infoDatabase_mgr/query/pageList/${this.page}/${this.size}`;
-      this.params = { type: 2 };
+      this.params = { type: 2 ,...this.params};
       return true;
     },
     toQuery(name) {
@@ -112,7 +114,7 @@ export default {
     },
     edit(row) {
       this.isAdd = false;
-      let _this = this.$refs.form;
+      let _this = this.$refs.editform;
       detailInfobase(row.id).then((res) => {
         if (res.code != "200") {
           this.$message.error(res.msg);

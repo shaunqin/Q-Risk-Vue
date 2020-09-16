@@ -7,136 +7,133 @@
     :title="isAdd ? '新增' : '编辑'"
     custom-class="big_dialog"
   >
-    <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="80px">
+    <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
       <el-row :gutter="16">
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="信息来源" prop="infoSource">
             <dict-select
               :value="form.infoSource"
-              type="info_source_customer"
-              @change="dictChange($event,'infoSource',form)"
+              type="info_source"
+              @change="dictChange($event,'infoSource')"
             />
           </el-form-item>
+          <el-form-item label="危险源层级一" prop="riskLevel1">
+            <el-select
+              clearable
+              v-model="form.riskLevel1"
+              placeholder
+              style="width: 100%;"
+              @change="form.riskLevel2= form.sourceOfRisk=''"
+            >
+              <el-option
+                v-for="item in riskLevel1List"
+                :key="item.key"
+                :label="item.name"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="发生日期" prop="happenDate">
             <el-date-picker v-model="form.happenDate" placeholder style="width: 100%;"></el-date-picker>
           </el-form-item>
+          <el-form-item label="危险源层级二" prop="riskLevel2">
+            <el-select clearable v-model="form.riskLevel2" placeholder style="width: 100%;" @change="form.sourceOfRisk = ''">
+              <el-option
+                v-for="item in riskLevel2List"
+                :key="item.key"
+                :label="item.name"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
         </el-col>
-        <!-- <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="地点" prop="place">
             <el-input v-model="form.place" style="width: 100%;" />
           </el-form-item>
+          <el-form-item label="危险源" prop="sourceOfRisk">
+            <el-select
+              clearable
+              filterable
+              v-model="form.sourceOfRisk"
+              placeholder
+              style="width: 100%;"
+            >
+              <el-option
+                v-for="item in riskList.filter(r=>r.cateValue==form.riskLevel2)"
+                :key="item.diskNo"
+                :label="item.diskName"
+                :value="item.diskNo"
+              ></el-option>
+            </el-select>
+          </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="12">
           <el-form-item label="机型" prop="aircraftType">
             <dict-select
               :value="form.aircraftType"
               type="aircraft"
-              @change="dictChange($event,'aircraftType',form)"
+              @change="dictChange($event,'aircraftType')"
             />
           </el-form-item>
-        </el-col> -->
-        <el-col :span="12"></el-col>
+          <el-form-item label="产品" prop="product">
+            <dict-select
+              :value="form.product"
+              type="product"
+              @change="dictChange($event,'product')"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="责任单位" prop="responsibleUnit">
+            <department :value="form.responsibleUnit" @change="deptChange"></department>
+          </el-form-item>
+          <el-form-item label="系统" prop="systemCode">
+            <dict-select
+              :value="form.systemCode"
+              type="system"
+              @change="dictChange($event,'systemCode')"
+            />
+          </el-form-item>
+        </el-col>
         <el-col :span="24">
           <el-form-item label="事件概述" prop="eventOverview">
             <el-input v-model="form.eventOverview" type="textarea" rows="3" style="width: 100%;" />
           </el-form-item>
+          <el-form-item label="原因分析" prop="causeAnalysis">
+            <el-input v-model="form.causeAnalysis" type="textarea" rows="3" style="width: 100%;" />
+          </el-form-item>
           <el-form-item label="风险" prop="risk">
-            <risk-select :value="form.risk" @change="riskChange"  style="width: 50%;"></risk-select>
+            <risk-select :value="form.risk" @change="riskChange"></risk-select>
+          </el-form-item>
+          <el-form-item label="诱因" prop="incentive">
+            <incentive-select ref="incentive" :value="form.incentive" @change="incentiveChange"></incentive-select>
+          </el-form-item>
+          <el-form-item label="附件上传">
+            <eupload @success="uploadSuccess"></eupload>
+          </el-form-item>
+          <el-form-item label>
+            <el-table :data="files" size="mini">
+              <el-table-column label="文件名" prop="originFileName" />
+              <el-table-column label="文件大小">
+                <template slot-scope="{row}">{{(row.fileSize/1024).toFixed(2)}}Kb</template>
+              </el-table-column>
+              <el-table-column label="操作" width="100px">
+                <template slot-scope="{row,$index}">
+                  <el-tooltip content="预览" placement="left">
+                    <el-link type="primary" :underline="false" :href="row.url" target="_blank">
+                      <svg-icon icon-class="eye-open"></svg-icon>
+                    </el-link>
+                  </el-tooltip>&nbsp;&nbsp;
+                  <el-button type="text" icon="el-icon-delete" @click="delFile($index)"></el-button>
+                </template>
+              </el-table-column>
+            </el-table>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-card v-for="(row,index) in data" :key="index" style="margin-bottom:20px">
-        <el-form-item label="原因分析">
-          <el-input v-model="row.causeAnalysis" placeholder type="textarea" rows="4"></el-input>
-        </el-form-item>
-        <el-row :gutter="16">
-          <el-col :span="8">
-            <el-form-item label="危险源层级一" label-width="100px">
-              <el-select
-                clearable
-                v-model="row.riskLevel1"
-                placeholder
-                style="width: 100%;"
-                @change="row.riskLevel2= row.sourceOfRisk=''"
-              >
-                <el-option
-                  v-for="item in riskLevel1List"
-                  :key="item.key"
-                  :label="item.name"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="责任单位">
-              <department :value="row.responsibleUnit" @change="deptChange($event,row)"></department>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="危险源层级二" label-width="100px">
-              <riskLevel2CP
-                :value="row.riskLevel2"
-                :list="riskLevel1List"
-                :riskLevel1="row.riskLevel1"
-                @change="riskLevel2Change($event,row)"
-              />
-            </el-form-item>
-            <el-form-item label="产品">
-              <dict-select
-                :value="row.product"
-                type="product"
-                @change="dictChange($event,'product',row)"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="危险源">
-              <el-select
-                clearable
-                filterable
-                v-model="row.sourceOfRisk"
-                placeholder
-                style="width: 100%;"
-              >
-                <el-option
-                  v-for="item in riskList.filter(r=>r.cateValue==row.riskLevel2)"
-                  :key="item.diskNo"
-                  :label="item.diskName"
-                  :value="item.diskNo"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="系统">
-              <dict-select
-                :value="row.systemCode"
-                type="system"
-                @change="dictChange($event,'systemCode',row)"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-form-item label="诱因">
-          <incentive-select :value="row.incentive" @change="incentiveChange($event,row)"></incentive-select>
-        </el-form-item>
-        <el-form-item label="附件">
-          <eupload v-if="row.filesId.length==0" @success="uploadSuccess($event,row)"></eupload>
-          <div v-else>
-            <el-link
-              type="primary"
-              :href="row.filesId[0].url"
-              target="_blank"
-            >{{row.filesId[0].originFileName}}</el-link>&nbsp;&nbsp;
-            <el-button type="text" icon="el-icon-close" @click="delFile(row)"></el-button>
-          </div>
-        </el-form-item>
-        <el-form-item label style="text-align: center;">
-          <el-button type="danger" icon="el-icon-delete" @click="delRows(index)">删除</el-button>
-        </el-form-item>
-      </el-card>
-      <el-form-item>
-        <el-button type="info" size="mini" icon="el-icon-plus" @click="addRow">新增表单</el-button>
-      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
@@ -154,8 +151,6 @@ import riskSelect from "../components/riskSelect";
 import incentiveSelect from "../components/incentiveSelect";
 import dictSelect from "@/components/common/dictSelect";
 import eupload from "@/components/Upload/index";
-import riskLevel2CP from "../components/riskLevel2CP";
-
 export default {
   components: {
     department,
@@ -163,7 +158,6 @@ export default {
     incentiveSelect,
     dictSelect,
     eupload,
-    riskLevel2CP,
   },
   data() {
     return {
@@ -173,10 +167,19 @@ export default {
         infoSource: "",
         happenDate: "",
         place: "",
+        riskLevel1: "",
+        riskLevel2: "",
+        sourceOfRisk: "",
         aircraftType: "",
+        responsibleUnit: null,
+        product: "",
+        systemCode: "",
         eventOverview: "",
+        causeAnalysis: "",
         risk: "",
-        type: "8",
+        incentive: "",
+        filesId: [],
+        type: "1",
       },
       roleSelect: [],
       formRules: {
@@ -223,19 +226,6 @@ export default {
       riskList: [],
       airList: [],
       files: [],
-      data: [
-        {
-          riskLevel1: "",
-          riskLevel2: "",
-          sourceOfRisk: "",
-          responsibleUnit: null,
-          product: "",
-          systemCode: "",
-          causeAnalysis: "",
-          incentive: "",
-          filesId: [],
-        },
-      ],
     };
   },
   props: {
@@ -251,7 +241,9 @@ export default {
     "form.riskLevel1": {
       handler(val) {
         if (this.riskLevel1List.length > 0) {
-          let list = this.riskLevel1List.filter((r) => r.value == val);
+          let list = this.riskLevel1List.filter(
+            (r) => r.value == val
+          );
           if (list && list.length > 0) {
             this.riskLevel2List = list[0].children;
             // this.form.riskLevel2 = "";
@@ -302,25 +294,36 @@ export default {
           this.loading = true;
           if (this.isAdd) {
             this.doAdd();
-          }
+          } else this.doModify();
         }
       });
     },
     doAdd() {
-      let subData = [];
-      this.data.map((item) => {
-        let filesId = item.filesId.map((r) => r.id);
-        subData.push({
-          ...this.form,
-          ...item,
-          filesId,
-        });
-      });
-      addInfobase(subData)
+      addInfobase(this.form)
         .then((res) => {
           if (res.code === "200") {
             this.$message({
               message: "添加成功",
+              type: "success",
+            });
+            this.resetForm();
+            this.loading = false;
+            this.$parent.init();
+          } else {
+            this.$message.error(res.msg);
+            this.loading = false;
+          }
+        })
+        .catch((err) => {
+          this.loading = false;
+        });
+    },
+    doModify() {
+      modifyInfobase(this.form)
+        .then((res) => {
+          if (res.code === "200") {
+            this.$message({
+              message: "修改成功",
               type: "success",
             });
             this.resetForm();
@@ -342,65 +345,41 @@ export default {
         infoSource: "",
         happenDate: "",
         place: "",
+        riskLevel1: "",
+        riskLevel2: "",
+        sourceOfRisk: "",
         aircraftType: "",
+        responsibleUnit: null,
+        product: "",
+        systemCode: "",
         eventOverview: "",
+        causeAnalysis: "",
         risk: "",
-        type: "8",
+        incentive: "",
+        filesId: [],
+        type: "1",
       };
-      // this.files = [];
-      // this.$refs.incentive.value1 = "";
-      this.data = [
-        {
-          riskLevel1: "",
-          riskLevel2: "",
-          sourceOfRisk: "",
-          responsibleUnit: null,
-          product: "",
-          systemCode: "",
-          causeAnalysis: "",
-          incentive: "",
-          filesId: [],
-        },
-      ];
+      this.files = [];
+      this.$refs.incentive.value1 = "";
     },
-    dictChange(val, key, row) {
-      row[key] = val;
+    dictChange(val, key) {
+      this.form[key] = val;
     },
-    deptChange(val, row) {
-      row.responsibleUnit = val;
+    deptChange(val) {
+      this.form.responsibleUnit = val;
     },
     riskChange(val) {
       this.form.risk = val.join(",");
     },
-    incentiveChange(val, row) {
-      row.incentive = val.join(",");
+    incentiveChange(val) {
+      this.form.incentive = val.join(",");
     },
-    uploadSuccess(response, row) {
+    uploadSuccess(response) {
       console.log(response);
-      row.filesId = [response.obj];
+      this.files.push(response.obj);
     },
-    delFile(row) {
-      row.filesId = [];
-    },
-    addRow() {
-      this.data.push({
-        riskLevel1: "",
-        riskLevel2: "",
-        sourceOfRisk: "",
-        responsibleUnit: null,
-        product: "",
-        systemCode: "",
-        causeAnalysis: "",
-        incentive: "",
-        filesId: [],
-      });
-    },
-    delRows(index) {
-      this.data.splice(index, 1);
-    },
-    riskLevel2Change(val, row) {
-      row.riskLevel2 = val;
-      row.sourceOfRisk = "";
+    delFile(index) {
+      this.files.splice(index, 1);
     },
   },
 };
@@ -408,4 +387,10 @@ export default {
 
 
 <style lang="scss" scoped>
+.roleSelect {
+  width: 370px;
+}
+.el-select-dropdown {
+  z-index: 99999999999999 !important;
+}
 </style>

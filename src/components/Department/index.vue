@@ -9,6 +9,7 @@
     :multiple="multiple"
     :limit="limit"
     :flat="flat"
+    appendToBody
   />
 </template>
 
@@ -36,7 +37,7 @@ export default {
   },
   props: {
     value: {
-      type: String|Array,
+      type: String | Array,
       default: null,
     },
     disabled: {
@@ -82,5 +83,10 @@ export default {
   /deep/ .el-scrollbar__wrap {
     overflow-x: auto;
   }
+}
+</style>
+<style lang="scss">
+.vue-treeselect--append-to-body {
+  z-index: 99999 !important;
 }
 </style>

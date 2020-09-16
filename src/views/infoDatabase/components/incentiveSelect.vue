@@ -1,9 +1,9 @@
 <template>
-  <el-row :gutter="16">
+  <el-row :gutter="16" style="display:flex;">
     <el-col :span="4">
       <dict-select type="incentive_category" :value="value1" @change="dictChange" placeholder="筛选分类"></dict-select>
     </el-col>
-    <el-col :span="19">
+    <el-col :span="20">
       <el-select filterable multiple v-model="_value" placeholder style="width: 100%;">
         <el-option v-for="item in list" :key="item.id" :label="item.name" :value="item.no"></el-option>
       </el-select>
