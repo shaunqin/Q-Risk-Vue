@@ -83,7 +83,7 @@ import { detailInfobase, delInfobase, downloadToExcel } from "@/api/infodb";
 import uploadExcel from "../components/uploadExcel";
 import { saveAs } from "file-saver";
 export default {
-  components: { eform, esearch, uploadExcel ,editform},
+  components: { eform, esearch, uploadExcel, editform },
   mixins: [initData],
   data() {
     return {
@@ -152,22 +152,13 @@ export default {
     },
     download() {
       this.downloadLoading = true;
-      let data = { type: "3", ...this.$refs.search.queryForm };
-      downloadToExcel(data)
-        .then((res) => {
-          // blob对象
-          let blob = new Blob([res], {
-            type:
-              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          });
-
-          saveAs(blob, `${format(new Date())}.xlsx`);
-          this.downloadLoading = false;
-        })
-        .catch((err) => {
-          console.log(err);
-          this.$message.error("导出错误!");
-        });
+      let data = { type: "8", ...this.$refs.search.queryForm };
+      const qs = require("qs");
+      location.href = `${
+        process.env.VUE_APP_BASE_API
+      }/infoDatabase_mgr/infoDatabase_mgr/downloadToExcel?${qs.stringify(
+        data
+      )}`;
     },
   },
 };

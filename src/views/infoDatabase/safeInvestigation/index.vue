@@ -161,21 +161,6 @@ export default {
       location.href = `${
         process.env.VUE_APP_BASE_API
       }/infoDatabase_mgr/infoDatabase_mgr/downloadToExcel?${qs.stringify(data)}`;
-      //   downloadToExcel(data)
-      //     .then((res) => {
-      //       // // blob对象
-      //       // let blob = new Blob([res], {
-      //       //   type:
-      //       //     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      //       // });
-
-      //       // saveAs(blob, `${format(new Date())}.xlsx`);
-      //       this.downloadLoading = false;
-      //     })
-      //     .catch((err) => {
-      //       console.log(err);
-      //       this.$message.error("导出错误!");
-      //     });
     },
   },
 };

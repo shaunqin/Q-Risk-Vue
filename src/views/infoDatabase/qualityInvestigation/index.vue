@@ -162,21 +162,10 @@ export default {
     download() {
       this.downloadLoading = true;
       let data = { type: "2", ...this.$refs.search.queryForm };
-      downloadToExcel(data)
-        .then((res) => {
-          // blob对象
-          let blob = new Blob([res], {
-            type:
-              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          });
-
-          saveAs(blob, `${format(new Date())}.xlsx`);
-          this.downloadLoading = false;
-        })
-        .catch((err) => {
-          console.log(err);
-          this.$message.error("导出错误!");
-        });
+      const qs = require("qs");
+      location.href = `${
+        process.env.VUE_APP_BASE_API
+      }/infoDatabase_mgr/infoDatabase_mgr/downloadToExcel?${qs.stringify(data)}`;
     },
   },
 };

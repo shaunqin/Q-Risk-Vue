@@ -4,7 +4,7 @@
       <dict-select type="incentive_category" :value="value1" @change="dictChange" placeholder="筛选分类"></dict-select>
     </el-col>
     <el-col :span="20">
-      <el-select filterable multiple v-model="_value" placeholder style="width: 100%;">
+      <el-select filterable multiple v-model="_value" placeholder="请选择诱因" style="width: 100%;">
         <el-option v-for="item in list" :key="item.id" :label="item.name" :value="item.no"></el-option>
       </el-select>
     </el-col>
