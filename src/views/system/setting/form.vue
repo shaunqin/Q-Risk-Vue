@@ -34,6 +34,9 @@
           style="line-height:20px"
         />
       </el-form-item>
+      <el-form-item label="默认值" v-else>
+        <el-input v-model="form.setValue" placeholder="" type="textarea" rows="3"></el-input>
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
