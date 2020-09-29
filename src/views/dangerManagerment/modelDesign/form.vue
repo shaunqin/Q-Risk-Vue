@@ -27,18 +27,28 @@
         <el-col :span="24">
           <!-- <el-form-item label="公式说明">
             <el-input type="textarea" :rows="6" readonly :value="designDesc" style="width: 100%;" />
-          </el-form-item> -->
+          </el-form-item>-->
           <el-form-item prop="formula">
             <template slot="label">
               公式
-              <el-popover placement="bottom" :content="designDesc" trigger="hover" width="360">
-                <div>
+              <el-popover placement="right" :content="designDesc" trigger="hover" width="600">
+                <div class="tips">
                   <p>各公式含义:</p>
-                  <p>m: 危险源关联事件次数(根据时间统计);</p>
-                  <p>n: 危险源关联安全信息次数(根据时间统计);</p>
-                  <p>a: 危险源关联的次数;</p>
-                  <p>s: 严重性量化分值(查询);</p>
-                  <p>z: 风险值(最终计算值)</p>
+                  <p><b>普通风险值计算：</b></p>
+                  <p>m:危险源关联的事件次数</p>
+                  <p>n:危险源关联的安全信息次数</p>
+                  <p>y:风险发生的可能性</p>
+                  <p>a:危险源关联的次数</p>
+                  <p>x:条件概率，默认是m/n</p>
+                  <p><b>权重风险值计算：</b></p>
+                  <p>z:最终风险值</p>
+                  <p>r:红色区域</p>
+                  <p>o:橙色区域</p>
+                  <p>h:黄色区域</p>
+                  <p>g:绿色区域</p>
+                  <p>w:白色区域</p>
+                  <p>对于普通的风险只计算只需要设置y值的计算方式即可，如y=a*x或y=a*(m/n)(右边是a与x的组合或者a和m n的组合)</p>
+                  <p>对于权重风险值计算需要给出z的计算方式如z=10*r+10*o+20*h+30*g+40*w</p>
                 </div>
                 <i class="el-icon-question" slot="reference"></i>
               </el-popover>
@@ -85,7 +95,9 @@ export default {
       roleSelect: [],
       formRules: {
         formula: [{ required: true, message: "公式不能为空", trigger: "blur" }],
-        formulaNo: [{ required: true, message: "编号不能为空", trigger: "blur" }],
+        formulaNo: [
+          { required: true, message: "编号不能为空", trigger: "blur" },
+        ],
         name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
       },
       entArr: [],
@@ -180,5 +192,10 @@ z:风险值(最终计算值)`,
 }
 .el-select-dropdown {
   z-index: 99999999999999 !important;
+}
+.tips{
+  p{
+    margin: 4px 0;
+  }
 }
 </style>
