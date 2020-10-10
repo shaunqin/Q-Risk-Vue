@@ -1,7 +1,7 @@
 <template>
   <el-form :model="queryForm" size="mini" inline class="search-form">
     <el-form-item label="部门">
-      <department :value="queryForm.deptId" @change="change" style="width:300px" />
+      <department :value="queryForm.deptPath" @change="change" style="width:300px" />
     </el-form-item>
     <el-form-item label="名称">
       <el-input v-model="queryForm.roleDesc" placeholder="请输入工号" style="width:130px"></el-input>
@@ -18,12 +18,12 @@ export default {
   components: { department },
   data() {
     return {
-      queryForm: { deptId: null, roleDesc: "", code: "" }
+      queryForm: { deptPath: null, roleDesc: "", code: "" }
     };
   },
   methods: {
     change(val) {
-      this.queryForm.deptId = val;
+      this.queryForm.deptPath = val;
       console.log(val);
     }
   }
