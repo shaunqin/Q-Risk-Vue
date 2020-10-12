@@ -42,4 +42,7 @@ export default {
     }
   }
 }
+.vue-treeselect--append-to-body {
+  z-index: 1 !important;
+}
 </style>

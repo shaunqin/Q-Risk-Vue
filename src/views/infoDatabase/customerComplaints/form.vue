@@ -13,7 +13,7 @@
           <el-form-item label="信息来源" prop="infoSource">
             <dict-select
               :value="form.infoSource"
-              type="info_source"
+              type="info_source_customer"
               @change="dictChange($event,'infoSource',form)"
             />
           </el-form-item>
@@ -23,21 +23,29 @@
             <el-date-picker v-model="form.happenDate" placeholder style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
-        <!-- <el-col :span="6">
+        <el-col :span="6">
           <el-form-item label="地点" prop="place">
-            <el-input v-model="form.place" style="width: 100%;" />
+            <el-input
+              v-model="form.place"
+              style="width: 100%;"
+              placeholder="请输入城市名称"
+              @blur="checkPlace"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="机型" prop="aircraftType">
+          <el-form-item label="机型">
             <dict-select
               :value="form.aircraftType"
               type="aircraft"
               @change="dictChange($event,'aircraftType',form)"
             />
           </el-form-item>
-        </el-col> -->
+        </el-col>
         <el-col :span="24">
+          <el-form-item label="标题" prop="title">
+            <el-input v-model="form.title" style="width: 100%;" />
+          </el-form-item>
           <el-form-item label="事件概述" prop="eventOverview">
             <el-input v-model="form.eventOverview" type="textarea" rows="3" style="width: 100%;" />
           </el-form-item>
@@ -149,6 +157,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
+      <el-button :loading="loading" type="success" @click="doSave">暂存</el-button>
       <el-button :loading="loading" type="primary" @click="doSubmit">确认</el-button>
     </div>
   </el-dialog>
@@ -164,6 +173,7 @@ import incentiveSelect from "../components/incentiveSelect";
 import dictSelect from "@/components/common/dictSelect";
 import eupload from "@/components/Upload/index";
 import riskLevel2CP from "../components/riskLevel2CP";
+import { re } from '@/utils/config-re'
 
 export default {
   components: {
@@ -183,6 +193,7 @@ export default {
         happenDate: "",
         place: "",
         aircraftType: "",
+        title: "",
         eventOverview: "",
         risk: "",
         filesId: [],
@@ -214,6 +225,9 @@ export default {
         product: [{ required: true, message: "产品不能为空", trigger: "blur" }],
         systemCode: [
           { required: true, message: "系统不能为空", trigger: "blur" },
+        ],
+        title: [
+          { required: true, message: "标题不能为空", trigger: "blur" },
         ],
         eventOverview: [
           { required: true, message: "事件概述不能为空", trigger: "blur" },
@@ -304,6 +318,17 @@ export default {
         }
       });
     },
+    doSave() {
+      this.$refs["form"].validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          if (this.isAdd) {
+            this.form.status = "1";
+            this.doAdd();
+          }
+        }
+      });
+    },
     doAdd() {
       let subData = [];
       this.data.map((item) => {
@@ -339,6 +364,7 @@ export default {
         happenDate: "",
         place: "",
         aircraftType: "",
+        title: "",
         eventOverview: "",
         risk: "",
         type: "8",
@@ -365,7 +391,7 @@ export default {
       row.responsibleUnit = val;
     },
     riskChange(val) {
-      this.form.risk = val.join(",");
+      this.form.risk = val;
     },
     incentiveChange(val, row) {
       row.incentive = val.join(",");
@@ -396,6 +422,15 @@ export default {
       row.riskLevel2 = val;
       row.sourceOfRisk = "";
     },
+    checkPlace(e) {
+      let value = e.target.value;
+      if (value) {
+        if (!re.chinese.test(value)) {
+          this.$message.error("地点请输入中文！");
+          this.form.place = "";
+        }
+      }
+    }
   },
 };
 </script>

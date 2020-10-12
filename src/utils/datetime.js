@@ -8,7 +8,7 @@
  * @param datetime 国际化日期格式
  */
 export function format(datetime) {
-  return formatWithSeperator(datetime, '/', ':')
+  return formatWithSeperator(datetime, '-', ':')
 }
 
 /**

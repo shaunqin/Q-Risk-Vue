@@ -13,7 +13,7 @@
           <el-form-item label="信息来源" prop="infoSource">
             <dict-select
               :value="form.infoSource"
-              type="info_source"
+              type="info_source_customer"
               @change="dictChange($event,'infoSource')"
             />
           </el-form-item>
@@ -39,7 +39,13 @@
             <el-date-picker v-model="form.happenDate" placeholder style="width: 100%;"></el-date-picker>
           </el-form-item>
           <el-form-item label="危险源层级二" prop="riskLevel2">
-            <el-select clearable v-model="form.riskLevel2" placeholder style="width: 100%;" @change="form.sourceOfRisk = ''">
+            <el-select
+              clearable
+              v-model="form.riskLevel2"
+              placeholder
+              style="width: 100%;"
+              @change="form.sourceOfRisk = ''"
+            >
               <el-option
                 v-for="item in riskLevel2List"
                 :key="item.key"
@@ -50,8 +56,13 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-           <el-form-item label="占位" style="visibility: hidden;">
-            <el-input placeholder=""></el-input>
+          <el-form-item label="地点">
+            <el-input
+              v-model="form.place"
+              style="width: 100%;"
+              placeholder="请输入城市名称"
+              @blur="checkPlace"
+            />
           </el-form-item>
           <el-form-item label="危险源" prop="sourceOfRisk">
             <el-select
@@ -72,7 +83,14 @@
         </el-col>
         <el-col :span="24">
           <el-row>
-            <el-col :span="7">
+            <el-col :span="12">
+              <el-form-item label="机型">
+                <dict-select
+                  :value="form.aircraftType"
+                  type="aircraft"
+                  @change="dictChange($event,'aircraftType')"
+                />
+              </el-form-item>
               <el-form-item label="产品" prop="product">
                 <dict-select
                   :value="form.product"
@@ -81,18 +99,16 @@
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="7">
+            <el-col :span="12">
+              <el-form-item label="责任单位" prop="responsibleUnit">
+                <department :value="form.responsibleUnit" @change="deptChange"></department>
+              </el-form-item>
               <el-form-item label="系统" prop="systemCode" label-width="70px">
                 <dict-select
                   :value="form.systemCode"
                   type="system"
                   @change="dictChange($event,'systemCode')"
                 />
-              </el-form-item>
-            </el-col>
-            <el-col :span="10">
-              <el-form-item label="责任单位" prop="responsibleUnit">
-                <department :value="form.responsibleUnit" @change="deptChange"></department>
               </el-form-item>
             </el-col>
           </el-row>
@@ -150,6 +166,7 @@ import riskSelect from "../components/riskSelect";
 import incentiveSelect from "../components/incentiveSelect";
 import dictSelect from "@/components/common/dictSelect";
 import eupload from "@/components/Upload/index";
+import { re } from '@/utils/config-re'
 
 export default {
   components: {
@@ -166,9 +183,11 @@ export default {
       form: {
         infoSource: "",
         happenDate: "",
+        place: "",
         riskLevel1: "",
         riskLevel2: "",
         sourceOfRisk: "",
+        aircraftType: "",
         responsibleUnit: null,
         product: "",
         systemCode: "",
@@ -374,6 +393,15 @@ export default {
     delFile(index) {
       this.files.splice(index, 1);
     },
+    checkPlace(e) {
+      let value = e.target.value;
+      if (value) {
+        if (!re.chinese.test(value)) {
+          this.$message.error("地点请输入中文！");
+          this.form.place = "";
+        }
+      }
+    }
   },
 };
 </script>

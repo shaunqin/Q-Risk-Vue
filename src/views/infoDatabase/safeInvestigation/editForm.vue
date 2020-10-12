@@ -39,7 +39,13 @@
             <el-date-picker v-model="form.happenDate" placeholder style="width: 100%;"></el-date-picker>
           </el-form-item>
           <el-form-item label="危险源层级二" prop="riskLevel2">
-            <el-select clearable v-model="form.riskLevel2" placeholder style="width: 100%;" @change="form.sourceOfRisk = ''">
+            <el-select
+              clearable
+              v-model="form.riskLevel2"
+              placeholder
+              style="width: 100%;"
+              @change="form.sourceOfRisk = ''"
+            >
               <el-option
                 v-for="item in riskLevel2List"
                 :key="item.key"
@@ -50,8 +56,13 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="地点" prop="place">
-            <el-input v-model="form.place" style="width: 100%;" />
+          <el-form-item label="地点">
+            <el-input
+              v-model="form.place"
+              style="width: 100%;"
+              placeholder="请输入城市名称"
+              @blur="checkPlace"
+            />
           </el-form-item>
           <el-form-item label="危险源" prop="sourceOfRisk">
             <el-select
@@ -71,7 +82,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="机型" prop="aircraftType">
+          <el-form-item label="机型">
             <dict-select
               :value="form.aircraftType"
               type="aircraft"
@@ -151,6 +162,7 @@ import riskSelect from "../components/riskSelect";
 import incentiveSelect from "../components/incentiveSelect";
 import dictSelect from "@/components/common/dictSelect";
 import eupload from "@/components/Upload/index";
+import { re } from '@/utils/config-re'
 export default {
   components: {
     department,
@@ -197,9 +209,6 @@ export default {
         ],
         sourceOfRisk: [
           { required: true, message: "危险源不能为空", trigger: "blur" },
-        ],
-        aircraftType: [
-          { required: true, message: "机型不能为空", trigger: "blur" },
         ],
         responsibleUnit: [
           { required: true, message: "责任单位不能为空", trigger: "blur" },
@@ -381,6 +390,15 @@ export default {
     delFile(index) {
       this.files.splice(index, 1);
     },
+    checkPlace(e) {
+      let value = e.target.value;
+      if (value) {
+        if (!re.chinese.test(value)) {
+          this.$message.error("地点请输入中文！");
+          this.form.place = "";
+        }
+      }
+    }
   },
 };
 </script>

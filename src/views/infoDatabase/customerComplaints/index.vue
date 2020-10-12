@@ -38,7 +38,9 @@
           <span v-if="row.happenDate!=null">{{format(row.happenDate).substring(0,10)}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="eventOverview" label="事件概述" width="120" show-overflow-tooltip />
+      <el-table-column prop="place" label="地点" />
+      <el-table-column prop="aircraftTypeText" label="机型" />
+      <el-table-column prop="title" label="标题" width="120" show-overflow-tooltip />
       <el-table-column prop="causeAnalysis" label="原因分析" width="120" show-overflow-tooltip />
       <el-table-column prop="departmentNameCn" label="责任单位" width="120" show-overflow-tooltip />
       <el-table-column prop="productText" label="产品" width="120" />
@@ -116,9 +118,11 @@ export default {
             id: obj.id,
             infoSource: obj.infoSource,
             happenDate: obj.happenDate,
+            place: obj.place,
             riskLevel1: obj.riskLevel1,
             riskLevel2: obj.riskLevel2,
             sourceOfRisk: obj.sourceOfRisk,
+            aircraftType: obj.aircraftType,
             responsibleUnit: obj.responsibleUnit,
             product: obj.product,
             systemCode: obj.systemCode,
@@ -145,7 +149,7 @@ export default {
             }
           });
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     upload() {
       this.$refs.uploadExcel.dialog = true;
@@ -154,11 +158,10 @@ export default {
       this.downloadLoading = true;
       let data = { type: "8", ...this.$refs.search.queryForm };
       const qs = require("qs");
-      location.href = `${
-        process.env.VUE_APP_BASE_API
-      }/infoDatabase_mgr/infoDatabase_mgr/downloadToExcel?${qs.stringify(
-        data
-      )}`;
+      location.href = `${process.env.VUE_APP_BASE_API
+        }/infoDatabase_mgr/infoDatabase_mgr/downloadToExcel?${qs.stringify(
+          data
+        )}`;
     },
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <el-select filterable multiple v-model="_value" placeholder style="width: 100%;">
+  <el-select filterable v-model="_value" placeholder style="width: 100%;">
     <!-- code作为key -->
     <el-option
       v-for="item in list"
@@ -27,7 +27,8 @@ export default {
   computed: {
     _value: {
       get() {
-        return !this.value ? [] : this.value.split(",");
+        // return !this.value ? [] : this.value.split(",");
+        return this.value;
       },
       set(val) {
         this.$emit("change", val);

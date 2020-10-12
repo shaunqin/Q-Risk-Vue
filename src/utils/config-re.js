@@ -11,7 +11,8 @@ const re = {
   docF: /txt|doc|docx|xls|ppt|pptx|xlsx|pdf|htl|html|%/i,
   imgF: /jpg|jpeg|svg|raw|bmp|png|gif|tif|tiff|swf|dwg|dwf|dwt|eps|mif|miff|wmf|dib|ico|tga|cut|pic|%/i,
   audioF: /mp3|aac|wav|wma|cda|flac|m4a|mid|mka|mp2|mpa|mpc|ape|ofr|ogg|ra|wv|tta|ac3|dts|%/i,
-  videoF: /avi|asf|wmv|avs|flv|mkv|mov|3gp|mp4|mpg|mpeg|dat|ogm|vob|rm|rmvb|ts|tp|ifo|nsv|%/i
+  videoF: /avi|asf|wmv|avs|flv|mkv|mov|3gp|mp4|mpg|mpeg|dat|ogm|vob|rm|rmvb|ts|tp|ifo|nsv|%/i,
+  chinese: /^[\u4e00-\u9fa5]+$/
 }
 
 export { re }
