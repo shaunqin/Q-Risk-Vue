@@ -31,11 +31,7 @@
       <el-table-column prop="setValue" label="值" width="300" show-overflow-tooltip>
         <template slot-scope="{row}">
           <template v-if="row.type==1">
-            <span
-              v-for="item in row.deptVos"
-              :key="item.deptPath"
-              style="margin-right: 4px;"
-            >{{item.deptNameCn}},</span>
+            <span v-if="row.deptVos!=null">{{row.deptVos.map(r=>r.deptNameCn).join(',')}}</span>
           </template>
           <template v-else>{{row.setValue}}</template>
         </template>

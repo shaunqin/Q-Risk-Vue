@@ -50,3 +50,26 @@ export const run = (jobId) => {
         method: 'put'
     })
 }
+
+// ==========  log ==========
+// detailLog
+export const detailLog = (jobLogId) => {
+    return request({
+        url: `/sys_mgr/job_log/query/detail/${jobLogId}`,
+        method: 'get'
+    })
+}
+// delLog
+export const delLog = (jobLogIds) => {
+    return request({
+        url: `/sys_mgr/job_log/${jobLogIds}`,
+        method: 'delete'
+    })
+}
+// clean
+export const cleanLog = () => {
+    return request({
+        url: `/sys_mgr/job_log/clean`,
+        method: 'delete'
+    })
+}

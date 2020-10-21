@@ -29,7 +29,7 @@
         :disabled="selectId.length!=1"
         @click="subDelete"
       >删除</el-button>
-      <el-button type="info" size="mini" icon="el-icon-s-operation">日志</el-button>
+      <el-button type="info" size="mini" icon="el-icon-s-operation" @click="log">日志</el-button>
     </div>
     <!--表格渲染-->
     <el-table
@@ -78,6 +78,7 @@
       @size-change="sizeChange"
       @current-change="pageChange"
     />
+    <log ref="log" />
   </div>
 </template>
 
@@ -88,9 +89,10 @@ import eform from "./form";
 import edetail from "./detail";
 import { del, detail, modifyStatus, run } from "@/api/job";
 import search from "./search";
+import log from './log'
 export default {
   name: "job",
-  components: { eform, search, edetail },
+  components: { eform, search, edetail, log },
   mixins: [initData],
   data() {
     return {
@@ -228,6 +230,10 @@ export default {
         }
       });
     },
+    log() {
+      let _this = this.$refs.log;
+      _this.dialog = true;
+    }
   },
 };
 </script>
