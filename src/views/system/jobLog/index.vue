@@ -13,7 +13,7 @@
         </el-form-item>
         <el-form-item label>
           <el-button
-            class="filter-item"
+            class="filter-item 1"
             size="mini"
             type="success"
             icon="el-icon-search"
