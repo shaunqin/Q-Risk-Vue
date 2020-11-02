@@ -7,7 +7,7 @@
     title="调度日志"
     custom-class="big_dialog"
   >
-    <log />
+    <log v-if="dialog" />
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
       <el-button :loading="loading" type="primary" @click="doSubmit">确认</el-button>
