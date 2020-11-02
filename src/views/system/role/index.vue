@@ -102,7 +102,7 @@ export default {
       this.init();
     });
   },
-  beforeRouteLeave: function(to, from, next) {
+  beforeRouteLeave: function (to, from, next) {
     if (to.path === this.toPath) {
       return;
     }
@@ -172,12 +172,13 @@ export default {
       });
     },
     // 选择切换
-    selectionChange: function(selections) {
+    selectionChange: function (selections) {
       this.selections = selections;
       this.$emit("selectionChange", { selections: selections });
     },
     toQuery() {
       this.queryForm = this.$refs.search.queryForm;
+      this.page = 1;
       this.init();
     },
     authSetting(row) {

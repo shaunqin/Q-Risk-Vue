@@ -94,6 +94,7 @@ export default {
     toQuery(name) {
       if (!name) this.params = {};
       else this.params = { moduleDesc: name };
+      this.page = 1;
       this.init();
     },
     beforeInit() {
