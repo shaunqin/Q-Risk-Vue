@@ -17,6 +17,9 @@
       <el-form-item label="名称(英文)" prop="departmentNameEn">
         <el-input v-model="form.departmentNameEn" style="width: 100%;" />
       </el-form-item>
+      <el-form-item label="排序">
+        <el-input-number v-model="form.sortno" />
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
@@ -44,6 +47,7 @@ export default {
         departmentNameCn: "",
         departmentNameEn: "",
         parentCode: null,
+        sortno: "",
       },
       rules: {
         departmentNameCn: [
@@ -60,7 +64,7 @@ export default {
       disabled: true,
     };
   },
-  created() {},
+  created() { },
   methods: {
     cancel() {
       this.resetForm();

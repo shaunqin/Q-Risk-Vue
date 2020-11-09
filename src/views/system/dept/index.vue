@@ -49,6 +49,9 @@
       <el-table-column label="部门名称(英文名)">
         <template slot-scope="{row}">{{row.externMap.departmentNameEn}}</template>
       </el-table-column>
+      <el-table-column label="排序" width="80">
+        <template slot-scope="{row}">{{row.externMap.sortno}}</template>
+      </el-table-column>
       <el-table-column label="操作" width="230px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -170,7 +173,8 @@ export default {
             departmentId: row.value,
             departmentNameCn: row.name,
             departmentNameEn: row.externMap.departmentNameEn,
-            parentCode: !!res.obj ? res.obj.departmentPath : null
+            parentCode: !!res.obj ? res.obj.departmentPath : null,
+            sortno: row.externMap.sortno || "0"
           };
           _this.dialog = true;
         }
