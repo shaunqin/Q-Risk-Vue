@@ -84,6 +84,15 @@ export default {
     overflow-x: auto;
   }
 }
+.mini {
+  /deep/ .vue-treeselect__control {
+    height: 30px;
+    .vue-treeselect__single-value,
+    .vue-treeselect__placeholder {
+      line-height: 30px;
+    }
+  }
+}
 </style>
 <style lang="scss">
 .vue-treeselect--append-to-body {
