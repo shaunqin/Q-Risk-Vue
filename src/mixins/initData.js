@@ -67,7 +67,7 @@ export default {
       if (size === undefined) {
         size = 1
       }
-      if (this.data.length === size && this.page !== 0) {
+      if (this.data.length === size && this.page > 1) {
         this.page = this.page - 1
       }
     },
