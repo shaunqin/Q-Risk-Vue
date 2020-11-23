@@ -2,7 +2,7 @@
   <div class="app-container">
     <eform ref="form" :is-add="isAdd" />
     <div class="head-container">
-      <el-input v-model="query" placeholder="请输入标题" size="mini" style="width:200px;"></el-input>
+      <el-input v-model="query" placeholder="请输入标题" size="mini" style="width:200px;" clearable></el-input>
       <el-button
         class="filter-item"
         size="mini"
