@@ -9,14 +9,14 @@
   >
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="70px">
       <el-form-item label="关键风险" prop="aa">
-            <el-input v-model="form.aa" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="编号" prop="bb">
-            <el-input v-model="form.bb" style="width: 100%;" />
-          </el-form-item>
-          <el-form-item label="危险源" prop="cc">
-            <el-input v-model="form.cc" style="width: 100%;" />
-          </el-form-item>
+        <el-input v-model="form.aa" style="width: 100%" />
+      </el-form-item>
+      <el-form-item label="编号" prop="bb">
+        <el-input v-model="form.bb" style="width: 100%" />
+      </el-form-item>
+      <el-form-item label="危险源" prop="cc">
+        <el-input v-model="form.cc" style="width: 100%" />
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="text" @click="cancel">取消</el-button>
@@ -26,133 +26,133 @@
 </template>
 
 <script>
-import { add, modify } from '@/api/emplotee.js'
-import { re } from '../../../../utils/config-re'
+import { add, modify } from "@/api/emplotee.js";
+import { re } from "../../../../utils/config-re";
 
 export default {
-  data () {
+  data() {
     let checkPhone = (rule, value, callback) => {
-      let check = re.phone
-      if (check.test(value)) return callback()
-      callback(new Error('手机号格式不正确'))
-    }
+      let check = re.phone;
+      if (check.test(value)) return callback();
+      callback(new Error("手机号格式不正确"));
+    };
     let checkEmail = (rule, value, callback) => {
-      let check = re.email
-      if (check.test(value)) return callback()
-      callback(new Error('邮箱格式不正确'))
-    }
+      let check = re.email;
+      if (check.test(value)) return callback();
+      callback(new Error("邮箱格式不正确"));
+    };
     return {
-      loading: false, dialog: false,
+      loading: false,
+      dialog: false,
       form: {
-        name: ''
+        name: "",
       },
       roleSelect: [],
       formRules: {
-        name: [
-          { required: true, message: '请填写名称', trigger: 'blur' }
-        ]
+        name: [{ required: true, message: "请填写名称", trigger: "blur" }],
       },
-      entArr: []
-    }
+      entArr: [],
+    };
   },
   props: {
     isAdd: {
       type: Boolean,
-      required: true
+      required: true,
     },
     roleOptions: {
       type: Array,
-      default:[]
-    }
-  },
-  created () {
-
-  },
-  methods: {
-    cancel () {
-      this.resetForm()
+      default: [],
     },
-    doSubmit () {
-      this.$refs['form'].validate((valid) => {
+  },
+  created() {},
+  methods: {
+    cancel() {
+      this.resetForm();
+    },
+    doSubmit() {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           // this.loading = true
           // if (this.isAdd) {
           //   this.doAdd()
           // } else this.doModify()
         }
-      })
+      });
     },
-    doAdd () {
+    doAdd() {
       // this.delwithRoleList()
-      const data = this.roleSelect
-      let arr = []
+      const data = this.roleSelect;
+      let arr = [];
       for (let i = 0; i < data.length; i++) {
         let obj = {
-          id: ''
-        }
-        obj.id = data[i]
-        arr.push(obj)
+          id: "",
+        };
+        obj.id = data[i];
+        arr.push(obj);
       }
-      this.form.roleList = arr
-      add(this.form).then(res => {
-        if (res.code === '200') {
-          this.$message({
-            message: '添加成功',
-            type: 'success'
-          })
-        } else {
-          this.$message.error(res.msg)
-        }
-        this.resetForm()
-        this.loading = false
-        this.$parent.init()
-      }).catch(err => {
-        this.loading = false
-      })
+      this.form.roleList = arr;
+      add(this.form)
+        .then((res) => {
+          if (res.code === "200") {
+            this.$message({
+              message: "添加成功",
+              type: "success",
+            });
+          } else {
+            this.$message.error(res.msg);
+          }
+          this.resetForm();
+          this.loading = false;
+          this.$parent.init();
+        })
+        .catch((err) => {
+          this.loading = false;
+        });
     },
-    doModify () {
-      modify(this.form).then(res => {
-        if (res.code === '200') {
-          this.$message({
-            message: '修改成功',
-            type: 'success'
-          })
-        } else {
-          this.$message.error(res.msg)
-        }
-        this.resetForm()
-        this.loading = false
-        this.$parent.init()
-      }).catch(err => {
-        this.loading = false
-      })
+    doModify() {
+      modify(this.form)
+        .then((res) => {
+          if (res.code === "200") {
+            this.$message({
+              message: "修改成功",
+              type: "success",
+            });
+          } else {
+            this.$message.error(res.msg);
+          }
+          this.resetForm();
+          this.loading = false;
+          this.$parent.init();
+        })
+        .catch((err) => {
+          this.loading = false;
+        });
     },
-    resetForm () {
-      this.dialog = false
-      this.$refs['form'].resetFields()
+    resetForm() {
+      this.dialog = false;
+      this.$refs["form"].resetFields();
       this.form = {
-        name: '',
-        createName: '',
-        createTime: '',
-      }
-      this.roleSelect = []
+        name: "",
+        createName: "",
+        createTime: "",
+      };
+      this.roleSelect = [];
     },
-    roleChange (e) {
+    roleChange(e) {
       if (e.length <= 1) {
-        this.form.roleList = e[0]
+        this.form.roleList = e[0];
       }
-      let arr = []
+      let arr = [];
       for (let i = 0; i < e.length; i++) {
         let obj = {
-          id: ''
-        }
-        obj.id = e[i]
-        arr.push(obj)
+          id: "",
+        };
+        obj.id = e[i];
+        arr.push(obj);
       }
-      this.form.roleList = arr
+      this.form.roleList = arr;
     },
-    roleRemove(e) {
-    }
+    roleRemove(e) {},
     // delwithRoleList() {
     //   const roleList = this.roleList
     //   const checkList = this.form.roleList
@@ -172,8 +172,8 @@ export default {
     //   }
     //   this.form.roleList = newList
     // }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
