@@ -414,6 +414,18 @@ export const asyncRoutes = [
         component: () => import('@/views/qualityEvaluation/fillIn/index'),
         name: 'qualityFillIn',
         meta: { title: 'qualityFillIn' }
+      },
+      {
+        path: 'unifiedReport',
+        component: () => import('@/views/qualityEvaluation/unifiedReport/index'),
+        name: 'unifiedReport',
+        meta: { title: 'unifiedReport' }
+      },
+      {
+        path: 'calculationStandard',
+        component: () => import('@/views/qualityEvaluation/calculationStandard/index'),
+        name: 'calculationStandard',
+        meta: { title: 'calculationStandard' }
       }
     ]
   },

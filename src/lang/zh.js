@@ -64,6 +64,8 @@ export default {
     qualityEvaluation: '质量评价',
     qualityEvaluate: '质量设置',
     qualityFillIn: '质量填报',
+    unifiedReport: '统一填报',
+    calculationStandard: '计算标准',
     notice: '通知',
     agencyMatters: '待办事项',
     workDone: '已办事项',
