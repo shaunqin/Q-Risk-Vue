@@ -105,3 +105,68 @@ export function modifyCountStandard(data) {
         data
     })
 }
+
+/**
+ * @description: 查询质量评价指标分值标准分页
+ * @param {*} params
+ */
+export function queryEvaluationLevel(params) {
+    return request({
+        url: `/quality_mgr/evaluationLevel/query/pageList/${params.pageNum}/${params.pageSize}`,
+        method: 'get',
+        params
+    })
+}
+/**
+ * @description: 查询质量评价指标分值标准详情
+ * @param {*} id
+ */
+export function detailEvaluationLevel(id) {
+    return request({
+        url: `/quality_mgr/evaluationLevel/query/detail/${id}`,
+        method: 'get'
+    })
+}
+/**
+ * @description: 添加质量评价指标分值标准
+ * @param {*} data
+ */
+export function addEvaluationLevel(data) {
+    return request({
+        url: '/quality_mgr/evaluationLevel/add',
+        method: 'post',
+        data
+    })
+}
+/**
+ * @description: 删除质量评价指标分值标准
+ * @param {*} id
+ */
+export function deleteEvaluationLevel(id) {
+    return request({
+        url: `/quality_mgr/evaluationLevel/delete/${id}`,
+        method: 'delete'
+    })
+}
+/**
+ * @description: 修改质量评价指标分值标准
+ * @param {*} data
+ */
+export function modifyEvaluationLevel(data) {
+    return request({
+        url: '/quality_mgr/evaluationLevel/modify',
+        method: 'put',
+        data
+    })
+}
+/**
+ * @description: 停用或启用质量评价指标分值标准
+ * @param {*} data
+ */
+export function enableEvaluationLevel(data) {
+    return request({
+        url: '/quality_mgr/evaluationLevel/enable',
+        method: 'post',
+        data
+    })
+}

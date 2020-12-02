@@ -426,6 +426,12 @@ export const asyncRoutes = [
         component: () => import('@/views/qualityEvaluation/calculationStandard/index'),
         name: 'calculationStandard',
         meta: { title: 'calculationStandard' }
+      },
+      {
+        path: 'keyIndicatorScoreStandard',
+        component: () => import('@/views/qualityEvaluation/keyIndicatorScoreStandard/index'),
+        name: 'KeyIndicatorScoreStandard',
+        meta: { title: 'keyIndicatorScoreStandard' }
       }
     ]
   },

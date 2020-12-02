@@ -53,13 +53,17 @@
           style="width: 100%;"
         >
           <el-table-column v-for="(column,index) in columns" :key="column.name+index" :label="column.name" :prop="column.prop ? column.prop : null">
+              <template slot-scope="{row}" v-if="column.prop">
+                <span v-if="column.prop!=='generalNumData1' && column.prop!=='generalTimeData1'">{{row[column.prop]}}</span>
+                <el-input v-else v-model="row[column.prop]" placeholder></el-input>
+              </template>
               <el-table-column
                 v-for="(item,iindex) in column.children"
                 :key="iindex"
                 :label="item.name"
               >
                 <template slot-scope="{row}">
-                  <span v-if="item.prop!=='generalNumData1' && item.prop!=='generalNumData2' && item.  prop!=='generalTimeData1' && item.prop!=='generalTimeData2'">{{row[item.prop]}}</span>
+                  <span v-if="item.prop!=='generalNumData1' && item.prop!=='generalNumData2' && item.prop!=='generalTimeData1' && item.prop!=='generalTimeData2'">{{row[item.prop]}}</span>
                   <el-input v-else v-model="row[item.prop]" placeholder></el-input>
                 </template>
               </el-table-column>
@@ -73,7 +77,7 @@
 <script>
 import department from '@/components/Department';
 import { queryDictByName } from '@/api/dict'
-import { queryMonthTaskNoPageListe, fillMonthGeneralData } from '@/api/quality'
+import { queryMonthTaskNoPageListe, fillMonthGeneralData, queryDefaultValue } from '@/api/quality'
 export default {
   components: { department },
   data() {
@@ -120,15 +124,32 @@ export default {
   },
   methods: {
     toQuery(name) {
-      this.loading = true;
-      queryMonthTaskNoPageListe(this.queryForm).then(res => {
-        this.loading = false;
+      let obj = {
+        setObjectName: `quality_product_index_${this.queryForm.productValue}_unifiedreport_title_cn`,
+        type: 2
+      };
+      queryDefaultValue(obj).then(res => {
         if (res.code != '200') {
-          this.$message.error(res.msg);
+          this.$message.error("未配置参数");
+          return false;
         } else {
-          this.data = res.obj;
+          this.columns = res.obj;
+          return true;
+        }
+      }).then(data => {
+        if (data) {
+          this.loading = true;
+          queryMonthTaskNoPageListe(this.queryForm).then(res => {
+            this.loading = false;
+            if (res.code != '200') {
+              this.$message.error(res.msg);
+            } else {
+              this.data = res.obj;
+            }
+          })
         }
       })
+      
     },
     changeData() {
       const obj = {

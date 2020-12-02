@@ -66,6 +66,7 @@ export default {
     qualityFillIn: '质量填报',
     unifiedReport: '统一填报',
     calculationStandard: '计算标准',
+    keyIndicatorScoreStandard: '关键指标分值标准',
     notice: '通知',
     agencyMatters: '待办事项',
     workDone: '已办事项',
