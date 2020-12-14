@@ -55,7 +55,7 @@
           <el-table-column v-for="(column,index) in columns" :key="column.name+index" :label="column.name" :prop="column.prop ? column.prop : null">
               <template slot-scope="{row}" v-if="column.prop">
                 <span v-if="column.prop!=='generalNumData1' && column.prop!=='generalTimeData1'">{{row[column.prop]}}</span>
-                <el-input v-else v-model="row[column.prop]" placeholder></el-input>
+                <el-input v-else v-model="row[column.prop]" placeholder :disabled="column.prop == 'generalTimeData1'"></el-input>
               </template>
               <el-table-column
                 v-for="(item,iindex) in column.children"
@@ -64,7 +64,7 @@
               >
                 <template slot-scope="{row}">
                   <span v-if="item.prop!=='generalNumData1' && item.prop!=='generalNumData2' && item.prop!=='generalTimeData1' && item.prop!=='generalTimeData2'">{{row[item.prop]}}</span>
-                  <el-input v-else v-model="row[item.prop]" placeholder></el-input>
+                  <el-input v-else v-model="row[item.prop]" placeholder :disabled="item.prop == 'generalNumData1' && generalDisabled == '1' || item.prop == 'generalNumData2' && generalDisabled == '1'  || item.prop == 'generalTimeData2' && generalDisabled == '4'"></el-input>
                 </template>
               </el-table-column>
           </el-table-column>
@@ -109,6 +109,7 @@ export default {
             { "name": "月度任务通用数量", "prop": "generalNumData2" },
             { "name": "月度任务通用时长", "prop": "generalTimeData2" }]
         }],
+      generalDisabled: ''
     };
   },
   computed: {
@@ -128,6 +129,7 @@ export default {
         setObjectName: `quality_product_index_${this.queryForm.productValue}_unifiedreport_title_cn`,
         type: 2
       };
+      this.generalDisabled = this.queryForm.productValue
       queryDefaultValue(obj).then(res => {
         if (res.code != '200') {
           this.$message.error("未配置参数");
