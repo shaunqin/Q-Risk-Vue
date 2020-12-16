@@ -55,7 +55,7 @@
           <el-table-column v-for="(column,index) in columns" :key="column.name+index" :label="column.name" :prop="column.prop ? column.prop : null">
               <template slot-scope="{row}" v-if="column.prop">
                 <span v-if="column.prop!=='generalNumData1' && column.prop!=='generalTimeData1'">{{row[column.prop]}}</span>
-                <el-input v-else v-model="row[column.prop]" placeholder :disabled="column.prop == 'generalTimeData1'"></el-input>
+                <el-input v-else v-model="row[column.prop]" placeholder :disabled="disabledColumn(column)"></el-input>
               </template>
               <el-table-column
                 v-for="(item,iindex) in column.children"
@@ -64,7 +64,7 @@
               >
                 <template slot-scope="{row}">
                   <span v-if="item.prop!=='generalNumData1' && item.prop!=='generalNumData2' && item.prop!=='generalTimeData1' && item.prop!=='generalTimeData2'">{{row[item.prop]}}</span>
-                  <el-input v-else v-model="row[item.prop]" placeholder :disabled="item.prop == 'generalNumData1' && generalDisabled == '1' || item.prop == 'generalNumData2' && generalDisabled == '1'  || item.prop == 'generalTimeData2' && generalDisabled == '4'"></el-input>
+                  <el-input v-else v-model="row[item.prop]" placeholder :disabled="disabledData(item)"></el-input>
                 </template>
               </el-table-column>
           </el-table-column>
@@ -212,6 +212,12 @@ export default {
         return "一月至十二月";
       }
     },
+    disabledData(item) {
+      return item.prop == 'generalNumData1' && this.generalDisabled == '1' || item.prop == 'generalNumData2' && this.generalDisabled == '1'  || item.prop == 'generalTimeData2' && this.generalDisabled == '4'
+    },
+    disabledColumn(column) {
+      return column.prop == 'generalTimeData1'
+    }
   }
 };
 </script>
