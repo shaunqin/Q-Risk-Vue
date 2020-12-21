@@ -9,12 +9,12 @@
   >
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
       <el-form-item label="发生日期" prop="dateTime">
-        <el-date-picker v-model="form.dateTime" placeholder></el-date-picker>
+        <el-date-picker v-model="form.dateTime" placeholder :disabled="!isAdd"></el-date-picker>
       </el-form-item>
       <el-row :gutter="16">
         <el-col :span="24">
           <el-form-item label="责任部门" prop="responsibleUnit">
-            <department :value="form.responsibleUnit" @change="deptChange"></department>
+            <department :value="form.responsibleUnit" @change="deptChange" :disabled="!isAdd"></department>
           </el-form-item>
         </el-col>
 
@@ -136,9 +136,9 @@ export default {
         dateTime: [
           { required: true, message: "发生日期不能为空", trigger: "blur" },
         ],
-        responsibleUnit: [
+        /* responsibleUnit: [
           { required: true, message: "责任部门不能为空", trigger: "change" },
-        ],
+        ], */
         riskLevel1: [
           { required: true, message: "危险源层级一不能为空", trigger: "blur" },
         ],

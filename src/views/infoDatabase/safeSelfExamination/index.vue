@@ -100,20 +100,7 @@ export default {
       let _this = this.$refs.form;
       detailSupervise(row.id).then((res) => {
         const { obj } = res;
-        _this.form = {
-          id: obj.id,
-          dateTime: obj.dateTime,
-          incentive: obj.incentive,
-          problemDescription: obj.problemDescription,
-          product: obj.product,
-          responsibleUnit: obj.responsibleUnit,
-          risk: obj.risk,
-          riskLevel1: obj.riskLevel1,
-          riskLevel2: obj.riskLevel2,
-          sourceOfRisk: obj.sourceOfRisk,
-          system: obj.system,
-          dataType: obj.dataType,
-        };
+        _this.form = {...obj};
         _this.dialog = true;
       });
     },
