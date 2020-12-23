@@ -62,6 +62,7 @@
               v-model="form.sourceOfRisk"
               placeholder
               style="width: 100%;"
+              @change="$forceUpdate()"
             >
               <el-option
                 v-for="item in riskList.filter(r=>r.cateValue==form.riskLevel2)"
@@ -94,7 +95,7 @@
         <incentive-select ref="incentive" :value="form.incentive" @change="incentiveChange"></incentive-select>
       </el-form-item>
       <el-form-item label="问题描述" prop="problemDescription">
-        <el-input v-model="form.problemDescription" type="textarea" rows="3" style="width: 100%;" />
+        <el-input v-model="form.problemDescription" type="textarea" rows="3" style="width: 100%;" :disabled="!isAdd" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -184,6 +185,7 @@ export default {
           if (list && list.length > 0) {
             this.riskLevel2List = list[0].children;
           }
+          this.$forceUpdate()
         }
       },
     },
@@ -195,6 +197,7 @@ export default {
               this.$refs.form.clearValidate(x);
             }
           }
+          this.$forceUpdate()
         }
       },
       deep: true,
@@ -211,6 +214,7 @@ export default {
           this.$message.error(res.msg);
         } else {
           this.riskLevel1List = res.obj[0].children;
+          this.$forceUpdate()
         }
       });
       //危险源
@@ -219,6 +223,7 @@ export default {
           this.$message.error(res.msg);
         } else {
           this.riskList = res.obj;
+          this.$forceUpdate()
         }
       });
     },
@@ -292,18 +297,23 @@ export default {
         dataType: "6",
       };
       this.$refs.incentive.value1 = "";
+      this.$forceUpdate()
     },
     dictChange(val, key) {
       this.form[key] = val;
+      this.$forceUpdate()
     },
     deptChange(val) {
       this.form.responsibleUnit = val;
+      this.$forceUpdate()
     },
     riskChange(val) {
-      this.form.risk = val.join(",");
+      this.form.risk = val;
+      this.$forceUpdate()
     },
     incentiveChange(val) {
       this.form.incentive = val.join(",");
+      this.$forceUpdate()
     },
   },
 };
