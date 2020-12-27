@@ -146,7 +146,15 @@ export default {
             if (res.code != '200') {
               this.$message.error(res.msg);
             } else {
-              this.data = res.obj;
+              let arr = []
+              res.obj.map((item, index) => {
+                if(item.sortNo) {
+                  arr[item.sortNo - 1] = item
+                } else {
+                  arr[index] = item
+                }
+              })
+              this.data = [...arr]
             }
           })
         }
