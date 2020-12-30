@@ -46,7 +46,7 @@ export default {
       form: {
         deptPath: null,
         roleDesc: "",
-        code: "ROLE_",
+        code: "",
         sn: 0,
       },
       rules: {

@@ -5,7 +5,7 @@
       <span class="title">后台管理系统</span>
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" status-icon>
         <el-form-item prop="userName">
-          <el-input v-model="loginForm.userName" placeholder="请输入用户名" clearable>
+          <el-input v-model="loginForm.userName" placeholder="请输入用户名" clearable @keyup.enter.native="handleLogin">
             <i slot="prefix" class="el-icon-user-solid el-input__icon icon userName" />
           </el-input>
         </el-form-item>
@@ -16,6 +16,7 @@
             clearable
             show-password
             maxlength="16"
+            @keyup.enter.native="handleLogin"
           >
             <i slot="prefix" class="el-input__icon icon pwd" />
           </el-input>

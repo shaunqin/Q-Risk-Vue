@@ -15,6 +15,14 @@ export const add = (data) => {
     data
   })
 }
+// 快速添加
+export const quickAdd = (data) => {
+  return request({
+    url: '/sys_mgr/role_mgr/addBatch',
+    method: 'post',
+    data
+  })
+}
 // 编辑
 export const modify = (data) => {
   return request({
@@ -46,7 +54,7 @@ export const query = (id) => {
 }
 
 // 为某个角色授权
-export const setAuthByRoleId = (roleId,data) => {
+export const setAuthByRoleId = (roleId, data) => {
   return request({
     url: `/sys_mgr/role_mgr/auth/${roleId}`,
     method: 'post',
@@ -62,7 +70,7 @@ export const queryRoleAuth = (roleId) => {
 }
 
 //为某个角色批量分配人员 
-export const setAssignUserByRoleId = (roleId,data) => {
+export const setAssignUserByRoleId = (roleId, data) => {
   return request({
     url: `/sys_mgr/role_mgr/assign/${roleId}`,
     method: 'post',
@@ -71,10 +79,18 @@ export const setAssignUserByRoleId = (roleId,data) => {
 }
 
 // 为某个角色批量/单个删除人员
-export const unassignByRoleId = (roleId,data) => {
+export const unassignByRoleId = (roleId, data) => {
   return request({
     url: `/sys_mgr/role_mgr/unassign/${roleId}`,
     method: 'delete',
     data
+  })
+}
+
+// 角色下拉列表
+export const queryCodeAndDesc = () => {
+  return request({
+    url: `/sys_mgr/role_mgr/queryCodeAndDesc`,
+    method: 'get',
   })
 }

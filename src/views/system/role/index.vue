@@ -11,6 +11,7 @@
         @click="toQuery(query)"
       >搜索</el-button>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-plus" @click="add">新增</el-button>
+      <el-button size="mini" type="primary" icon="el-icon-plus" @click="quickAdd">快速添加</el-button>
     </div>
     <!--表格渲染-->
     <el-table
@@ -64,6 +65,7 @@
     <auth-setting ref="authSetting"></auth-setting>
     <!-- 分配用户 -->
     <user-setting ref="userSetting"></user-setting>
+    <formQuick ref="formQuick" />
   </div>
 </template>
 
@@ -75,10 +77,11 @@ import search from "./search";
 import { del, query, detail } from "@/api/role";
 import authSetting from "./components/authSetting";
 import userSetting from "./components/userSetting";
+import formQuick from './formQuick'
 
 export default {
   name: "Role",
-  components: { eform, search, authSetting, userSetting },
+  components: { eform, search, authSetting, userSetting, formQuick },
   mixins: [initData],
   data() {
     return {
@@ -152,6 +155,9 @@ export default {
     add() {
       this.isAdd = true;
       this.$refs.form.dialog = true;
+    },
+    quickAdd() {
+      this.$refs.formQuick.dialog = true;
     },
     edit(id) {
       this.isAdd = false;
