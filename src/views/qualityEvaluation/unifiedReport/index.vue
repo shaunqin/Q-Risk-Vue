@@ -14,7 +14,7 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="月份">
-          <el-select v-model="queryForm.month" placeholder style="width:80px;" clearable>
+          <el-select v-model="queryForm.month" placeholder style="width:80px;">
             <el-option v-for="num in 12" :key="num" :label="num" :value="num"></el-option>
           </el-select>
         </el-form-item>
@@ -26,20 +26,9 @@
             v-model="queryForm.productValue"
             placeholder
             style="width:160px"
-            @change="queryForm.indexValue=indexList[0].value"
           >
             <el-option
               v-for="item in prodList"
-              :key="item.key"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="指标">
-          <el-select v-model="queryForm.indexValue" placeholder style="width:150px">
-            <el-option
-              v-for="item in indexList"
               :key="item.key"
               :label="item.name"
               :value="item.value"
@@ -63,20 +52,21 @@
           :highlight-current-row="true"
           style="width: 100%;"
         >
-          <el-table-column label width="120">
-            <template slot-scope="{row}">{{renderTbCol(row)}}</template>
-          </el-table-column>
-          <el-table-column v-for="(column,index) in columns" :key="index" :label="column.name">
-            <el-table-column
-              v-for="(item,iindex) in column.children"
-              :key="iindex"
-              :label="item.name"
-            >
-              <template slot-scope="{row}">
-                <el-input v-if="item.prop=='dividend0'||item.prop=='dividend1'" v-model="row[item.prop]" placeholder></el-input>
-                <span v-else>{{row[item.prop]}}</span>
+          <el-table-column v-for="(column,index) in columns" :key="column.name+index" :label="column.name" :prop="column.prop ? column.prop : null">
+              <template slot-scope="{row}" v-if="column.prop">
+                <span v-if="column.prop!=='generalNumData1' && column.prop!=='generalTimeData1'">{{row[column.prop]}}</span>
+                <el-input v-else v-model="row[column.prop]" placeholder :disabled="disabledColumn(column)"></el-input>
               </template>
-            </el-table-column>
+              <el-table-column
+                v-for="(item,iindex) in column.children"
+                :key="iindex"
+                :label="item.name"
+              >
+                <template slot-scope="{row}">
+                  <span v-if="item.prop!=='generalNumData1' && item.prop!=='generalNumData2' && item.prop!=='generalTimeData1' && item.prop!=='generalTimeData2'">{{row[item.prop]}}</span>
+                  <el-input v-else v-model="row[item.prop]" placeholder :disabled="disabledData(item)"></el-input>
+                </template>
+              </el-table-column>
           </el-table-column>
         </el-table>
       </el-col>
@@ -87,7 +77,7 @@
 <script>
 import department from '@/components/Department';
 import { queryDictByName } from '@/api/dict'
-import { queryIndexList, queryDefaultValue, modifyFillData } from '@/api/quality'
+import { queryMonthTaskNoPageListe, fillMonthGeneralData, queryDefaultValue } from '@/api/quality'
 export default {
   components: { department },
   data() {
@@ -96,28 +86,30 @@ export default {
       userInfo: {},
       selections: [],
       queryForm: {
+        type: 2,
         year: new Date().getFullYear().toString(),
-        productValue: "",
-        indexValue: ""
+        month: 1,
+        departmentPath: null,
+        productValue: ""
       },
       prodList: [],
       loading: false,
       data: [],
       columns: [
+        { "name": "部门", "prop": "departmentName" },
         {
           "name": "国航机队",
           "children": [
-            { "name": "出厂检发现问题数量", "prop": "dividend0" },
-            { "name": "全月出厂飞机总计划工时", "prop": "divisor0" },
-            { "name": "出厂检发现问题万时率", "prop": "result0" }]
+            { "name": "月度任务通用数量", "prop": "generalNumData1" },
+            { "name": "月度任务通用时长", "prop": "generalTimeData1" }]
         },
         {
           "name": "客户机队",
           "children": [
-            { "name": "出厂检发现问题数量", "prop": "dividend1" },
-            { "name": "全月出厂飞机总计划工时", "prop": "divisor1" },
-            { "name": "出厂检发现问题万时率", "prop": "result1" }]
+            { "name": "月度任务通用数量", "prop": "generalNumData2" },
+            { "name": "月度任务通用时长", "prop": "generalTimeData2" }]
         }],
+      generalDisabled: ''
     };
   },
   computed: {
@@ -133,14 +125,11 @@ export default {
   },
   methods: {
     toQuery(name) {
-      if(!this.queryForm.month && !this.queryForm.departmentPath) {
-        this.$message.error("月份和部门不能同时为空！");
-        return
-      }
       let obj = {
-        setObjectName: `quality_product_index_${this.queryForm.productValue}_${this.queryForm.indexValue}_title_cn`,
+        setObjectName: `quality_product_index_${this.queryForm.productValue}_unifiedreport_title_cn`,
         type: 2
       };
+      this.generalDisabled = this.queryForm.productValue
       queryDefaultValue(obj).then(res => {
         if (res.code != '200') {
           this.$message.error("未配置参数");
@@ -152,15 +141,44 @@ export default {
       }).then(data => {
         if (data) {
           this.loading = true;
-          queryIndexList(this.queryForm).then(res => {
+          queryMonthTaskNoPageListe(this.queryForm).then(res => {
             this.loading = false;
             if (res.code != '200') {
               this.$message.error(res.msg);
             } else {
-              this.data = res.obj;
+              let arr = []
+              res.obj.map((item, index) => {
+                if(item.sortNo) {
+                  arr[item.sortNo - 1] = item
+                } else {
+                  arr[index] = item
+                }
+              })
+              this.data = [...arr]
             }
           })
         }
+      })
+      
+    },
+    changeData() {
+      const obj = {
+	      fillData: {},
+	      fillInDate: new Date().getTime()
+      }
+      this.data.map(item => {
+        if(item.generalNumData1 || item.generalNumData2 || item.generalTimeData1 || item.generalTimeData20) {
+          obj.fillData[item.monthTaskId] = {
+            generalNumData1: item.generalNumData1,
+            generalNumData2: item.generalNumData2,
+            generalTimeData1: item.generalTimeData1,
+            generalTimeData2: item.generalTimeData2
+          }
+        }
+      })
+      fillMonthGeneralData(obj).then(res => {
+        this.$message.success('填报成功！！')
+        this.toQuery()
       })
     },
     loadData() {
@@ -171,7 +189,6 @@ export default {
           this.prodList = res.obj[0].children;
           // 默认值
           this.queryForm.productValue = res.obj[0].children[0].value;
-          this.queryForm.indexValue = res.obj[0].children[0].children[0].value;
         }
       })
     },
@@ -203,18 +220,11 @@ export default {
         return "一月至十二月";
       }
     },
-    changeData() {
-      let params = {...this.queryForm}
-      params.indexVos = [...this.data.slice(0,-1)]
-      console.log('params', params)
-      modifyFillData(params).then(res => {
-        if (res.code != '200') {
-          this.$message.error(res.msg);
-        } else {
-          this.$message.success("修改成功！");
-          this.toQuery()
-        }
-      })
+    disabledData(item) {
+      return item.prop == 'generalNumData1' && this.generalDisabled == '1' || item.prop == 'generalNumData2' && this.generalDisabled == '1'  || item.prop == 'generalTimeData2' && this.generalDisabled == '4'
+    },
+    disabledColumn(column) {
+      return column.prop == 'generalTimeData1'
     }
   }
 };

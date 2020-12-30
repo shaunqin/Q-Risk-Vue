@@ -9,12 +9,12 @@
   >
     <el-form ref="form" :model="form" :rules="formRules" size="small" label-width="auto">
       <el-form-item label="发生日期" prop="dateTime">
-        <el-date-picker v-model="form.dateTime" placeholder></el-date-picker>
+        <el-date-picker v-model="form.dateTime" placeholder :disabled="!isAdd"></el-date-picker>
       </el-form-item>
       <el-row :gutter="16">
         <el-col :span="24">
           <el-form-item label="责任部门" prop="responsibleUnit">
-            <department :value="form.responsibleUnit" @change="deptChange"></department>
+            <department :value="form.responsibleUnit" @change="deptChange" :disabled="!isAdd"></department>
           </el-form-item>
         </el-col>
 
@@ -56,6 +56,7 @@
               v-model="form.sourceOfRisk"
               placeholder
               style="width: 100%;"
+              @change="$forceUpdate()"
             >
               <el-option
                 v-for="item in riskList.filter(r=>r.cateValue==form.riskLevel2)"
@@ -88,7 +89,7 @@
         <incentive-select ref="incentive" :value="form.incentive" @change="incentiveChange"></incentive-select>
       </el-form-item>
       <el-form-item label="问题描述" prop="incentive">
-        <el-input v-model="form.problemDescription" type="textarea" rows="3" style="width: 100%;" />
+        <el-input v-model="form.problemDescription" type="textarea" rows="3" style="width: 100%;" :disabled="!isAdd" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -136,9 +137,9 @@ export default {
         dateTime: [
           { required: true, message: "发生日期不能为空", trigger: "blur" },
         ],
-        responsibleUnit: [
+        /* responsibleUnit: [
           { required: true, message: "责任部门不能为空", trigger: "change" },
-        ],
+        ], */
         riskLevel1: [
           { required: true, message: "危险源层级一不能为空", trigger: "blur" },
         ],
@@ -180,6 +181,7 @@ export default {
           if (list && list.length > 0) {
             this.riskLevel2List = list[0].children;
           }
+          this.$forceUpdate()
         }
       },
     },
@@ -191,6 +193,7 @@ export default {
               this.$refs.form.clearValidate(x);
             }
           }
+          this.$forceUpdate()
         }
       },
       deep: true,
@@ -207,6 +210,7 @@ export default {
           this.$message.error(res.msg);
         } else {
           this.riskLevel1List = res.obj[0].children;
+          this.$forceUpdate()
         }
       });
       //危险源
@@ -215,6 +219,7 @@ export default {
           this.$message.error(res.msg);
         } else {
           this.riskList = res.obj;
+          this.$forceUpdate()
         }
       });
     },
@@ -288,18 +293,23 @@ export default {
         dataType: "7",
       };
       this.$refs.incentive.value1 = "";
+      this.$forceUpdate()
     },
     dictChange(val, key) {
       this.form[key] = val;
+      this.$forceUpdate()
     },
     deptChange(val) {
       this.form.responsibleUnit = val;
+      this.$forceUpdate()
     },
     riskChange(val) {
-      this.form.risk = val.join(",");
+      this.form.risk = val;
+      this.$forceUpdate()
     },
     incentiveChange(val) {
       this.form.incentive = val.join(",");
+      this.$forceUpdate()
     },
   },
 };
