@@ -103,6 +103,7 @@ export default {
         deptPath: null,
         roles: []
       };
+      this.selectedRoles = [];
     },
     change(val) {
       this.form.deptPath = val;
