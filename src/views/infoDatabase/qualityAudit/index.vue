@@ -1,10 +1,12 @@
 <template>
   <div class="app-container">
     <eform ref="form" :is-add="isAdd"></eform>
+    <dateForm ref="dateForm" :dataType="'7'"></dateForm>
     <div class="head-container">
       <esearch />
       <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @click="add">新增</el-button>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-download">导出</el-button>
+      <el-button class="filter-item" size="mini" type="success" @click="retrieveData()" >获取数据</el-button>
     </div>
     <!--表格渲染-->
     <el-table
@@ -69,10 +71,11 @@
 import initData from "@/mixins/initData";
 import eform from "./form";
 import esearch from "../components/search";
+import dateForm from "../components/dateForm";
 import { detailSupervise, delSupervise } from "@/api/infodb";
 import { format } from "@/utils/datetime";
 export default {
-  components: { eform, esearch },
+  components: { eform, esearch, dateForm },
   mixins: [initData],
   data() {
     return {
@@ -122,6 +125,9 @@ export default {
         })
         .catch(() => {});
     },
+    retrieveData() {
+      this.$refs.dateForm.dialog = true
+    }
   },
 };
 </script>
