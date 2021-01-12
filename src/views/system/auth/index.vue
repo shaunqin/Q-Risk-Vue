@@ -33,7 +33,7 @@
         style="width: 100%;margin-bottom: 20px;"
         row-key="key"
         border
-        default-expand-all
+        :expand-row-keys="expandRow"
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
       >
         <el-table-column label="菜单名称" align="left">
@@ -83,12 +83,21 @@ export default {
   data() {
     return {
       parentIdList: [],
+      expandRow: []
     };
   },
   created() {
     this.$nextTick(() => {
       this.init();
     });
+  },
+  watch: {
+    data: {
+      deep: true,
+      handler(data) {
+        this.expandRow = data.map(r => r.key);
+      }
+    }
   },
   methods: {
     toQuery(name) {

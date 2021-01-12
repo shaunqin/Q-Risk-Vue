@@ -15,7 +15,7 @@ export default {
     },
     width: {
       type: String,
-      default: '50%'
+      default: '100%'
     },
     height: {
       type: String,
@@ -40,7 +40,7 @@ export default {
     chartData: {
       deep: true,
       handler (val) {
-        this.chart.setOptions(val)
+        this.chart.setOption(val)
       }
     }
   },
