@@ -30,6 +30,12 @@ export default {
       data: {},
     }
   },
+  props: {
+    showOperation: {
+      type: Boolean,
+      default: true
+    },
+  },
   computed: {
     processType() {
       return this.data.type

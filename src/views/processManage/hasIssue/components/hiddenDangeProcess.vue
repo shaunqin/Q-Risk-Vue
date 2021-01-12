@@ -78,7 +78,7 @@
                   </el-popover>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="100" fixed="right">
+              <el-table-column label="操作" width="100" fixed="right" v-if="showOperation">
                 <template slot-scope="{ row }">
                   <span v-if="row.status == '5' || row.status == '7'">-</span>
                   <el-button v-else type="primary" size="mini" @click="doHandle(row)">取消任务</el-button>
@@ -124,6 +124,9 @@ export default {
   computed: {
     dialog() {
       return this.$parent.$parent.dialog
+    },
+    showOperation(){
+      return this.$parent.$parent.showOperation
     }
   },
   watch: {

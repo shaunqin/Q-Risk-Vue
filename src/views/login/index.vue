@@ -120,7 +120,7 @@ export default {
                   path: this.redirect || "/",
                   query: this.otherQuery
                 });
-                this.loading = false;
+                // this.loading = false;
               } else {
                 this.$message.error("用户名或密码输入错误！！！");
                 this.loading = false;
