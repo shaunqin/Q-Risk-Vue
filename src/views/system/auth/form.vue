@@ -46,10 +46,10 @@
           <el-form-item label="菜单排序" prop="orderNum">
             <el-input-number v-model="form.orderNum" />
           </el-form-item>
-          <el-form-item label="路由地址" prop="modulePath" v-if="form.isMenu!=2">
+          <el-form-item label="路由地址" key="modulePath" prop="modulePath" v-if="form.isMenu!=2">
             <el-input v-model="form.modulePath" style="width: 100%;" />
           </el-form-item>
-          <el-form-item label="权限标识" v-if="form.isMenu!=0">
+          <el-form-item label="权限标识" key="moduleCode" v-if="form.isMenu!=0">
             <el-input v-model="form.moduleCode" style="width: 100%;" />
           </el-form-item>
         </el-col>
@@ -104,6 +104,9 @@ export default {
         ],
         moduleDesc: [
           { required: true, message: "菜单名称不能为空", trigger: "blur" },
+        ],
+        modulePath: [
+          { required: true, message: "路由地址不能为空", trigger: "blur" },
         ],
       },
       entArr: [],
